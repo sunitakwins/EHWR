@@ -1,0 +1,205 @@
+@import "./assets/scss/common.scss";
+
+
+.pt2 {
+	padding-top:2px!important;
+}
+.mat-table tbody{
+    tr{
+      &:hover{
+        background-color: #eee !important;
+      }
+    }
+  }
+
+.loginWrapper {
+	background-color: rgba(255, 255, 255, 0.97);
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	padding: 20px;
+	border-radius: 5px;
+	margin-bottom: 50px;
+	h2 {
+		font-size: 1.5rem;
+	}
+	.useFieldIcon {
+		position: relative;
+		input {
+			padding-right: 40px;
+		}
+		i {
+			cursor: pointer;
+			position: absolute;
+			right: 15px;
+			top: 50%;
+			transform: translateY(-50%);
+			-webkit-transform: translateY(-50%);
+			-moz-transform: translateY(-50%);
+			-ms-transform: translateY(-50%);
+		}
+	}
+	.csRadioBtn {
+		.radioBtn {
+			margin-right: 15px;
+			min-width: 120px;
+			margin-bottom: 15px;
+		}
+		&.invoiceMethod {
+			.radioBtn {
+				min-width: 70px;
+			}
+		}
+		label {
+			font-weight: 400;
+		}
+	}
+	label {
+		font-weight: 500;
+	}
+	textarea {
+		min-height: 120px;
+		background-color: #fff;
+		resize: none;
+		font-size: 14px;
+		line-height: 20px;
+		&.maxHeight {
+			min-height: 150px;
+		}
+		&.smheightFix {
+			min-height: 101px;
+		}
+	}
+	.addTopSpace {
+		margin-top: 30px;
+		@media (max-width: 767px) {
+			margin-top: 5px;
+		}
+	}
+	.reportTable {
+		td {
+			border: none;
+			padding: 0;
+			vertical-align: middle;
+			border-bottom: 1px solid #ddd;
+		}
+	}
+}
+#viewDetails {
+	textarea {
+		min-height: 120px;
+		background-color: #fff;
+		resize: none;
+		font-size: 14px;
+		line-height: 20px;
+	}
+}
+// report page
+.selectOption {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 5px;
+}
+
+.labelNo {
+	//background-color: #04773B;
+	color: #04773B;
+	padding: 4px 10px;
+	display: inline-flex;
+	align-items: center;
+	border-radius: 3px;
+	margin-left: 5px;
+	.jobId {
+		color: #04773B;
+		font-size: 18px;
+		margin-left: 5px;
+		display: flex;
+    	text-align: left;
+	}
+}
+.jobId {
+	color: #04773B;
+	font-size: 18px;
+	margin-left: 5px;
+	font-weight: 600;
+	display: flex;
+    text-align: left;
+}
+// tabbing
+.nav-tabs {
+	li {
+		margin-right: 5px;
+
+		a {
+			background-color: #eee;
+			color: #04773B;
+			padding: 8px 15px;
+			font-size: 16px;
+			display: inline-block;
+			text-decoration: none;
+			border-radius: 5px 5px 0 0;
+			min-width: 100px;
+			text-align: center;
+			&.active {
+				background-color: #04773B;
+				color: #fff;
+				display: inline-block;
+			}
+		}
+	}
+}
+#successMessage {
+	.modal-dialog {
+		.modal-body {
+			height: 150px;
+		}
+	}
+}
+.mat-button,
+.mat-icon-button,
+.mat-stroked-button {
+	&.mat-warn {
+		.mat-button-focus-overlay {
+			background-color: transparent;
+			display: none !important;
+		}
+	}
+}
+html,
+body {
+	height: 100%;
+}
+body {
+	margin: 0;
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mrTop {
+	margin-top: 63px;
+	@media (max-width: 767px) {
+		margin-top: 0px;
+	}
+	.printCheck {
+		.radioBtn {
+			font-weight: normal;
+		}
+	}
+
+	.dateRange {
+		input {
+			margin-left: 15px;
+			max-width: 190px;
+			@media (max-width: 1199px) {
+				max-width: 150px;
+			}
+			@media (max-width: 991px) {
+				max-width: 100%;
+			}
+		}
+	}
+	.reportBtn {
+		.btn {
+			margin: 0 5px 5px 0;
+		}
+	}
+}

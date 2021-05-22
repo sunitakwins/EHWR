@@ -1,0 +1,30 @@
+  <div class="bgShadow">
+    <div class="col-sm-12">
+      <div class="table-responsive popupTable">
+        <table [dataSource]="dataSource"  matSort (matSortChange)="sortData($event)" class="mat-elevation-z8" mat-table >
+          <ng-container matColumnDef="userName">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>User Name</th>
+            <td *matCellDef="let element" mat-cell>
+              <a >{{element.userName}}</a></td>
+          </ng-container>
+      
+          <ng-container matColumnDef="loginDateTime">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Login Date</th>
+            <td *matCellDef="let element" mat-cell> {{element.loginDateTime | date: 'dd-MM-yyyy'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="logOutDateTime">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Logout Date</th>
+            <td *matCellDef="let element" mat-cell>
+              <div  *ngIf ="element.invoiceSendDate > '0001-01-01T00:00:00' ? element.invoiceSendDate : null ">
+                {{element.logOutDateTime | date: 'dd-MM-yyyy'}}
+              </div>  
+               </td>
+          </ng-container>
+
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+        </table>
+      </div>
+    </div>
+  </div>

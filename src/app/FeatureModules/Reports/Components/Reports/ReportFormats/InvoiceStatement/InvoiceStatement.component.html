@@ -1,0 +1,54 @@
+
+<div class="d-none" [class.show]="invoiceStatementValue1">
+  <form [formGroup]="JobTypePrintForm">
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        <div class="row">
+
+          <div class="col-md-12">
+            <div class="dueDateWrapper mb-3 mt-3">
+              <label>Month and Year</label>
+              <div class="dueDateCol">
+                <input matInput [matDatepicker]="dp"  [formControl]="date" class="form-control">
+                <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                <div class="pickerIcon">
+                  <mat-datepicker #dp
+                                  startView="multi-year"
+                                  (yearSelected)="chosenYearHandler($event)"
+                                  (monthSelected)="chosenMonthHandler($event, dp)"
+                                  panelClass="example-month-picker">
+                  </mat-datepicker>
+                </div>
+              </div>
+              
+          </div>
+          </div>
+        </div>
+      </div> 
+
+      <div class="col-sm-12 col-md-12">
+        <div class="form-group">
+          <label>Customers</label> 
+          <input type="text" matInput placeholder="Search Customer" aria-label="string" class="form-control"
+             formControlName="customerId" [matAutocomplete]="customer" 
+             (keyup)="searchCustomer($event.target.value)">
+          
+            <mat-autocomplete #customer="matAutocomplete" [displayWith]="displayCustomer.bind(this)">
+            <mat-option *ngFor="let customer of allCustomers" [value]="customer">
+              {{customer.customerName}}
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+      </div> 
+
+      <div class="col-sm-12 mb-3">
+        <div class="actionBtn mb-2 mt-2 reportBtn">
+          <!-- <button type="button" class="btn primary-btn comBtn" (click)="clearDate()">Clear Dates</button> -->
+          <button type="button" class="btn primary-btn comBtn" (click)="clearFilter()">Clear Filter</button>
+        </div>
+      </div> 
+    </div>
+  </form>
+</div>
+
+<!-- Print Format -->

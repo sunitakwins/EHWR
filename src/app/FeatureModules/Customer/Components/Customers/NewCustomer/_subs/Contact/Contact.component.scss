@@ -1,0 +1,12 @@
+table {
+    width: 100%;
+}
+input{
+    &.removeArrow{
+    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    -ms-appearance: none;
+    -moz-appearance: none;
+    }
+    }
+}  

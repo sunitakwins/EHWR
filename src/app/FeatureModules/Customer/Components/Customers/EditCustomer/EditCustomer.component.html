@@ -1,0 +1,95 @@
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="loginWrapper">
+          <div class="row">
+            <div class="col-sm-12 col-lg-3">
+              <h2>Customers</h2>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="customer">Customers</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Edit Customer</li>
+                </ol>
+              </nav>
+            </div>
+            <div class="col-sm-12 col-lg-6 col-md-9 d-flex">
+              <div class="customerNameCol text-center" *ngIf="customerName">Customer:<strong class="jobId">{{ customerName | titlecase}}</strong> </div>&nbsp;
+              <div class="customerNameCol text-center" *ngIf="accountBalance>-1">Account Balance:
+                <strong class="jobId">
+                  <!-- <div *ngIf ="accountBalance > 0 else Zero">
+                    -${{accountBalance}}
+                  </div>
+                  <ng-template #Zero >
+                    ${{accountBalance}} 
+                  </ng-template>
+                </strong></div> -->
+                 <!-- ====================== -->
+                  <div *ngIf ="accountBalance == 0 else Zero">
+                    ${{accountBalance}}
+                  </div>
+                  <ng-template #Zero >
+                    -${{accountBalance}} 
+                  </ng-template>
+                </strong></div>
+            </div>
+           
+            <!-- <div class="col-sm-12 col-md-7 text-right">
+              <ul class="customerDetails">
+                <li><strong>Entered By:</strong><span>EHW</span></li>
+                <li><strong>Date:</strong><span>27 jan, 2008 11:00</span></li>
+                <li><strong>Last Updated By:</strong><span>EHW</span></li>
+                <li><strong>Date:</strong><span>27 jan, 2008 11:00</span></li>
+              </ul>
+            </div> -->
+           
+            <div class="col-sm-12 col-md-3">
+            
+              <div class="form-group actionBtn toggleAct text-right">
+                <!-- <a routerLink ="../../jobs/addjob" class="btn primary-btn comBtn mr-1">Save & Create Job</a>
+                <button type="button" class="btn primary-btn comBtn mr-1">Save</button> -->
+                <a (click)="OnCreateJob()" class="btn primary-btn comBtn mr-0">Add Jobs</a>
+                <!-- <a [routerLink] ="customer" class ="btn primary-btn comBtn mr-0"> Back</a> -->
+              </div>
+            </div>
+          </div>
+          
+            <div class="row">
+              <div class="col-sm-12">
+                <mat-tab-group [(selectedIndex)]="selectedIndex" (selectedTabChange)="tabChanged($event)">
+                  <mat-tab label="Customer" #tabGroup>
+                    <br>
+                    <app-EditDetails (sendTabValue)="saveTabValue($event)" ></app-EditDetails>
+                  </mat-tab>
+                  <mat-tab label="Contacts"> 
+                    <br>
+                    <app-EditContact></app-EditContact>
+                   </mat-tab>
+                   <mat-tab label="Job Details"> 
+                    <br>
+                    <app-EditJobs></app-EditJobs>
+                    </mat-tab>
+                    <!-- <mat-tab label="Invoices"> 
+                    <br>
+                    <app-CusInvoices></app-CusInvoices>
+                   </mat-tab> -->
+                  <mat-tab label="Paid Payments"> 
+                    <br>
+                    <app-cusPayment></app-cusPayment>
+                   </mat-tab>
+                    <mat-tab label="Audits"> 
+                    <br>
+                    <app-audit></app-audit>
+                    </mat-tab> 
+                </mat-tab-group>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-spin-clockwise" [fullScreen] = "true">
+  <p style="color: white" > Loading... </p>
+</ngx-spinner> -->

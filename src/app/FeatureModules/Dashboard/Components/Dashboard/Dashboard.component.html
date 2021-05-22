@@ -1,0 +1,98 @@
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="loginWrapper">
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <h2>Dashboard</h2>
+            </div>
+            <div class="col-sm-12 col-md-6">
+              <div class="form-group customSearch">
+                <input class="form-control" type="text" (keyup.enter)="searchFilter($event.target.value)"
+                  placeholder="Search by Customer Name">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <!-- , Customer Address, Job Address -->
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-sm-12 col-md-6 col-lg-3">
+              <a routerLink="../customer/NewCustomer" class="dbActionBtn">
+                <span class="dbIcon bg-danger text-white">
+                  <mat-icon>account_circle</mat-icon>
+                </span>
+                <span class="dbText">New Customer</span>
+              </a>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+              <a routerLink="../customer/NewJob" class="dbActionBtn">
+                <span class="dbIcon bg-success text-white">
+                  <mat-icon>work</mat-icon>
+                </span>
+                <span class="dbText">New Job</span>
+              </a>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+              <a routerLink="../reports" class="dbActionBtn">
+                <span class="dbIcon bg-info text-white">
+                  <mat-icon>list_alt</mat-icon>
+                </span>
+                <span class="dbText">Reports</span>
+              </a>
+            </div>
+            
+            <div class="col-sm-12 col-md-6 col-lg-3">
+              <a routerLink="../maintenance/settings" class="dbActionBtn">
+                <span class="dbIcon bg-secondary text-white">
+                  <mat-icon>settings</mat-icon>
+                </span>
+                <span class="dbText">Maintenance</span>
+              </a>
+            </div>
+          </div>
+          
+
+          <div class="row mt-4">
+            <!-- Chart 1 -->
+            <div class="col-sm-12 col-md-6">
+              <div id="chart" style="text-align:center" *ngIf = "chartOptions.series">
+                <apx-chart [series]="chartOptions.series"
+                 [chart]="chartOptions.chart"
+                 [yaxis]="chartOptions.yaxis"
+                 [xaxis]="chartOptions.xaxis" 
+                 [labels]="chartOptions.labels" 
+                 [stroke]="chartOptions.stroke"
+                 [title]="chartOptions.title"
+                 [dataLabels]="chartOptions.dataLabels"
+                 [fill]="chartOptions.fill"
+                 [tooltip]="chartOptions.tooltip"   >
+                </apx-chart>
+              </div>
+            </div>
+            <!-- Chart 2 -->
+            <div class="col-sm-12 col-md-6">
+              <div id="chart2" style="text-align:center" *ngIf = "chartOptions2.series">
+                <apx-chart 
+                 [series]="chartOptions2.series"
+                 [chart]="chartOptions2.chart"
+                 [xaxis]="chartOptions2.xaxis"
+                 [dataLabels]="chartOptions2.dataLabels" 
+                 [grid]="chartOptions2.grid" 
+                 [stroke]="chartOptions2.stroke"
+                 [title]="chartOptions2.title"
+                 >
+                </apx-chart>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-spin-clockwise" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>

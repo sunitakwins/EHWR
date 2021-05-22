@@ -1,0 +1,22 @@
+.mat-tab-group{
+    position: relative;
+    ::ng-deep .mat-tab-header{
+        position: relative;
+        .mat-tab-label-container{
+            .mat-tab-list{
+                position: relative;
+                .mat-ink-bar{
+                    background-color: #04773B;
+                  }   
+            }
+        }
+    }
+    ::ng-deep .mat-tab-body-wrapper{
+      .mat-tab-body{
+          .mat-tab-body-content{
+            overflow: hidden;
+          }
+      }
+    }
+}
+

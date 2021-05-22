@@ -1,0 +1,155 @@
+<div class="modal fade" id="moveJob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" >Move Job to another Customer</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="moveJobForm" (ngSubmit)="onSubmit()">
+		<div class="modal-body">
+			<!-- <div class="bgShadow">
+				<div class="row">
+					<div class="col-sm-12"><h2>From</h2></div>
+					<div class="col-sm-12 col-md-6">
+						<div class="form-group">
+							<label>Customer</label>
+							<div class="form-group typeableWrapper">
+				<input class="form-control" disabled type="text" formControlName="toCustomerName">
+				
+							</div>
+						</div>
+					</div>					
+				</div>
+			</div> -->
+			<div class="bgShadow">
+				<div class="row">
+					<div class="col-sm-12"><h2>From</h2></div>
+					<div class="col-sm-12">
+						<div class="form-group">
+							<label>Customer</label>
+							<div class="form-group typeableWrapper">
+				             <input class="form-control" disabled type="text" formControlName="toCustomerName">
+							</div>
+						</div>
+					</div>					
+				</div>
+				<div class="row">
+					<div class="col-sm-12 col-md-6">
+						<div class="form-group">
+							<label>Address 1</label>
+							<input class="form-control" disabled type="text" formControlName="toAddress1">
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="form-group">
+							<label>Address 2</label>
+							<input class="form-control" disabled type="text" formControlName="toAddress2">
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="form-group">
+							<label>Address 3</label>
+							<input class="form-control" disabled type="text" formControlName="toAddress3">
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="form-group">
+							<label>Suburb</label>
+							<input class="form-control" disabled type="text" formControlName="toSuburbName">
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="form-group">
+							<label>State</label>
+							<input class="form-control" disabled type="text" formControlName="toState">
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="form-group">
+							<label>Postal Code</label>
+							<input class="form-control" disabled type="text" formControlName="toPostalCode">
+						</div>
+					</div>
+				</div>
+      </div>
+      
+     
+
+			<div class="bgShadow">
+				<div class="row">
+					<div class="col-sm-12"><h2>To</h2></div>
+					<div class="col-sm-12">
+						<div class="form-group">
+							<label>Customer<sup>*</sup></label>
+							<div class="form-group typeableWrapper">
+							<input id="searchCustomer" type="text" matInput  placeholder="Search by customer name" 
+							formControlName="searchDetail" aria-label="Number" class="form-control"
+								[matAutocomplete]="auto" (keyup)="searchFilter($event.target.value)">
+							<mat-autocomplete #auto="matAutocomplete"
+							(optionSelected)='bindCustomerData($event.option.value)' >
+								<mat-option *ngFor="let res of allSearch" [value]="res">
+								{{res.customerName}}/  {{res.address1}}, {{res.suburbName}}, {{res.state}}-{{res.postCode}} 
+								
+								</mat-option>
+							</mat-autocomplete>
+							<div class="help-block" *ngIf="moveJobForm.get('searchDetail').invalid && moveJobForm.get('searchDetail').touched">
+								<p>Search Customer</p>
+							  </div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					
+					<div class="col-sm-12 col-md-6">
+						<div class="form-group">
+							<label>Address 1</label>
+							<input class="form-control" type="text" disabled formControlName="fromAddress1">
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="form-group">
+							<label>Address 2</label>
+							<input class="form-control" type="text" disabled formControlName="fromAddress2">
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="form-group">
+							<label>Address 3</label>
+							<input class="form-control" type="text" disabled formControlName="fromAddress3">
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="form-group">
+							<label>Suburb</label>
+							<input class="form-control" type="text" disabled formControlName="fromSuburb">
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="form-group">
+							<label>State</label>
+							<input class="form-control" type="text" disabled formControlName="fromState">
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="form-group">
+							<label>Postal Code</label>
+							<input class="form-control" type="text" disabled formControlName="fromPostCode">
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button"  class="btn primary-btn comBtn" data-dismiss="modal" (click)="closeDialog()">Cancel</button>
+        <button type="submit"   class="btn primary-btn comBtn">Save</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>

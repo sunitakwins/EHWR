@@ -1,0 +1,109 @@
+<div id="home" class="tab-pane fade in active show">
+  <!-- <h4>Items</h4> -->
+  <div class="bgShadow tableesponsive mt-4">
+    <div class="row">
+      <div class="col-sm-12 col-md-5 ">
+        <div class="form-group">
+          <label>Search Items</label>
+          <input type="text" placeholder="Search by Item Name" class="form-control"
+            (keydown.enter)="searchJobs($event.target.value)" (keyup)="empty($event.target.value)">
+        </div>
+      </div>
+
+      <div class="col-sm-12 col-md-7">
+        <div class="actionBtn  text-right">
+          <button type="button" class="btn primary-btn comBtn" (click)="addItemModal()">Add New Items</button>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="table-responsive">
+          <!-- infinite-scroll
+          [infiniteScrollDistance]="scrollModel.scrollDistance"
+          [infiniteScrollUpDistance]="scrollModel.scrollUpDistance"
+          [infiniteScrollThrottle]="scrollModel.throttle"
+          (scrolled)="loadMore()" -->
+          <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)"
+            class="mat-elevation-z8">
+            <ng-container matColumnDef="checkbox">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element">
+                <div class="csRadioBtn form-group">
+                  <label class="radioBtn checkBox">
+                    <input type="checkbox" name="Types">
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="itemName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Name</th>
+              <td mat-cell *matCellDef="let element">
+                <a style="color: #137d59;text-decoration: none; cursor: pointer;"
+                  (click)="onEditItem(element)">{{element.itemName}}</a>
+              </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="itemDescription">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+              <td mat-cell *matCellDef="let element">{{element.itemDescription}} </td> 
+            </ng-container>
+   
+            <ng-container matColumnDef="itemPartsName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header > Item Parts Type </th>
+              <td mat-cell *matCellDef="let element">{{element.itemPartName}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="customerTypeName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Type </th>
+              <td mat-cell *matCellDef="let element">
+                <div *ngFor ="let index of element.itemPrice | jsonParse">
+                 {{ index.CustomerTypeName}}
+                </div>  
+              </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="price_exTax">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
+              <td mat-cell *matCellDef="let element">
+                <div *ngFor ="let index of element.itemPrice | jsonParse">
+                  ${{ index.UnitPrice}}
+                 </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="effectiveDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+              <td mat-cell *matCellDef="let element">{{element.effectiveDate | date: 'dd-MM-yyyy'}} </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="Action">
+              <th mat-header-cell *matHeaderCellDef> Action </th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-button color="warn" matTooltip="Delete" (click)="openDialog(element)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"  (click) ="OnSelectedRow(row)" ></tr>
+
+          </table>
+        </div>
+        <!-- <div *ngIf="result.length === 0">
+          <h4>No records found!</h4>
+        </div>  -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-spin-clockwise" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>

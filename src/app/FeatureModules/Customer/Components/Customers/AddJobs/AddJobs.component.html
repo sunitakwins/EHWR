@@ -1,0 +1,303 @@
+<section [class.innerTabbingData]="innerTabbingData">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="loginWrapper mb-0">
+          <form [formGroup]="addJobsForm" (ngSubmit)="onSubmit()">
+            <div class="col-sm-12 mb-2 text-center" *ngIf="!hideSearch">
+              <div class="customerNameCol">Customer:<span class="labelNo">
+                <strong class="jobId">{{customerName}} </strong></span>
+              </div>
+             
+            </div>
+            <div class="row">
+              <div class="col-sm-12 col-md-3">
+                <h2>Job Details </h2>
+                <nav aria-label="breadcrumb" *ngIf="!hideSearch">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a routerLink="../jobs">Job</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">New job</li>
+                  </ol>
+                </nav>
+              </div>
+
+              <div class="col-sm-12 col-md-9">
+                <div class="form-group d-flex align-items-center justify-content-end">
+                  <span class="labelNo" *ngIf="JobOrderId"><label class="mb-0">Job No.</label> <strong class="jobId">
+                      #{{JobOrderId}}</strong></span>
+                  <button type="submit" *ngIf="!isUpdatingJob" (click)="onSaveAndCreateItem()"
+                    class="btn primary-btn comBtn">
+                    Save Job
+                  </button>
+                  <button type="submit" *ngIf="isUpdatingJob" [disabled]="btnDisable" (click)="onSaveAndCreateItem()"
+                    class="btn primary-btn comBtn">
+                    Update Job
+                  </button>
+                  <button class="btn primary-btn comBtn ml-1" *ngIf="backBtn" (click)="onBack()">Back</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">  
+                   <div class="row">
+                     <div class="col-sm-12 col-md-8">
+                      <div class="form-group" *ngIf="searchDisabled">
+                        <label>Customer Name</label>
+                        <input type="text" matInput  placeholder="Search by customer name" aria-label="Number"
+                          class="form-control" (keyup)="searchFilter($event.target.value)" [matAutocomplete]="auto"
+                          formControlName="searchDetail">
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)='bindData($event.option.value)'>
+                          <mat-option *ngFor="let res of allsearch" [value]="res" (click) = "afterSelectCustomer(res)"> 
+                            {{res.customerName | titlecase}} / {{res.address1}}, {{res.suburbName}}, {{res.state}}-{{res.postCode}}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </div>
+                     </div>
+                     <div class="col-sm-12 col-md-4 d-flex align-items-end">
+                      <div class="form-group" >
+                        <button (click)="refreshData()"  
+                        class="btn primary-btn comBtn mb-0">New Customer</button >
+                      </div>
+                     </div>
+                   </div>
+
+                    <div class="form-group">
+                      <label>Owner Name</label>
+                      <input class="form-control" type="text" formControlName="ownerName" placeholder="Owner Name">
+                    </div>
+
+                    <div class="form-group">
+                      <label>Customer Ref No.</label>
+                      <input class="form-control" type="text" formControlName="customerContactReference"
+                       placeholder="Customer ref no.">
+                    </div>
+
+                   
+                    <div class="row">
+                      <div class="col-sm-12 col-md-12">
+                        <h3 class="subTitle">Job Address
+                          <div class="alertCheck ml-2">
+                            <div class="csRadioBtn form-group mb-0">
+                              <label class="radioBtn checkBox mb-0">Same as customers
+                                <!-- <input type="checkbox" [disabled]="btnDisable" [checked]="isChecked"
+                                  (change)="onChange()" name="Types"> -->
+                                  <input type="checkbox" formControlName="sameAsCustomer" [disabled]="btnDisable" 
+                                  (change)="onChange($event)" >
+                                <span class="checkmark"></span>
+                              </label>
+                            </div>
+                          </div>
+                          <!--div class="alertCheck"><input type="checkbox" [checked]="isChecked"
+                          (change)="onChange()" name="Types"> <span class="ml-1">Same as Customers</span>
+                      </div-->
+                        </h3>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label>Address 1<sup>*</sup></label>
+                      <input class="form-control" type="text" formControlName="address1" placeholder="Address 1"
+                        required>
+                      <div class="help-block"
+                        *ngIf="submitted || addJobsForm.get('address1').invalid && addJobsForm.get('address1').touched">
+                        <p>Address is required</p>
+                      </div>
+                    </div>
+                    <!-- value="{{result[0].jobAddress}}" -->
+                    <div class="form-group">
+                      <label>Address 2</label>
+                      <input class="form-control" type="text" formControlName="address2" placeholder="Address 2">
+                    </div>
+                    <div class="form-group">
+                      <label>Address 3</label>
+                      <input class="form-control" type="text" formControlName="address3" placeholder="Address 3">
+                    </div>
+                    <div class="form-group">
+                      <label>Suburb<sup>*</sup></label>
+
+                      <input matInput class="form-control" name="suburb" placeholder="Suburb" [matAutocomplete]="suburb"
+                        formControlName="suburb" (keyup)="filterSuburb($event.target.value)">
+                      <mat-autocomplete #suburb="matAutocomplete" [displayWith]="displaySuburb.bind(this)">
+                        <mat-option *ngFor="let suburb of allSuburb" [value]="suburb">
+                          {{suburb.suburb}}/ {{suburb.state}}-{{suburb.postCode}}
+                        </mat-option>
+                      </mat-autocomplete>
+                      <div class="help-block"
+                        *ngIf="addJobsForm.get('suburb').invalid && addJobsForm.get('suburb').touched">
+                        <p>Suburb is required</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12 col-md-7">
+                        <div class="form-group">
+                          <label>State<sup>*</sup></label>
+                          <input type="text" class="form-control" formControlName="state" placeholder="State">
+                          <div class="help-block"
+                            *ngIf="addJobsForm.get('state').invalid && addJobsForm.get('state').touched">
+                            <p>State is required</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 col-md-5">
+                        <div class="form-group">
+                          <label>Post Code<sup>*</sup></label>
+                          <input class="form-control removeArrow" type="number" formControlName="postCode"
+                            placeholder="Post Code">
+                          <div class="help-block"
+                            *ngIf="addJobsForm.get('postCode').invalid && addJobsForm.get('postCode').touched">
+                            <p>Post Code is required</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="col-sm-12 col-md-6">
+                    <div class="form-group">
+                      <label>Status<sup>*</sup></label>
+                      <select class="form-control" formControlName="statusId" placeholder="Status"
+                        (change)="onSelectCompleteStatus($event.target.value)">
+                        <option *ngFor="let status of showStatus" value="{{status.globalCodeId}}">
+                          {{status.codeName}}
+                        </option>
+                      </select>
+                      <div class="help-block"
+                        *ngIf=" submitted || addJobsForm.get('statusId').invalid && addJobsForm.get('statusId').touched">
+                        <p>Status is required</p>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label>CC Invoice To <span class ="labelmsg"> (only 3 emails are allowed)</span> </label> 
+                      <div class="form-control d-flex control-tags">
+                        <mat-chip-list #chipListContact>
+                          <mat-chip *ngFor="let fruit of contactFruits;let indx=index; co" [selectable]="selectable"
+                            [removable]="removable" (removed)="removeContact(fruit,indx)" matTooltip ="{{fruit.email}}">
+                            {{fruit.email}}
+                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                          </mat-chip>
+  
+                          <input placeholder="Search by Contact email"  #contactEmail 
+                          formControlName="contactEmail"
+                            [matAutocomplete]="autoContactList" [matChipInputFor]="chipListContact"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                            (matChipInputTokenEnd)="addContact($event)"
+                             (keyup)="searchContact($event.target.value)" (click)="searchContact($event.target.value)">
+                             
+                        </mat-chip-list>
+  
+                        <mat-autocomplete #autoContactList="matAutocomplete" (optionSelected)="selectedContact($event)">
+                          <mat-option *ngFor="let item of filterContactsList(allFruitsContact)" [value]="item">
+                            {{item.email}}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </div>
+                    </div>
+                 
+                    <div class="form-group">
+                      <label>Job Description</label>
+                      <div class="useFieldIcon">
+                        <textarea class="form-control smheightFix" formControlName="jobOrderDescription"
+                          placeholder="Job Description"></textarea>
+                      </div>
+                    </div>
+                    <div class="form-group pt2">
+                      <label>Page No.<sup>*</sup></label>
+                      <input class="form-control removeArrow" type="number" formControlName="pageNo"
+                        placeholder="Page No." required>
+                      <div class="help-block"
+                        *ngIf="submitted || addJobsForm.get('pageNo').invalid && addJobsForm.get('pageNo').touched">
+                        <p>Page No. is required</p>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label id="employee">Employee<sup>*</sup></label>
+                      <div class="form-control d-flex control-tags">
+                        <mat-chip-list #chipList>
+                          <mat-chip *ngFor="let fruit of fruits;let indx=index;" [selectable]="selectable"
+                            [removable]="removable" (removed)="remove(fruit,indx)">
+                            {{fruit.employeeName}}
+                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                          </mat-chip>
+
+                          <input placeholder="Add Employees"  #employees formControlName="employees" 
+                            [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                            (matChipInputTokenEnd)="add($event)" (keyup)="searchEmployee($event.target.value)">
+                        </mat-chip-list>
+
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                          <mat-option *ngFor="let item of filterList(allFruits)" [value]="item">
+                            {{item.employeeName}}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </div>
+
+                      <div class="help-block"
+                        *ngIf="addJobsForm.get('employees').invalid && addJobsForm.get('employees').touched">
+                        <p>Employee Required</p>
+                      </div>
+                    </div>
+
+
+                    <div class="form-group">
+                      <label>Completed Date <sup *ngIf="hideValidation">*</sup></label>
+                      <input type="text" style="visibility: hidden;" id="labelCompletedDate">
+                      <div class="datePickerCol f-flex">
+                        <input class="form-control" formControlName="completedDate" id="onCompleteDate" matInput
+                          [matDatepicker]="picker" [max]="tomorrow" placeholder="dd/mm/yyyy" readonly>
+                        <div class="pickerIconCol">
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker>
+                        </div>
+                      </div>
+                      <div class="help-block"
+                        *ngIf="addJobsForm.get('completedDate').invalid && addJobsForm.get('completedDate').touched">
+                        <p>Completed Date is required</p>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Date Tank Installed</label>
+                      <div class="datePickerCol f-flex">
+                        <input class="form-control" formControlName="tankDateInstalled" matInput [matDatepicker]="pick"
+                          placeholder="dd/mm/yyyy" readonly>
+                        <div class="pickerIconCol">
+                          <mat-datepicker-toggle matSuffix [for]="pick"></mat-datepicker-toggle>
+                          <mat-datepicker #pick></mat-datepicker>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-sm-12 mt-2">
+                <div class="form-group actionBtn text-right mb-0">
+                  <button type="submit" (click)="onSaveAndCreateItem()"  *ngIf="!isUpdatingJob"
+                    class="btn primary-btn comBtn">
+                    <span > Save Job </span>
+                  </button>
+                  <button type="submit" [disabled]="btnDisable" (click)="onSaveAndCreateItem()" *ngIf="isUpdatingJob" 
+                    class="btn primary-btn comBtn" >
+                  <span *ngIf="isUpdatingJob" >Update Job </span>  
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-spin-clockwise" [fullScreen]="true">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>

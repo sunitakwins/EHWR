@@ -1,0 +1,29 @@
+table {
+    width: 100%;
+  }
+
+  th.mat-sort-header-sorted {
+    color: black;
+  }
+
+  ::ng-deep .mat-checkbox .mat-checkbox-frame {
+    border-color: grey;
+  }
+  
+  ::ng-deep .mat-checkbox-checked .mat-checkbox-background {
+    background-color: #04773B !important;
+  }  
+  .innerTabbingData .container .loginWrapper {
+    box-shadow: none;
+    margin-top: 15px !important;
+    padding: 0;
+}
+
+.none{
+  display: none;
+}
+
+.disable {
+  background-color: #e9ecef;
+  color:black;
+}

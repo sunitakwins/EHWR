@@ -1,0 +1,236 @@
+<!-- (ngSubmit)="onSubmit()" -->
+<form [formGroup]="detailsForm"  *ngIf ="detailsForm" onsubmit="saveButton.disabled = true?true: false">
+  <div class="row">
+    <div class="col-sm-12 col-md-6">
+      <div class="form-group">
+        <label>Customer Name <sup>*</sup></label>
+        <input class="form-control" type="text" placeholder="Customer Name" 
+        (keyup) ="checkExistingCustomer($event)"   *ngIf ="isUpdatingContact== false" formControlName="customerName" id="searchCust" required>
+
+        <input class="form-control" type="text"  *ngIf ="isUpdatingContact" placeholder="Customer Name" 
+        formControlName="customerName"  required>
+
+        <div class="help-block" *ngIf=" detailsForm.get('customerName').invalid && detailsForm.get('customerName').touched">
+          <p>Customer Name is required</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-3">
+      <div class="form-group">
+        <label>Preferred Invoice Method
+        </label>
+        <div class="csRadioBtn invoiceMethod d-flex">
+          <label class="radioBtn" *ngFor="let res of invoiceMethodArr">{{res.codeName}}
+            <input type="radio" [value]="res.globalCodeId" name="invoiceMethod" 
+            (change) ="onInvoiceChange(res.globalCodeId)" formControlName="invoiceMethod" *ngIf ="res.globalCodeId">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-3">
+      <div class="form-group">
+        <label>Type</label>
+        <div class="csRadioBtn invoiceMethod d-flex">
+          <label class="radioBtn" *ngFor="let res of customerType">{{res.codeName}}
+            <input type="radio" [value]="res.globalCodeId" name="customerType" 
+            formControlName="customerType" *ngIf ="res.globalCodeId">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-sm-12 col-md-6">
+          <div class="form-group">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <label class="mb-0">Email <sup *ngIf="hideValidation">*</sup></label>
+              <div class="csRadioBtn form-group mb-0">
+                <label class="radioBtn checkBox mb-0">Set as default email
+                  <input type="checkbox" name="Types" formControlName= "defaultEmail">
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+            </div>
+            <input class="form-control" type="email" placeholder="Email" formControlName="email">
+            <!-- <div class="help-block" *ngIf="detailsForm.get('email').invalid && detailsForm.get('email').touched">
+              <p>Email is required</p>
+              </div> -->
+              <div class="help-block" *ngIf="(detailsForm.get('email').invalid && detailsForm.get('email').touched) || detailsForm.get('email').dirty">
+                <div *ngIf="detailsForm.get('email').errors?.required">
+                <p>Email address is required</p>
+                </div>
+                <div *ngIf="detailsForm.get('email').errors?.email && detailsForm.get('email').dirty">
+                  <p>Email must be a valid email address</p>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 mt-1" >
+          <div class="form-group">
+            <label>Contact No. <sup></sup></label>
+            <input class="form-control" type="text" formControlName ="telephoneNo" mask="(00) 0000 0000"  >
+          <div *ngIf="(detailsForm.get('telephoneNo').hasError('minlength') || detailsForm.get('telephoneNo').hasError('maxlength'))">
+            <div class="help-block" *ngIf="detailsForm.get('telephoneNo').hasError('minlength') && detailsForm.get('telephoneNo').touched">
+              <p >Min 10 digit</p>
+            </div>
+          </div>
+        </div>
+        
+        </div> 
+        
+       <div class="col-sm-12 col-md-6 mt-1"  *ngIf ="isUpdatingContact">
+          <div class="form-group">
+            <label>Account Balance </label>
+            <div class="form-control font-weight-bold disableCol" >
+              <div *ngIf="accountBal != 0">-${{accountBal}}</div>
+              <div *ngIf="accountBal == 0">${{accountBal}}</div>
+            </div>
+          </div>
+       </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-6" formGroupName="address">
+      <h3 class="subTitle">Street Address</h3>
+      <div class="form-group">
+        <label>Address 1<sup>*</sup></label>
+        <input class="form-control" type="text" formControlName="address1" placeholder="Address 1" required>
+        <div class="help-block" *ngIf="detailsForm.get('address.address1').invalid && detailsForm.get('address.address1').touched">
+          <p>Address is required</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Address 2</label>
+        <input class="form-control" type="text" formControlName="address2" placeholder="Address 2">
+
+      </div>
+      <div class="form-group">
+        <label>Address 3</label>
+        <input class="form-control" type="text" formControlName="address3" placeholder="Address 3">
+
+      </div>
+      <div class="form-group">
+        <label>Suburb<sup>*</sup></label>
+        <input matInput placeholder="Suburb" class="form-control" name="suburb" [matAutocomplete]="suburb"
+          formControlName="suburb" 
+          (keyup)="filterSuburb($event.target.value)" [attr.disabled]="IsTextBoxDisabled?'true':null" required>
+        <mat-autocomplete #suburb="matAutocomplete" [displayWith]="displaySuburb.bind(this)">
+          <mat-option *ngFor="let suburb of allSuburb" [value]="suburb">
+            {{suburb.suburb}}/ {{suburb.state}}-{{suburb.postCode}}
+          </mat-option>
+        </mat-autocomplete>
+        <div class="help-block" *ngIf="detailsForm.get('address.suburb').invalid && detailsForm.get('address.suburb').touched">
+          <p>Suburb is required</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-7">
+          <div class="form-group">
+          <label>State <sup>*</sup></label>
+          <input type="text" class="form-control" formControlName="state" placeholder="State">
+          <div class="help-block" *ngIf="detailsForm.get('address.state').invalid && detailsForm.get('address.state').touched">
+          <p>State is required</p>
+          </div>
+          </div>
+          </div>
+          <div class="col-sm-12 col-md-5">
+          <div class="form-group">
+          <label>Post Code <sup>*</sup></label>
+          <input class="form-control removeArrow" type="number" formControlName="postCode" placeholder="Post Code">
+          <div class="help-block" *ngIf="detailsForm.get('address.postCode').invalid && detailsForm.get('address.postCode').touched">
+          <p>PostCode is required</p>
+          </div>
+          </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- Postal Address start-->
+
+    <div class="col-sm-12 col-md-6" formGroupName="postal">
+      <h3 class="subTitle"> Postal Address 
+        <div class="csRadioBtn form-group mb-0">
+          <label class="radioBtn checkBox mb-0">Same as Street
+            <input type="checkbox" name="Types" [checked]="false" (change)="AddrsCheck($event)" 
+            formControlName ="sameAsStreet">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </h3>
+      <div class="form-group">
+        <label>Address 1<sup>*</sup></label>
+        <input class="form-control" type="text" formControlName="postaladdress1" placeholder="Address 1" required>
+        <div class="help-block" *ngIf="detailsForm.get('postal.postaladdress1').invalid && detailsForm.get('postal.postaladdress1').touched" >
+          <p>Address is required</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Address 2</label>
+        <input class="form-control" type="text" formControlName="postaladdress2" placeholder="Address 2">
+
+      </div>
+      <div class="form-group">
+        <label>Address 3</label>
+        <input class="form-control" type="text" formControlName="postaladdress3" placeholder="Address 3">
+
+      </div>
+      <div class="form-group">
+        <label>Suburb<sup>*</sup></label>
+        <div class="form-group">
+          <input matInput placeholder="Suburb" class="form-control" name="suburb" [matAutocomplete]="suburb1"
+            formControlName="suburbPostal" 
+            (keyup)="filterPostalSuburb($event.target.value)" required>
+          
+          <mat-autocomplete #suburb1="matAutocomplete" [displayWith]="displaySuburbPostal.bind(this)">
+            <mat-option *ngFor="let suburb1 of allSuburbPostal" [value]="suburb1">
+              {{suburb1.suburb}}/ {{suburb1.state}}-{{suburb1.postCode}}
+            
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+        <div class="help-block" *ngIf="detailsForm.get('postal.suburbPostal').invalid && detailsForm.get('postal.suburbPostal').touched">
+          <p>Suburb is required</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-7">
+          <div class="form-group">
+            <label>State <sup>*</sup></label>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="State" formControlName="postalState">
+              <div class="help-block" *ngIf="detailsForm.get('postal.postalState').invalid && detailsForm.get('postal.postalState').touched">
+                <p>State is required</p>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-5">
+          <div class="form-group">
+            <label>Post Code <sup>*</sup></label>
+            <input class="form-control removeArrow" type="number" placeholder="Post Code" formControlName="postalPostcode">
+            <div class="help-block" *ngIf="detailsForm.get('postal.postalPostcode').invalid && detailsForm.get('postal.postalPostcode').touched">
+              <p>PostCode is required</p>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 mt-2">
+      <div class="form-group actionBtn toggleAct text-right">
+    <button *ngIf="!hideSearch" type="button" class="btn primary-btn comBtn"(click)="onSaveAndCreateJob(true)"  > 
+          <!-- Save & Create Job -->
+          {{isUpdatingContact ? 'Update & Create Job': 'Save & Create Job'}}</button> &nbsp;
+        <button type="button" class="btn primary-btn comBtn"  [disabled]="btnDisable" 
+        (click)="onSaveAndCreateJob()" name="saveButton"  >
+           <!-- Save -->
+           {{isUpdatingContact ? 'Update Customer': 'Save Customer'}}
+          </button>
+      </div>
+    </div>
+  </div>
+</form>
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-spin-clockwise" [fullScreen] = "true">
+  <p style="color: white" > Loading... </p>
+</ngx-spinner>

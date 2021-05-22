@@ -1,0 +1,130 @@
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="loginWrapper">
+          <div class="row">
+            <div class="col-md-6 col-sm-12">
+              <h2>Reports</h2>
+            </div>
+            <div class="col-sm-12 col-md-6 text-right">
+              <div class="form-group">
+                <div class="actionBtn">
+                  <a routerLink="../customer/NewJob" class="btn primary-btn comBtn">Add Jobs</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6">
+              <div class="form-group mb-0">
+                <label>Customer Type</label>
+                <div class="csRadioBtn invoiceMethod d-flex">
+                  <label class="radioBtn" *ngFor="let res of allCustomerType">{{res.codeName}}
+                    <input type="radio" name="csType" (change)="getCustomerTypeId(res.globalCodeId)" 
+                    [value]="res.globalCodeId" [checked]=true *ngIf ="allCustomerType">
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+              </div>
+              <div class="table-responsive popupTable">
+                <table [dataSource]="dataSource" class="table mat-elevation-z8" mat-table *ngIf ="dataSource">
+
+                  <!-- Job Type Column -->
+                  <ng-container matColumnDef="reportName">
+                    <th *matHeaderCellDef mat-header-cell>Type</th>
+                    <td *matCellDef="let element" mat-cell>
+                      <a style="cursor: pointer; color: #137d59;" (click)="onSelectReport(element)">
+                        {{element.reportName}}</a>
+                    </td>
+                  </ng-container>
+
+                  <!-- Dates Required Column -->
+                  <ng-container matColumnDef="dateRequired">
+                    <th *matHeaderCellDef mat-header-cell>Date required?</th>
+                    <td *matCellDef="let element" mat-cell>
+                      <span *ngIf="element.dateRequired == true">Yes</span>
+                      <span *ngIf="element.dateRequired == false">No</span>
+                    </td>
+                  </ng-container>
+
+                  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+                  <tr *matRowDef="let row; columns: displayedColumns;" mat-row
+                  (click)="selectedRow = selectedRow === row ? null : row" [ngClass]="{ 'selected': row === selectedRow }"></tr>
+                </table>
+              </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6 mrTop">
+              <form class="row">
+                <!-- <div class="col-sm-12 col-md-6">
+                  <div class="mb-4 printCheck">
+                    <label class="radioBtn">Default Printer
+                      <input type="radio" name="csType">
+                      <span class="checkmark"></span>
+                    </label>
+                    <label class="radioBtn">Print Preview
+                      <input type="radio" name="csType">
+                      <span class="checkmark"></span>
+                    </label>
+                    <label class="radioBtn mb-0">Export to Excel
+                      <input type="radio" name="csType">
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                </div> -->
+                <div class="col-sm-12 col-md-6">
+                  <div class="actionBtn">
+                    <button type="button" *ngIf="defaultBtn" (click)="printDefault()" class="btn primary-btn comBtn">Print Report</button>
+
+                    <button type="button" *ngIf="jobExceptionPrintBtn" id="inputprintbutton1" (click)="jobException.print()" class="btn primary-btn comBtn">Print Report</button>
+                    
+                    <button type="button" *ngIf="jobTypePrintBtn" id="inputprintbutton2" (click)="jobType.print()" class="btn primary-btn comBtn">Print Report</button>
+                    
+                    <button type="button" *ngIf ="jobCompletedPrintBtn" id ="inputprintbutton3" (click) ="jobCompleted.print()" class="btn primary-btn comBtn">Print Report</button>
+                    
+                    <button type="button" *ngIf ="invoicePaidPrintBtn "id ="inputprintbutton4" (click)="invoicePaid.print()" class="btn primary-btn comBtn">Print Report</button>
+                    
+                    <button type="button" *ngIf="tankInstalledDateBtn" id="inputprintbutton15" (click)="tankInstalledDate.print()" class="btn primary-btn comBtn">Print Report</button>
+                    
+                    <button type="button" *ngIf="jobsByEmployeeBtn" id="inputprintbutton12" (click)="jobByEmployee.print()" class="btn primary-btn comBtn">Print Report</button>
+                    
+                    <button type="button" *ngIf ="invoiceNotPaidPrintBtn" id="inputprintbutton6" (click)="invoiceNotPaid.print()" class="btn primary-btn comBtn"> Print Report </button>
+
+                    <button type="button" *ngIf ="invoiceSentPrintBtn" id="inputprintbutton10" (click)="invoiceSent.print()" class="btn primary-btn comBtn"> Print Report </button>
+
+                    <button type="button" *ngIf ="invoiceNotSentPrintBtn" id="inputprintbutton9" (click)="invoiceNotSent.print()" class="btn primary-btn comBtn"> Print Report </button>
+
+                    <button type="button" *ngIf ="invoiceOverDuePrintBtn" id="inputprintbutton5" (click)="invoiceOverDue.print()" class="btn primary-btn comBtn"> Print Report </button>
+
+                    <button type="button" *ngIf ="invoiceStatementPrintBtn" id ="inputprintbutton7" (click)="invoiceStatement.print()" class="btn primary-btn comBtn"> Print Report </button>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-12">
+                  <app-JobType #jobType [jobTypeboolean]="jobTypeboolean"></app-JobType>
+                  <app-JobCompleted #jobCompleted [jobCompletedboolean]= "jobCompletedboolean"></app-JobCompleted>
+
+                  <app-InvoicesPaid #invoicePaid [invoicePaidBoolean] ="invoicePaidBoolean"></app-InvoicesPaid>
+                  <app-InvoiceNotPaid #invoiceNotPaid [invoiceNotPaidBoolean] ="invoiceNotPaidBoolean"></app-InvoiceNotPaid>
+
+                  <app-InvoiceSent #invoiceSent [invoiceSentBoolean] ="invoiceSentBoolean"></app-InvoiceSent>
+                  
+                  <app-JobByEmployee #jobByEmployee [jobByEmployeeBoolean]="jobByEmployeeBoolean"></app-JobByEmployee>
+
+                  <app-InvoiceStatement #invoiceStatement [invoiceStatementBoolean] ="invoiceStatementBoolean"></app-InvoiceStatement>
+
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-JobException #jobException [jobExceptionList]="jobExceptionList" class="d-none"></app-JobException>
+  <app-TankInstalledDate #tankInstalledDate [tankInstalledDateList]="tankInstalledDateList" class="d-none"></app-TankInstalledDate>
+  <app-InvoiceNotSent #invoiceNotSent [invoiceNotSentList] ="invoiceNotSentList" class="d-none"></app-InvoiceNotSent>
+  <app-InvoiceOverDue #invoiceOverDue  [invoiceOverDueList] ="invoiceOverDueList" class ="d-none"></app-InvoiceOverDue>
+</section>
+
+<!-- Print Report -->
+

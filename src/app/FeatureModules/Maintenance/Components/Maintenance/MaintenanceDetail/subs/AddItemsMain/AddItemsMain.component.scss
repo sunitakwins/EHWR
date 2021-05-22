@@ -1,0 +1,26 @@
+.actionBtn {
+    padding: 24px 0 0 0;
+}
+table {
+    width: 100%;
+  }
+  
+  th.mat-sort-header-sorted {
+    color: black;
+  }
+  ::ng-deep.mat-dialog-container {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+td{
+  &.cdk-column-itemDescription{
+    max-width: 300px;
+  }
+}
+
+// td{
+//   &.cdk-column-price_exTax{
+//     min-width: auto;
+//   }
+// }

@@ -1,0 +1,14 @@
+table {
+    width: 100%;
+  }
+
+  th.mat-sort-header-sorted {
+    color: black;
+  }
+
+
+  
+::ng-deep.mat-dialog-container {
+    background-color: transparent !important;
+    box-shadow: none !important;    
+}

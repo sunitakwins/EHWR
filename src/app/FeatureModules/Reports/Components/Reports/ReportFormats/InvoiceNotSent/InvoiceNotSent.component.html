@@ -1,0 +1,54 @@
+<!-- print div -->
+<section id="printDivInvoiceNotSent">
+
+  <div class="container pb-3">
+    <div class="pagebreak loginWrapper">
+
+        <div class="headerWrapper">
+            <div class="row">
+              <div class="col-sm-12 col-md-6">
+                  <div class="addressWrapper1">
+                    <h3>Invoice Not Sent</h3>
+                  </div>
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                  <div class="table-responsive removeLastBorder">
+                    <table  class="table ">
+                      <thead>
+                        <tr>
+                          <td>Page</td>
+                          <td>Invoice</td>
+                          <td>Customer</td>
+                          <td>Job Date</td>
+                          <td>Due Date</td>
+                          <td>Amount</td>
+                          <td>Date Paid</td>
+                          <td>Amount Paid</td>
+                        </tr>
+                        <!-- <tr>
+                          <th colspan="4">210 Days Overdue</th>
+                        </tr> -->
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let data of invoiceNotSentList">
+                          <td>{{data.pageNo}}</td>
+                          <td>{{data.invoiceId}}</td>
+                          <td>{{data.customerName}}  <br> {{data.customerAddress}} </td>
+                          <td>{{data.completedDate}}</td>
+                          <td>{{data.dueDate}}</td>
+                          <td>{{data.amountInvoice}}</td>
+                          <td>{{data.paymentDate}}</td>
+                          <td>{{data.amountPayment}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</section>

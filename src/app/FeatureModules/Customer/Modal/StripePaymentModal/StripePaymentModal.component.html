@@ -1,0 +1,90 @@
+<div class="modal fade" id="moveJob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog smallModal" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"> Payment Method </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="stripeForm" (ngSubmit)="onSubmit()">
+      <div class="modal-body smHeight">
+        <!-- <div> Amount Invoice :   for Invoice no. : </span> -->
+        <div mat-dialog-content>
+
+            <!-- <div class="form-group">
+              <label>Email</label>
+              <input type="text" class="form-control" formControlName = "email" placeholder="Email" required/>
+              <div class="help-block"
+                *ngIf="(stripeForm.get('email').invalid && stripeForm.get('email').touched) || stripeForm.get('email').dirty">
+                <div *ngIf="stripeForm.get('email').errors?.required">
+                  <p>Email address is required</p>
+                </div>
+                <div *ngIf="stripeForm.get('email').errors?.email && stripeForm.get('email').dirty">
+                  <p>Email must be a valid email address</p>
+                  </div>
+              </div> 
+            </div> -->
+
+            <div class="form-group">
+              <label>Name On Card <sup>*</sup></label>
+              <input type="text" class="form-control" formControlName="cardName" placeholder="Name On Card" required/>
+              <div class="help-block"
+                      *ngIf="stripeForm.get('cardName').invalid && stripeForm.get('cardName').touched">
+                      <p>Card Name is required</p>
+                    </div>
+            </div> 
+
+            <div class="form-group">
+              <label>Card Number <sup>*</sup></label>
+              <!-- <input id="cc-number" class="form-control " formControlName="cardNumber" 
+               placeholder="Card Number"
+               type="tel" autocomplete="cc-number" ccNumber> -->
+               <input type ="text" class ="form-control " formControlName ="cardNumber" mask ="0000 0000 0000 0000"
+                placeholder="Card Number" autocomplete="cc-number" ccNumber required>
+                <div class="help-block"
+                      *ngIf="stripeForm.get('cardNumber').invalid && stripeForm.get('cardNumber').touched">
+                      <p>Card Number is required</p>
+                    </div>
+            </div>
+
+            <div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Expiry Date <sup>*</sup></label>
+                    <input id="cc-exp-date" mask="00/0000" class="form-control "formControlName="expirationDate" placeholder="MM/YYYY"
+                     type="text" autocomplete="cc-exp" ccExp required>
+                     <div class="help-block"
+                      *ngIf="stripeForm.get('expirationDate').invalid && stripeForm.get('expirationDate').touched">
+                      <p> Expiry Date is required</p>
+                    </div>
+                  </div> 
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>CVC <sup>*</sup></label>
+                    <input id="cc-csc"  mask="000" class="form-control" formControlName="cvv" placeholder="CVV" type="text" autocomplete="cc-cvc" ccCvc required>
+                    <!-- <input type="tel" type="tel" formControlName="cvv" placeholder="CVV"autocomplete="cc-cvc" id="cc-csc" ccCvc> -->
+                    <div class="help-block"
+                      *ngIf="stripeForm.get('cvv').invalid && stripeForm.get('cvv').touched">
+                      <p>CVV is required</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          
+            <button type="submit" class="btn comBtn col-md-12"> 
+             Pay ${{data.PaymentForm.controls.amount.value}}           
+            </button>
+           
+
+         
+        </div>
+      </div>
+     </form>  
+    </div>
+  </div>
+</div>

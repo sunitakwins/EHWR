@@ -1,0 +1,88 @@
+<div class="col-sm-12 col-md-12">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8"  *ngIf ="dataSource"
+  matSort #sort="matSort" matSortDisableClear 
+  (matSortChange)="sortData($event)">
+    <ng-container matColumnDef="jobOrderId">
+      <th mat-header-cell *matHeaderCellDef  >Job Id </th>
+      <td mat-cell *matCellDef="let element">
+         <!-- <a style="color: #137d59;text-decoration: none;"> -->
+          #{{element.jobOrderId}}
+         <!-- </a>  -->
+        </td>
+    </ng-container>
+   
+    <ng-container matColumnDef="jobCreatedDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header ="jobCreatedDate" > Job Created Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.jobCreatedDate | date: 'dd-MM-yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="jobCompletedDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header ="jobCompletedDate" > Job Completed Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.completedDate | date: 'dd-MM-yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="invoiceSendDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header ="invoiceSendDate"> Invoice Send Date </th>
+      <td mat-cell *matCellDef="let element">
+        <div *ngIf ="element.invoiceSendDate > '0001-01-01T00:00:00' ? element.invoiceSendDate : null ">
+          {{element.invoiceSendDate | date: 'dd-MM-yyyy'}}
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="paymentTaken">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header ="paymentTaken" > Payment Taken Date </th>
+      <td mat-cell *matCellDef="let element"> 
+        <div *ngIf ="element.paymentTaken > '0001-01-01T00:00:00' ? element.paymentTaken : null ">
+          {{element.paymentTaken | date: 'dd-MM-yyyy'}}
+        </div>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="invoiceDeleted">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header ="invoiceDeleted" > Invoice Deleted Date </th>
+      <td mat-cell *matCellDef="let element">
+        <div *ngIf ="element.invoiceDeleted > '0001-01-01T00:00:00' ? element.invoiceDeleted : null ">
+          {{element.invoiceDeleted | date: 'dd-MM-yyyy'}} 
+         </div>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="paymentDeleted">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header ="paymentDeleted" > Payment Deleted Date </th>
+      <td mat-cell *matCellDef="let element">
+        <div *ngIf ="element.paymentDeleted > '0001-01-01T00:00:00' ? element.paymentDeleted : null ">
+          {{element.paymentDeleted | date: 'dd-MM-yyyy'}}
+        </div> 
+        </td>
+    </ng-container>
+
+    <!--<ng-container matColumnDef="lastModifiedByDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header ="lastModifiedByDate" > Last Modified Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.lastModifiedByDate | date}} </td>
+    </ng-container> -->
+
+    
+    <ng-container matColumnDef="lastModifiedByDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header ="lastModifiedByDate" > Last Modified Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.lastModifiedByDate | date: 'dd-MM-yyyy'}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="lastModifiedBy">
+      <th mat-header-cell *matHeaderCellDef> Last Modified By </th>
+      <td mat-cell *matCellDef="let element"> {{element.lastModifiedBy}} </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="jobModule">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="jobModule" >Job Module </th>
+      <td mat-cell *matCellDef="let element"> {{element.jobModule}} </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    
+  </table>
+</div>
+<div *ngIf="notFoundData" class="col-sm-12 col-md-12 text-center noDataFound">
+  <b>No record found</b>
+</div>

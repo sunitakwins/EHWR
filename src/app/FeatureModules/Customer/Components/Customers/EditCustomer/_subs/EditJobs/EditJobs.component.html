@@ -1,0 +1,221 @@
+<section>
+  <div class="col-sm-12 col-md-12">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort #sort="matSort" matSortDisableClear
+      (matSortChange)="sortData($event)">
+  
+      <ng-container matColumnDef="jobOrderId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="jobOrderId">Job No. </th>
+        <td mat-cell *matCellDef="let element">
+          <a matTooltip="Edit" (click)="onEditJob(element)"
+            style="color: #137d59;text-decoration: none; cursor: pointer;">
+            #{{element.jobOrderId}} </a>
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="completion_Date">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="completedDate"> Completed Date </th>
+        <td mat-cell *matCellDef="let element"> {{element.completedDate | date: 'dd-MM-yyyy' }} </td>
+      </ng-container>
+  
+  
+      <ng-container matColumnDef="pageNo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="pageNo"> Page No. </th>
+        <td mat-cell *matCellDef="let element"> {{element.pageNo}} </td>
+      </ng-container>
+  
+  
+      <ng-container matColumnDef="address1">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="address1"> Address </th>
+        <td mat-cell *matCellDef="let element"> {{element.address1}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="invoiceStatus">
+        <th mat-header-cell *matHeaderCellDef> Invoices </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-button color="primary" id="inputprintbutton1" (click)="print(element.invoiceId,element.jobInvoiceStatus, $event )"
+            [disabled]="printInvoice" title="Download PDF/Print">
+            <mat-icon>print</mat-icon>
+            <!-- (click)="print(element.invoiceId)" -->
+          </button>
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let element">{{element.invoiceStatus}}</td>
+      </ng-container>
+  
+  
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Action </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-button matTooltip="Move Job" (click)="openMoveJobDialog(element, $event)">
+            <mat-icon>shuffle</mat-icon>
+            <!-- [disabled]="element.jobInvoiceStatus == true" -->
+          </button>
+          <button mat-button color="warn" matTooltip="Delete" (click)="onDeleteContact(element, $event)">
+            <!-- [disabled]="element.jobInvoiceStatus == true" -->
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click) ="OnSelectedRow(row)"></tr>
+  
+    </table>
+  </div>
+  <div *ngIf="notFoundData" class="col-sm-12 col-md-12 text-center noDataFound">
+    <b>No Record Found</b>
+  </div>
+  <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-spin-clockwise" [fullScreen]="true">
+    <p style="color: white"> Loading... </p>
+  </ngx-spinner>
+</section>
+
+<!-- Invoice Print Start -->
+<section class="taxInvoice d-none" id="printDiv"  [class.show]="show" *ngIf ="newArr">
+  <div>
+    <table cellpadding="0" cellspacing="0" > 
+      <thead>
+        <div *ngFor="let printData of newArr; let i = index;" >
+          <tr>
+            <th>
+              <div class="tiWrapper">
+                <div class="tiLeftCol">
+                  <h5>Emergency Hot Water Repairs (Kingsford) Pty. Ltd.</h5>
+                  <div class="tiLeftInnerWrap">
+                    <div class="tiLogo"><img src="/ehwr//assets/images/tax-invoice-logo.jpg" alt="images"></div>
+                    <div class="tiContentWrap">
+                      <div class="tiContent">
+                        <p>87 Bunnerong Rd. Kingsford, NSW, 2032</p>
+                        <p class="redColor">Ph: 02 9344 6602 Fax: 02 9344 9529</p>
+                        <p>Bondi: Cnr Curlewis & Old South Head Rd,</p>
+                        <p>Bondi: 2026</p>
+                        <p class="redColor">Ph: 02 9365 4533</p>
+                        <p>ewhr@bigpond.com</p>
+                        <p>www.emergencyhotwaterrepairs.com.au</p>
+                        <p>ABN: 78 003 998 329 Lic No. 284905c</p>
+                      </div>
+                      <div class="tiPriceMatch"><img src="/ehwr/assets/images/price-match.jpg" alt="images"></div>
+                    </div>
+                  </div>
+                  <h6>Proudly servicing the eastern suburbs of Sydney for over 30 years</h6>
+                </div>
+                        
+              </div>            
+            </th>
+            <th>
+              <div class="tiRighttCol">
+                <img src="/ehwr/assets/images/micky-images.jpg" alt="images">
+                <p class="redColor">Don't Be A Bunny, <br>Don't Run Out Of Hot Water</p>
+              </div>	
+            </th>
+          </tr>
+          <tr>
+            <th colspan="2" align="left" valign="center"><div class="redColor mdText"><span>Accredited Rheem Service Agents</span><img src="/ehwr/assets/images/raheem-logo.jpg" alt="images"></div></th>
+          </tr>
+        </div>
+      
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="2">
+            <div class="tableBodyContent">
+              <div class="tbLeftCol">
+                <div class="dateWrapper">
+                  <div>
+                    <strong>Job Date  : </strong>{{completedDate | date: 'dd/MM/yyyy'}}
+                  </div>
+                </div>
+                <div class="addressWrapper">
+                  <p><strong>Accounts Payable:</strong></p>
+                  <p><strong>
+                    <p >{{invoiceTo}}</p>
+                    <p>{{customerAddress}}</p>
+                  </strong></p>
+                </div>
+                <div class ="addressWrapper" *ngIf ="customerContactReference > -1">
+                  <strong>Customer ref no. :</strong> &nbsp; {{customerContactReference}}
+                </div>
+              </div>
+              <div class="tbRightCol">						
+                <div class="invoiveIdWrapper">
+                  <h1>Tax Invoice</h1>
+                  <p>Tax Invoice #{{invoiceId}}</p>
+                  <p>{{dueDate | date: 'dd/MM/yyyy'}}</p>
+                  <!-- <p>{{completedDate | date: 'dd/MM/yyyy' }}</p> -->
+                </div>
+                <div class="jobAddressWrapper">
+                  <p class="textJustify"><strong>Job Address:   </strong>
+                    <span style ="margin-left: 5px;">{{jobAddress}} </span></p>
+
+                    <p><strong>Job Done By: </strong>
+                      <span style ="margin-left: 5px;" *ngFor ="let emp of employeeNames">
+                        {{emp.EmployeeName}} </span></p>
+                    <p><strong>Payment Type:  </strong><span> {{paymentMethod}}</span></p>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        
+        <!-- <tr>
+          <td colspan="2">
+            <div class="workComplete">
+              <h3 class="smCaption">WORK COMPLETED:</h3>
+              <p>2012 50L compact leaking from element and relief would replace tank because of its age.</p>
+            </div>
+          </td>
+        </tr> -->
+        
+        <tr >
+          <td colspan="2" >
+            <div class="table-responsive">			
+             <table class="taxInvoiceTable" cellpadding="10" cellspacing="10"> 
+              <thead>
+                <tr>
+                  <th>DESCRIPTION </th>
+                  <th>QTY</th>
+                  <th>UNIT PRICE</th>
+                  <!-- <th>TAX AMOUNT</th> -->
+                  <th>TOTAL PRICE</th>
+                </tr>
+              </thead>
+              <tbody >
+                <tr *ngFor="let data of itemRecordData; let i = index;">
+                  <td>{{data.JobItemDescription}} </td>
+                  <td>{{data.Quantity}}</td>
+                  <td>${{data.UnitPrice}}</td>
+                  <!-- <td>${{data.GST}}</td> -->
+                  <td>${{data.TotalPrice}}</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td colspan="4">
+                    <ul class="amountTotal">
+                      <li><strong>SUBTOTAL:</strong> <span>${{subTotal}}</span></li>
+                      <li><strong>GST:</strong> <span>${{GST}}</span></li>
+                      <li><strong>TOTAL:</strong> <span>${{total}}</span></li>
+                      <li><strong>PAID:</strong> <span>${{paidAmount}}</span></li>
+                      <li class="dueBalance"><strong>BALANCE DUE:</strong> <span>${{balanceDue}}</span></li>
+                    </ul>
+                  </td>
+                </tr>
+              </tbody>
+             </table>		
+            </div>		
+          </td>
+        </tr>		
+      </tbody>
+    </table>
+    </div>  
+      <div class="banlDetails">
+      <p><strong>Our Bank Account Details:</strong></p>
+      <p>Name: Commonwealth Bank</p>
+      <p>BSB: 06 2121</p>
+      <p>Account No: 28061210</p>
+      </div>
+</section>
+
+<!-- Invoice Print End -->

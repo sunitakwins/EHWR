@@ -1,0 +1,89 @@
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="loginWrapper">
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <h2>Items</h2>
+            </div>
+                <div class="col-sm-12 col-md-6 text-right">
+                <div class="form-group">
+                  <div class="actionBtn">
+                    
+                    <a routerLink="../AddItems" class="btn primary-btn comBtn mr-1">Add Item</a>	
+                    <a routerLink="../NewJob" class="btn primary-btn comBtn ">Add Jobs</a>	
+                  </div>
+                </div>
+              </div>
+          </div>
+          <form class = "mt-4">
+            <div class = "row">
+              <div class = "col-sm-12 col-md-6">
+                <div class = "form-group">
+                  <label>Item Search</label>
+                  <div class = "form-group typeableWrapper">
+                    <input type = "text" class = "form-control" placeholder = "Search by Item name"
+                    (keydown.enter) = "searchItems($event.target.value)" (keyup) = "empty($event.target.value)">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+         
+
+            <div infinite-scroll
+            [infiniteScrollDistance]="scrollModel.scrollDistance"
+            [infiniteScrollUpDistance]="scrollModel.scrollUpDistance"
+            [infiniteScrollThrottle]="scrollModel.throttle"
+            (scrolled)="loadMore()" class="table-responsive">
+            <table mat-table [dataSource] = "dataSource" matSort   class = "mat-elevation-z8">
+
+                           <!-- Position Column -->
+                           <ng-container matColumnDef = "jobOrderId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Job No.</th>
+                            <td mat-cell *matCellDef = "let element"> <a style="color: #04773B; font: weight 10; text-decoration: none;cursor: pointer;">#{{element.jobOrderId}}</a>  </td>
+                          </ng-container>
+            
+                          <ng-container matColumnDef = "jobOrderItemId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Item No.</th>
+                            <td mat-cell *matCellDef = "let element"> {{element.jobOrderItemId}} </td>
+                          </ng-container>
+            
+                          <!-- Name Column -->
+                          <ng-container matColumnDef = "itemName">
+                            <th mat-header-cell *matHeaderCellDef > Item Name</th>
+                            <td mat-cell *matCellDef = "let element"><a style="color: #04773B; font: weight 10; text-decoration: none;cursor: pointer;">{{element.itemName}}</a>  </td>
+                          </ng-container>
+
+              <!-- Weight Column -->
+              <ng-container matColumnDef = "unitPrice">
+                <th mat-header-cell *matHeaderCellDef > Unit Price</th>
+                <td mat-cell *matCellDef = "let element"> {{element.unitPrice}} </td>
+              </ng-container>
+
+              <!-- Symbol Column -->
+              <ng-container matColumnDef = "totalPrice">
+                <th mat-header-cell *matHeaderCellDef > Total Price</th>
+                <td mat-cell *matCellDef = "let element"> {{element.totalPrice}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef = "action">
+                <th *matHeaderCellDef mat-header-cell> Action</th>
+                <td *matCellDef = "let element" mat-cell>
+                  <button color = "warn" mat-button (click) = "onDeleteItem(element)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef = "displayedColumns"></tr>
+              <tr mat-row *matRowDef = "let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

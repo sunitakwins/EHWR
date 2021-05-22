@@ -1,0 +1,9 @@
+.show{
+    display: block !important;
+}
+.dueDateCol{
+    .mat-datepicker-toggle {
+        position: absolute;
+        right: 15px;
+    }
+}

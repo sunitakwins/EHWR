@@ -1,0 +1,19 @@
+.csRadioBtn{
+    .radioBtn {
+        margin-right: 0px;
+        min-width: 120px;
+        margin-bottom: 15px;
+        display: inline-block;
+        input {
+            left: 0;
+        }
+    }
+    span {
+        right: 40px;
+    }
+} 
+
+::ng-deep.mat-dialog-container {
+    background-color: transparent !important;
+    box-shadow: none !important;    
+}

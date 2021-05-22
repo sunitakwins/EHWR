@@ -1,0 +1,17 @@
+.comLightBg {
+  display: block;
+  opacity: 1;
+}
+.modal-content{
+  height: 510px !important;
+}
+
+@media(min-width:992px){
+  .modal-body{
+    height: 380px !important;
+  }
+}
+
+.priceModalTextarea{
+  min-height: 124px!important;
+}

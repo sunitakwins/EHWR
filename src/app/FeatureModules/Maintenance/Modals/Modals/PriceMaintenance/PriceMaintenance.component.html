@@ -1,0 +1,190 @@
+<!-- View Details-->
+<section>
+  <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade comLightBg" role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add/Change Item</h5>
+          <button aria-label="Close" class="close" data-dismiss="modal" type="button" (click)="onCancel()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <form [formGroup]="addItemsForm" (ngSubmit)="onSaveItem()">
+          <div class="modal-body">
+            <div class="bgShadow">
+              <div class="row mt-3">
+                <div class="col-sm-12 col-md-6">
+                  <div class="form-group">
+                    <label>Item Name<sup>*</sup></label>
+                    <input class="form-control" placeholder="Item Name" type="text" formControlName="itemName">
+                    <div class="help-block"
+                      *ngIf=" addItemsForm.get('itemName').invalid && addItemsForm.get('itemName').touched">
+                      <p>Item Name Required</p>
+                    </div>
+                  </div>
+
+             
+
+                  <div class="form-group">
+                    <label>Account Type</label>
+                    <select class="form-control" formControlName="accountId" placeholder="Account Type">
+                      <option *ngFor="let res of allAccountType" value="{{res.globalCodeId}}">
+                        {{res.codeName}}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Price Exclusive of GST for Agent<sup>*</sup></label>
+                    <input class="form-control removeArrow" type="number" formControlName="price_exTaxForAgent"
+                      placeholder="Price Exclusive of GST For Agent">
+                    <div class="help-block"
+                      *ngIf=" addItemsForm.get('price_exTaxForAgent').invalid && addItemsForm.get('price_exTaxForAgent').touched">
+                      <p>Price is Required</p>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Price Exclusive of GST For Private <sup>*</sup></label>
+                    <input class="form-control removeArrow" type="number" formControlName="price_exTaxForPrivate"
+                      placeholder="Price Exclusive of GST For Private">
+                    <div class="help-block"
+                      *ngIf=" addItemsForm.get('price_exTaxForPrivate').invalid && addItemsForm.get('price_exTaxForPrivate').touched">
+                      <p>Price is Required</p>
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label class="fullWidth">Item Type</label>
+                    <label class="radioBtn csRadioBtn" *ngFor="let itemType of allItemType">
+                      {{itemType.codeName}}
+                      <input type="radio" value="{{itemType.globalCodeId}}" formControlName="itemType">
+                      <span class="checkmark"></span>
+                    </label>
+                   </div>
+                  <!-- <div class="form-group">
+                    <label class="fullWidth">Customer Type</label>
+                    <label class="radioBtn csRadioBtn" *ngFor="let customerType of allCustomerType">
+                      {{customerType.codeName}}
+                      <input type="radio" value="{{customerType.globalCodeId}}" formControlName="customerType">
+                      <span class="checkmark"></span>
+                    </label>
+                  </div> -->
+
+                </div>
+                <div class="col-sm-12 col-md-6">
+                  <div class="form-group">
+                    <label>Item Description</label>
+                    <div class="useFieldIcon">
+                      <textarea class="form-control priceModalTextarea" formControlName="itemDescription"
+                        placeholder="Item Description"></textarea>
+                    </div>
+                  </div>
+                  <!-- <div class="form-group">
+                    <label>Price Exclusive of GST<sup>*</sup></label>
+                    <input class="form-control removeArrow" type="number" formControlName="price_exTax"
+                      placeholder="Price Exclusive of GST">
+                    <div class="help-block"
+                      *ngIf=" addItemsForm.get('price_exTax').invalid && addItemsForm.get('price_exTax').touched">
+                      <p>Price is Required</p>
+                    </div>
+                  </div> -->
+
+                  <!-- <div class="form-group">
+                    <label>Date Effective</label>
+                    <input class="form-control" formControlName="effectiveDate" placeholder="Date Effective"
+                      type="Date">
+                  </div> -->
+
+                  <div class="form-group">
+                    <label>Item Parts Type</label>
+                    <select class="form-control" formControlName="itemPartsType" placeholder="Item Parts Type">
+                      <option *ngFor="let res of allItemPartsType" value="{{res.globalCodeId}}">
+                        {{res.codeName}}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <label>Date Effective <sup>*</sup></label>
+                      <!-- <div class="csRadioBtn form-group mb-0" *ngIf="showGrid">
+                        <label class="radioBtn checkBox mb-0">Show List
+                          <input type="checkbox" name="Types" >
+                          <span class="checkmark"></span>
+                        </label>
+                      </div> -->
+                    </div>
+                    
+                    <div class="datePickerCol f-flex">
+                      <input class="form-control" formControlName="effectiveDate" matInput
+                        [matDatepicker]="dateEffective"  placeholder="dd/mm/yyyy" readonly>
+                      <div class="pickerIconCol">
+                        <mat-datepicker-toggle matSuffix [for]="dateEffective"></mat-datepicker-toggle>
+                        <mat-datepicker #dateEffective></mat-datepicker>
+                      </div>
+                    </div>
+                    <div class="help-block" *ngIf="addItemsForm.get('effectiveDate').invalid && addItemsForm.get('effectiveDate').touched">
+                    <p>Date Effective is required</p>
+                    </div>
+                  </div>
+                  <!-- <div class="form-group">
+                    <label class="fullWidth">Item Type</label>
+                    <label class="radioBtn csRadioBtn" *ngFor="let itemType of allItemType">
+                      {{itemType.codeName}}
+                      <input type="radio" value="{{itemType.globalCodeId}}" formControlName="itemType">
+                      <span class="checkmark"></span>
+                    </label>
+                   </div> -->
+                </div>
+                <div class="col-sm-12" *ngIf="showGrid">
+                  <div class="table-responsive popupTable">
+                    <table [dataSource]="dataSource" class="mat-elevation-z8" mat-table >
+                      <ng-container matColumnDef="price_exTax">
+                        <th *matHeaderCellDef mat-header-cell >Price</th>
+                        <td *matCellDef="let element" mat-cell>
+                          <a style="color: #137d59;text-decoration: none;cursor: pointer;">{{element.price_exTax}}</a></td>
+                      </ng-container>
+                  
+                      <ng-container matColumnDef="effectiveDate">
+                        <th *matHeaderCellDef mat-header-cell >Effective Date</th>
+                        <td *matCellDef="let element" mat-cell> {{element.effectiveDate | date}} </td>
+                      </ng-container>
+                  
+                      <ng-container matColumnDef="action">
+                        <th *matHeaderCellDef mat-header-cell> Action</th>
+                        <td *matCellDef="let element" mat-cell>
+                          <button type="button" (click)="deleteEffectivePrice(element)" color="warn" matTooltip="Delete" mat-button>
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+                  
+                      <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+                      <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn primary-btn comBtn" data-dismiss="modal" type="button" (click)="onCancel()">
+              Cancel
+            </button>
+            <button type="submit" class="btn primary-btn comBtn">Save</button>
+          </div>
+        </form>
+
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+

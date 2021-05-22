@@ -1,0 +1,72 @@
+.disable {
+    background-color: #e9ecef;
+    color:black;
+}
+.none{
+    display: none;
+}
+.mat-header-cell:first-of-type {
+    padding-left: 0px;
+}
+.mat-cell:first-of-type {
+    padding-left: 0px;
+}
+.mat-cell:last-of-type {
+    padding-right: 0px;
+}
+.mat-column-invoiceNo {
+    flex: 0 0 18% !important;
+    width: 18% !important;
+}
+.mat-column-dateSend {
+    flex: 0 0 18% !important;
+    width: 18% !important;
+}
+.mat-column-dateDue {
+    flex: 0 0 18% !important;
+    width: 18% !important;
+}
+.mat-column-amountDue {
+    flex: 0 0 18% !important;
+    width: 18% !important;
+}
+.mat-column-amountPaid {
+    flex: 0 0 18% !important;
+    width: 18% !important;
+}
+.mat-column-status {
+    flex: 0 0 18% !important;
+    width: 18% !important;
+}
+.mat-column-Action {
+    flex: 0 0 18% !important;
+    width: 18% !important;
+    .mat-button {
+        min-width: auto;
+        padding: 0;
+    }
+}
+
+.mainDivContent {
+    .hide {
+        display: none;
+    }
+}
+
+#printDiv {
+    &.show {
+        display: block !important;
+    }
+}
+
+
+
+// ==============================================================================
+.jobInvoieTable {
+    tr {
+        td {
+            font-size: 13.2px;
+        }
+    }
+}
+

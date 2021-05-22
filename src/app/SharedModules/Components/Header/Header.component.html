@@ -1,0 +1,143 @@
+<header>
+  <div class="container">
+    <div class="row">
+      <nav class="navbar navbar-expand-lg navbar-dark d-flex col-sm-12">
+        <a routerLink="dashboard"><img src="assets/images/logo-wide.png" alt="logo" class="img-fluid logo"></a>
+        <button class="navbar-toggler" (click)="navToggleBtn()" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+          aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span *ngIf="sidebar==false" class="navbar-toggler-icon"></span>
+          <span *ngIf="sidebar==true" class="material-icons cross-icon">
+            add
+          </span>
+        </button>
+        <div class="collapse navbar-collapse" id="basicExampleNav" [class.sidebar]="sidebar">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <div class="d-flex subMenuList">
+                <a class="nav-link" routerLink="customer" (click)="sendIndexVal('customer')">Customers</a>
+                <button mat-icon-button [matMenuTriggerFor]="customer" aria-label="Example icon-button with a menu">
+                  <mat-icon style="color: rgba(255, 255, 255, 0.5);">arrow_drop_down</mat-icon>
+                </button>
+                <mat-menu #customer="matMenu">
+                  <button mat-menu-item routerLink="customer/NewCustomer"  (click)="sendIndexVal('customer')">
+                    <span>New customer</span>
+                  </button>
+                  <button mat-menu-item routerLink="customer">
+                    <span>Search</span>
+                  </button>
+                </mat-menu>
+                </div>
+            </li>
+            <li class="nav-item ">
+              <div class="d-flex subMenuList">
+                <a class="nav-link " routerLink="../customer/jobs" >Jobs</a>
+                <button mat-icon-button [matMenuTriggerFor]="job" aria-label="Example icon-button with a menu">
+                  <mat-icon style="color: rgba(255, 255, 255, 0.5);">arrow_drop_down</mat-icon>
+                </button>
+                <mat-menu #job="matMenu">
+                  <button mat-menu-item routerLink="../customer/NewJob" (click)="sendIndexVal('job')">
+                    <span>New Job</span>
+                  </button>
+                  <button mat-menu-item routerLink="../customer/jobs">
+                    <span>Search</span>
+                  </button>
+                </mat-menu>
+              </div>
+            </li>
+            <!-- <li class="nav-item ">
+              <a class="nav-link" routerLink="../customer/AddItems" (click)="sendIndexVal('item')">Items</a>
+            </li> -->
+            <li class="nav-item ">
+              <!-- <a class="nav-link" routerLink="customer/Invoices" (click)="sendIndexVal('invoice')">Invoices</a> -->
+              <a class ="nav-link "  routerLink ="customer/Invoiceslist"> Invoices</a>
+            </li>
+            <li class="nav-item ">
+              <div class="d-flex subMenuList">
+                <!-- <a class="nav-link" routerLink="customer/payments" (click)="sendIndexVal('payment')">Payments</a> -->
+               <a class="nav-link" routerLink="customer/paymentsList">Payments</a>     
+                <!-- <button mat-icon-button [matMenuTriggerFor]="payment" aria-label="Example icon-button with a menu">
+                  <mat-icon style="color: rgba(255, 255, 255, 0.5);">arrow_drop_down</mat-icon>
+                </button>
+                <mat-menu #payment="matMenu">
+                  <button mat-menu-item routerLink="customer/payments">
+                    <span>New Payments</span>
+                  </button>
+                  <button mat-menu-item>
+                    <span>Add bulk Payments</span>
+                  </button>
+                  <button mat-menu-item>
+                    <span>Search</span>
+                  </button>
+                </mat-menu> -->
+                <!-- <div class="dropdown loginSection desktopView">
+                          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <a class="dropdown-item" href="payments">New Payments</a>
+                          <a class="dropdown-item" href="#">Add Bulk Payment</a>
+                          <a class="dropdown-item" href="#">Search</a>
+                          </div>
+                        </div> -->
+              </div>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link" routerLink="reports">Reports</a>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link" routerLink="maintenance/settings">Maintenance</a>
+            </li>
+            <li class="nav-item">
+              <div class="dropdown loginSection">
+
+                <button mat-icon-button [matMenuTriggerFor]="profile" aria-label="Example icon-button with a menu">
+                  <mat-icon style="color: rgba(255, 255, 255, 0.5);">account_circle</mat-icon>
+                </button>
+                <mat-menu #profile="matMenu">
+                  <button mat-menu-item routerLink="../customer/NewCustomer">
+                    <span>New Customers</span>
+                  </button>
+                  <button mat-menu-item routerLink="../customer/NewJob" (click)="sendIndexVal('job')">
+                    <span>New Job</span>
+                  </button>
+                  <!-- <button mat-menu-item routerLink="../customer/AddItems">
+                    <span>New Item</span>
+                  </button> -->
+                  <!-- <button mat-menu-item routerLink="../invoices">
+                    <span>Search Invoice</span>
+                  </button> -->
+                  <button mat-menu-item (click)="logout()">
+                    <span>Logout</span>
+                  </button>
+                </mat-menu>
+                <!-- <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-user-circle" aria-hidden="true"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" routerLink="customer">New Customers</a>
+                      <a class="dropdown-item" href="new-job">New Job</a>
+                      <a class="dropdown-item" href="add-item">New Item</a>
+                      <a class="dropdown-item" href="search-invoice">Search Invoice</a>
+                      <a class="dropdown-item" href="records-payments">Record Payments</a>
+                      <a class="dropdown-item" href="login">Log Out</a>
+                    </div> -->
+              </div>
+            </li>
+          </ul>
+        </div>
+        <!-- <div class="dropdown loginSection desktopView">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-user-circle" aria-hidden="true"></i>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="new-customer">New Customers</a>
+                  <a class="dropdown-item" href="new-job">New Job</a>
+                  <a class="dropdown-item" href="add-item">New Item</a>
+                  <a class="dropdown-item" href="search-invoice">Search Invoice</a>
+                  <a class="dropdown-item" href="records-payments">Record Payments</a>
+                  <a class="dropdown-item" href="login">Log Out</a>
+              </div>
+            </div> -->
+      </nav>
+    </div>
+  </div>
+</header>

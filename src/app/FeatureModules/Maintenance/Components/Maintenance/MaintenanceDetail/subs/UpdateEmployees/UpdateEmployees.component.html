@@ -1,0 +1,73 @@
+<div class="tab-pane fade in active show" id="home">
+  <!-- <h4 class="mt-4">Update Employees</h4> -->
+  <div class="bgShadow mt-4">
+    <div class="row" [formGroup]="addEmployeeForm">
+      <div class="col-sm-12 col-md-5">
+        <div class="form-group">
+          <label>First name<sup>*</sup></label>
+          <input class="form-control" placeholder="First name" type="text" #firstName [value]="fName"
+          formControlName="firstnameFormControl">
+            <div class="help-block" *ngIf=" addEmployeeForm.get('firstnameFormControl').invalid && addEmployeeForm.get('firstnameFormControl').touched">
+            <p>First Name is required</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-5">
+        <div class="form-group">
+          <label>Last Name<sup>*</sup></label>
+          <input class="form-control" placeholder="Last Name" type="text" #lastName [value]="sName"
+                 formControlName="lastnameFormControl">
+          <div class="help-block" *ngIf=" addEmployeeForm.get('lastnameFormControl').invalid && addEmployeeForm.get('lastnameFormControl').touched">
+          <p>Last Name is required</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-2 mt-2">
+        <label></label>
+        <div class="actionBtn mb-4 text-center">
+          <button class="btn primary-btn comBtn" type="button"
+                  (click)="updateEmployeeData(firstName.value,lastName.value)" *ngIf="isUpdate">Update
+          </button>
+          <button class="btn primary-btn comBtn" type="button"
+                  (click)="saveEmployeeData(firstName.value,lastName.value)" *ngIf="!isUpdate">Save
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table [dataSource]="dataSource" matSort class="mat-elevation-z8" mat-table (matSortChange)="sortData($event)">
+
+        <!-- employeeId Column -->
+        <ng-container matColumnDef="EmployeeId">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header> ID</th>
+          <td *matCellDef="let element" mat-cell><a
+            style="color: #137d59;text-decoration: none;cursor: pointer;"
+            (click)="showUpdateEmployeeData(element)">#{{element.employeeId}}</a></td>
+        </ng-container>
+
+        <!-- employeeName Column -->
+        <ng-container matColumnDef="employeeName">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Employee Name</th>
+          <td *matCellDef="let element" mat-cell> {{element.employeeName}} </td>
+
+        </ng-container>
+
+        <!-- action Column -->
+        <ng-container matColumnDef="action">
+          <th *matHeaderCellDef mat-header-cell> Action</th>
+          <td *matCellDef="let element" mat-cell>
+            <button (click)="onDeleteItem(element)" color="warn" matTooltip="Delete" mat-button>
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedColumns;" (click) ="OnSelectedRow(row)" mat-row></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-spin-clockwise" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner> -->

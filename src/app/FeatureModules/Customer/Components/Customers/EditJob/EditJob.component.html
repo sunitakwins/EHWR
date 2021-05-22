@@ -1,0 +1,214 @@
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="loginWrapper">
+          <form [formGroup]="addJobsForm" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <h2 class="mb-0">Jobs</h2>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a routerLink="../../../jobs">Job</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Edit job</li>
+                </ol>
+              </nav>
+            </div>
+            
+              <div class="col-sm-12 col-md-6">
+                <div class="form-group d-flex align-items-center justify-content-end">
+                  <span class="labelNo"><label class="mb-0">Job No.</label> <strong
+                      class="jobId">#{{id}}</strong></span>
+                  <button type="submit" [hidden]="invoiceStatus" (click)="onSaveAndCreateItem(true)" class="btn primary-btn comBtn mr-1">Update & Add Items</button>
+                  <!-- routerLink="../../items/AddItems" -->
+                  <button type="submit" [hidden]="invoiceStatus" (click)="onSaveAndCreateItem()" class="btn primary-btn comBtn">Update</button>&nbsp;
+                  <button type ="button" class="btn primary-btn comBtn" (click)="onClickBack()">Back</button>
+                </div>
+              </div>
+          </div>
+
+          <div class="row">
+            <!-- <div class="col-sm-12 col-md-6 mt-3">
+              <div class="form-group">
+                <label>Search By customer name and job no.</label>
+                <input type="text" matInput placeholder="Search by " aria-label="Number" class="form-control"
+                (keyup)="searchFilter($event.target.value)"
+                    [matAutocomplete]="auto" >
+                  <mat-autocomplete #auto="matAutocomplete" 
+                  (optionSelected)='bindData($event.option.value)'>
+                    <mat-option *ngFor="let res of allsearch" [value]="res">
+                      #{{res.jobOrderId}} || {{res.customerName}}
+                    </mat-option>
+                  </mat-autocomplete>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+              <div class="form-group">
+                <div class="actionBtn topSpace">
+                  <a routerLink="../../customer/NewCustomer" data-toggle="modal" data-target="#addCustomerPopup"
+                    class="btn primary-btn comBtn mr-1">New Customer</a>
+                </div>
+              </div>
+            </div> -->
+
+            <div class="col-sm-12 col-md-6">
+              <div class="form-group customerNameSection">
+                <label>Customer Name:</label>
+                <b class="csName">{{customerName}}</b>
+              </div> 
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group mb-0">
+                    <label>Owner Name</label>
+                    <input class="form-control" type="text" formControlName="ownerName" placeholder="Owner Name">
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <h3 class="subTitle">Job Address 
+                    <div class="alertCheck">
+                    <!-- <input type="checkbox" [checked]="isChecked" name="Types"> <span
+                        class="ml-1">Same as Customers</span> -->
+                      </div>
+                  </h3>
+                </div>                
+              </div>
+              <div class="form-group">
+                <label>Address 1<sup>*</sup></label>
+                <input class="form-control"  type="text" formControlName="address1" placeholder="Address 1">
+              </div>
+              <!-- value="{{result[0].jobAddress}}" -->
+              <div class="form-group">
+                <label>Address 2</label>
+                <input class="form-control" type="text" formControlName="address2" placeholder="Address 2">
+              </div>
+              <div class="form-group">
+                <label>Address 3</label>
+                <input class="form-control" type="text" formControlName="address3" placeholder="Address 3">
+              </div>
+              <div class="form-group">
+                <label>Suburb</label>
+                <input matInput placeholder="Suburb" class="form-control"
+                   name="suburb"
+                   [matAutocomplete]="suburb"
+                   formControlName="suburb"
+                   (keydown.enter)="searchSuburb($event.target.value)"
+                   (keyup)="filterSuburb($event.target.value)">
+               <mat-autocomplete #suburb="matAutocomplete" [displayWith]="displaySuburb.bind(this)" >
+                  <mat-option *ngFor="let suburb of allSuburb"  [value]="suburb">
+                    {{suburb.suburb}}
+                  </mat-option>
+               </mat-autocomplete>
+              </div>
+              <div class="row">
+                <div class="col-sm-12 col-md-7">
+                  <div class="form-group">
+                    <label>State</label>
+                    <input type="text" class="form-control" formControlName="state">
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-5">
+                  <div class="form-group">
+                    <label>Post Code</label>
+                    <input class="form-control" type="text" formControlName="postCode" placeholder="Post Code">
+                  </div>
+                </div>
+              </div>              
+
+            </div>
+            <div class="col-sm-12 col-md-6">              
+              <div class="form-group">
+                <label>Status</label>
+                <select class="form-control" formControlName="statusId" (change)="onSelectCompleteStatus($event.target.value)">
+                  <option *ngFor="let status of showStatus" value="{{status.globalCodeId}}">
+                    {{status.codeName}}
+                  </option>
+                </select>
+              </div>             
+              <div class="form-group">
+                <label>Job Description</label>
+                <div class="useFieldIcon">
+                  <textarea class="form-control" formControlName="jobOrderDescription"
+                    placeholder="Job Description"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Page No</label>
+                <input class="form-control removeArrow" type="number" formControlName="pageNo" placeholder="Page No">
+              </div>
+              <div class="form-group">
+                <label>Employee</label>
+                <div class="form-control d-flex control-tags">
+                  <mat-chip-list #chipList>
+                    <mat-chip *ngFor="let fruit of fruits;let indx=index;" 
+                    [selectable]="selectable" 
+                    [removable]="removable" 
+                    (removed)="remove(fruit,indx)">
+                      {{fruit.employeeName}}
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input  placeholder="Add Employees"
+                    
+                     #fruitInput formControlName="employees"
+                      [matAutocomplete]="auto" 
+                      [matChipInputFor]="chipList"
+                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes" 
+                     [matChipInputAddOnBlur]="addOnBlur" 
+                     (matChipInputTokenEnd)="add($event)"
+                     (keyup)="searchEmployee($event.target.value)">
+                  </mat-chip-list>
+                <mat-autocomplete #auto="matAutocomplete"  (optionSelected)="selected($event)" >
+                  <mat-option *ngFor="let fruit of allFruits" [value]="fruit">
+                    {{fruit.employeeName}}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+                <!-- <p>{{fruits | json}}</p> -->
+                <!-- <div class="help-block" *ngIf="addJobsForm.get('employees').invalid && addJobsForm.get('employees').touched">
+                  <p>Employee Required</p>
+              </div> -->
+              </div>
+              <div class="form-group">
+                <label>Completed Date</label>
+                <input class="form-control" type="date" formControlName="completedDate">
+              </div>
+
+              <div class="form-group">
+                <label>Date Tank Installed</label>
+                <input class="form-control" type="date" formControlName="tankDateInstalled"
+                  placeholder="Date Tank Installed">
+              </div>
+
+              <!-- <div class="row">
+                <div class="col-sm-12 col-md-6">
+                  <div class="form-group">
+                    <label>Date Tank Installed</label>
+                    <input class="form-control" type="date" formControlName="tankDateInstalled"
+                      placeholder="Date Tank Installed">
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                  <div class="form-group">
+                    <label>Letter Send</label>
+                    <input class="form-control" type="date" formControlName="letterSend">
+                  </div>
+                </div>
+              </div> -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 mt-2">
+              <div class="form-group actionBtn text-right">
+                <button type="submit" [hidden]="invoiceStatus" (click)="onSaveAndCreateItem(true)" class="btn primary-btn comBtn mr-1">Update & Add Items</button>
+                <button type="submit" [hidden]="invoiceStatus" (click)="onSaveAndCreateItem()" class="btn primary-btn comBtn">Update</button>
+              </div>
+            </div>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-spin-clockwise" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner> -->

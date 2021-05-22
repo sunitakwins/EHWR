@@ -1,0 +1,105 @@
+<div class="d-none" [class.show]="jobTypeVal">
+  <form [formGroup]="JobTypePrintForm" >
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-6">
+        <div class="form-group">
+          <label>Date Range </label>
+          <div class="d-flex align-items-center dateRange mb-3 justify-content-between">
+            From<sup style="color: red;"><strong>*</strong></sup>: 
+            <div class="datePickerCol f-flex">
+              <input class="form-control" formControlName="from"  matInput [matDatepicker]="fromDate" placeholder="mm/dd/yyyy"
+                readonly>
+              <div class="pickerIconCol">
+                <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+                <mat-datepicker #fromDate></mat-datepicker>
+              </div>
+              <div class="help-block" *ngIf="JobTypePrintForm.get('from').invalid && JobTypePrintForm.get('from').touched">
+                <p class="mt-4 ml-3 mb-1">Select date</p>
+              </div>
+            </div>
+            
+          </div>
+
+  
+          <div class="d-flex align-items-center dateRange justify-content-between">
+            To<sup style="color: red;"><strong>*</strong></sup>:
+             <div class="datePickerCol f-flex">
+              <input class="form-control" formControlName="to" matInput  [matDatepicker]="toDate" placeholder="mm/dd/yyyy" readonly>
+              <div class="pickerIconCol">
+                <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+                <mat-datepicker #toDate></mat-datepicker>
+              </div>
+              <div class="help-block p-2" *ngIf="JobTypePrintForm.get('to').invalid && JobTypePrintForm.get('to').touched">
+                <p class="ml-2">Select date</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-6">
+        <!-- <div class="form-group">
+          <label>Month</label>
+          <div class="datePickerCol f-flex">
+            <input class="form-control" matInput [matDatepicker]="month" formControlName="month"  placeholder="mm/yyyy"  readonly>
+            <div class="pickerIconCol">
+              <mat-datepicker-toggle matSuffix [for]="month"></mat-datepicker-toggle>
+              <mat-datepicker #month></mat-datepicker>
+            </div>
+          </div>
+        </div> -->
+      </div>
+      <div class="col-sm-12 mb-3">
+        <div class="actionBtn mb-2 mt-2 reportBtn">
+          <button type="button" (click)="clearDate()" class="btn primary-btn comBtn">Clear Dates</button>
+          <!-- <button type="button" class="btn primary-btn comBtn">Clear Filter</button> -->
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- Print div -->
+<section id="jobTypePrintDiv" class="d-none" >
+  <div class="container pb-3">
+    <div class="pagebreak loginWrapper">
+      <header>
+        <div class="headerWrapper">
+            <div class="row">
+              <div class="col-sm-12 col-md-6">
+                  <div class="addressWrapper1">
+                    <h4>Job Type</h4>
+                  </div>
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                  <div class="table-responsive removeLastBorder">
+                    <table  class="table tableBodyScroll">
+                      <thead>
+                        <tr>
+                          <th class="comWidth">ReportType</th>
+                          <th class="comWidth">Count</th>
+                        </tr>
+                      </thead>
+                      <tbody class="boxscroll">
+                        <tr *ngFor="let res of printData;let i=index">
+
+                          <td>{{res.jobItemDescription}}</td>
+                          <td>{{res.itemCount}}</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Total:{{totalRecords}}</strong></td>
+                          <td><strong>{{totalItems}}</strong></td>
+                        </tr>
+                        
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+            </div>
+
+        </div>
+      </header>
+    </div>
+  </div>
+</section>

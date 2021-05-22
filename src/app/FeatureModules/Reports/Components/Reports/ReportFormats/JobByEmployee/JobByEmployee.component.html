@@ -1,0 +1,145 @@
+<div class="d-none" [class.show]="jobByEmpValue1">
+  <form [formGroup]="JobTypePrintForm">
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-6">
+        <div class="form-group">
+          <label>Date Range </label>
+          <div class="d-flex align-items-center dateRange mb-3 justify-content-between">
+            From:<sup style="color: red;"><strong>*</strong></sup>
+            <div class="datePickerCol f-flex">
+              <input class="form-control" formControlName="from" matInput [matDatepicker]="fromDate"
+                placeholder="mm/dd/yyyy" readonly required>
+              <div class="pickerIconCol">
+                <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+                <mat-datepicker #fromDate></mat-datepicker>
+              </div>
+              <div class="help-block"
+                *ngIf="JobTypePrintForm.get('from').invalid && JobTypePrintForm.get('from').touched">
+                <p class="mt-4 ml-3 mb-1">Select date</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center dateRange justify-content-between">
+            To:<sup style="color: red;"><strong>*</strong></sup>
+            <div class="datePickerCol f-flex">
+              <input class="form-control" formControlName="to" matInput [matDatepicker]="toDate"
+                placeholder="mm/dd/yyyy" readonly required>
+              <div class="pickerIconCol">
+                <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+                <mat-datepicker #toDate></mat-datepicker>
+              </div>
+              <div class="help-block" *ngIf="JobTypePrintForm.get('to').invalid && JobTypePrintForm.get('to').touched">
+                <p class="mt-4 ml-3 mb-1">Select date</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-sm-12 col-md-12 col-lg-6">
+        <div class="row">
+          <div class="col-md-7">
+            <div class="form-group">
+              <label>Month</label>
+              <mat-select class="form-control" [(ngModel)]="selectedValue" name="months" formControlName ="months">
+                <mat-option *ngFor="let month of months" [value]="month.value">
+                  {{month.viewValue}}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="form-group">
+              <label>Year</label>
+              <mat-select class="form-control" [(ngModel)]="selectedValue" name="years" formControlName ="years">
+                <mat-option *ngFor="let year of years" [value]="year.value">
+                  {{year}}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+        </div>
+         <div class="form-group">
+          <label>Month</label>
+          <mat-select class="form-control" [(ngModel)]="selectedValue" name="months" formControlName ="months">
+            <mat-option *ngFor="let month of months" [value]="month.value">
+              {{month.viewValue}}
+            </mat-option>
+          </mat-select>
+        </div>
+      </div> -->
+      <div class="col-sm-12 col-md-12">
+        <div class="form-group">
+          <label>Employee</label>
+          <input type="text" matInput placeholder="Search Employee" aria-label="string" class="form-control"
+            formControlName="EmployeeId" [matAutocomplete]="employee" (keyup)="searchEmployee($event.target.value)">
+          <mat-autocomplete #employee="matAutocomplete" [displayWith]="displayEmployee.bind(this)">
+            <mat-option *ngFor="let employee of allEmployees" [value]="employee">
+              {{employee.employeeName}}
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+      </div>
+
+      <div class="col-sm-12 mb-3">
+        <div class="actionBtn mb-2 mt-2 reportBtn">
+          <button type="button" class="btn primary-btn comBtn" (click)="clearDate()">Clear Dates</button>
+          <button type="button" class="btn primary-btn comBtn" (click)="clearFilter()">Clear Filter</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- print -->
+
+<section id="printDivJobsByEmployee" class="d-none">
+
+  <div class="container pb-3">
+    <div class="pagebreak loginWrapper">
+
+      <div class="headerWrapper">
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <div class="addressWrapper1">
+              <h3>Job By Employee</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="table-responsive removeLastBorder">
+              <table class="table ">
+                <thead>
+                  <tr>
+                    <th>Job</th>
+                    <th>Customer</th>
+                    <th>JobAddress</th>
+                    <th>Completed</th>
+                    <th>Job Amt(incl. GST)</th>
+                    <th>Employees</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of jobsByEmployeeData">
+                    <td>{{data.jobOrderId}}</td>
+                    <td>{{data.customerName}}</td>
+                    <td>{{data.jobAddress}}</td>
+                    <td>{{data.completedDate | date}}</td>
+                    <td>{{data.amount}}</td>
+                    <td> 
+                        <div *ngFor="let employee of data.employees | jsonParse">
+                          {{employee.EmployeeName}}
+                        </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

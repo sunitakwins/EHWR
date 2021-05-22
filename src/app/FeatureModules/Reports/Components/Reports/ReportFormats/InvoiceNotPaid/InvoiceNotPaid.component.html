@@ -1,0 +1,132 @@
+<div class="d-none" [class.show]="invoiceNotPaidValue1">
+  <form [formGroup]="JobTypePrintForm" >
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-6">
+        <div class="form-group">
+          <label>Date Range </label>
+          <div class="d-flex align-items-center dateRange mb-3 justify-content-between">
+            From:<sup style="color: red;"><strong>*</strong></sup><div class="datePickerCol f-flex">
+              <input class="form-control" formControlName="from"  matInput [matDatepicker]="fromDate" placeholder="mm/dd/yyyy"
+                readonly required>
+              <div class="pickerIconCol">
+                <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+                <mat-datepicker #fromDate></mat-datepicker>
+              </div>
+              <div class="help-block" *ngIf="JobTypePrintForm.get('from').invalid && JobTypePrintForm.get('from').touched">
+                <p class="mt-4 ml-3 mb-1">Select date</p>
+              </div>
+            </div>
+          </div>
+  
+          <div class="d-flex align-items-center dateRange justify-content-between">
+            To:<sup style="color: red;"><strong>*</strong></sup> <div class="datePickerCol f-flex">
+              <input class="form-control" formControlName="to" matInput [matDatepicker]="toDate" placeholder="mm/dd/yyyy" readonly required>
+              <div class="pickerIconCol">
+                <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+                <mat-datepicker #toDate></mat-datepicker>
+              </div>
+              <div class="help-block" *ngIf="JobTypePrintForm.get('to').invalid && JobTypePrintForm.get('to').touched">
+                <p class="mt-4 ml-3 mb-1">Select date</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-sm-12 col-md-12 col-lg-6">
+        <div class="row">
+          <div class="col-md-7">
+            <div class="form-group">
+              <label>Month</label>
+              <mat-select class="form-control" [(ngModel)]="selectedValue" name="months" formControlName ="months">
+                <mat-option *ngFor="let month of months" [value]="month.value">
+                  {{month.viewValue}}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="form-group">
+              <label>Year</label>
+              <mat-select class="form-control" [(ngModel)]="selectedValue" name="years" formControlName ="years">
+                <mat-option *ngFor="let year of years" [value]="year.value">
+                  {{year}}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+        </div>
+         <div class="form-group">
+          <label>Month</label>
+          <mat-select class="form-control" [(ngModel)]="selectedValue" name="months" formControlName ="months">
+            <mat-option *ngFor="let month of months" [value]="month.value">
+              {{month.viewValue}}
+            </mat-option>
+          </mat-select>
+        </div>
+      </div> -->
+      <div class="col-sm-12 mb-3">
+        <div class="actionBtn mb-2 mt-2 reportBtn">
+          <button type="button"  class="btn primary-btn comBtn"(click)="clearDate()">Clear Dates</button>
+          <!-- <button type="button" class="btn primary-btn comBtn">Clear Filter</button> -->
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- Print div -->
+<section id="InvoiceNotPaidPrintDiv" class="d-none" >
+  <div class="container pb-3">
+    <div class="pagebreak loginWrapper">
+      <header>
+        <div class="headerWrapper">
+            <div class="row">
+              <div class="col-sm-12 col-md-6">
+                  <div class="addressWrapper1">
+                    <h4>Invoice - Not Paid</h4>
+                  </div>
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                  <div class="table-responsive removeLastBorder">
+                    <table  class="table tableBodyScroll1">
+                      <thead>
+                        <tr *ngFor = "let res of displayData">
+                          <th>{{res.column1}}</th>
+                          <th>{{res.column2}}</th>
+                          <th>{{res.column3}}</th>
+                          <th>{{res.column4}}</th>
+                          <th>{{res.column5}}</th>
+                          <th>{{res.column6}}</th>
+                          <th>{{res.column7}}</th>
+                          <th>{{res.column8}}</th>
+                          <th>{{res.column9}}</th> 
+                        </tr>
+                      </thead>
+                      <tbody class="boxscroll">
+                        <tr *ngFor="let data of printData; let i = index">
+                          <td>{{data.page}}</td>
+                          <td>{{data.invoice}}</td>
+                          <td>{{data.customerNamw}}</td>
+                          <td>{{data.jobDate | date}}</td>
+                          <td>{{data.dueDate | date}}</td>
+                          <td>{{data.amountInvoice}}</td>
+                          <td>{{data.outstanding}}</td>
+                        </tr>
+
+                          <tr>
+                            <!-- <td><strong>Total Amount: {{totalAmount}}</strong></td>
+                            <td><strong>Total Amount Paid : {{totalAmountPaid}}</strong></td> -->
+                          </tr>
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+            </div>
+
+        </div>
+      </header>
+    </div>
+  </div>
+</section>

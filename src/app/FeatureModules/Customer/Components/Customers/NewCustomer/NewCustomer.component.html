@@ -1,0 +1,91 @@
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="loginWrapper">
+          <div class="row">
+            <div class="col-sm-12 d-flex flex-sm-row flex-column">
+              <div class="ptBreadcrumb" *ngIf="customerData">
+                <h2 >Customers</h2>
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="customer">Customers</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" *ngIf="hideNewJob">New Customer</li>
+                    <li class="breadcrumb-item active" aria-current="page" *ngIf="!hideNewJob">New Job</li>
+                  </ol>
+                </nav>
+              </div>
+
+              <div class="custData" *ngIf="customerData == false">
+                <div *ngIf="JobId">
+                  <span>Job no. :<strong class="jobId">#{{JobId}} </strong></span>
+                  <span>for</span>
+                </div>
+                <div *ngIf="CusId">
+                  <span (click)="getCusID()" *ngIf="customerName"> Customer :
+                    <strong class="jobId" style="cursor:pointer;">{{ customerName | titlecase}}</strong></span>
+                </div>
+              </div>
+              <div *ngIf="!hideNewJob || !customerData" style="cursor:pointer;">
+                <a routerLink="../NewCustomer" *ngIf="newCusBtn" class="btn primary-btn comBtn newCusBtn d-none">New
+                  Customer</a>
+              </div>
+            </div>
+            <!-- <div class="col-sm-12" >
+              <div class="form-group actionBtn toggleAct text-right" *ngIf ="!hideNewJob || !customerData" style ="cursor:pointer;">
+               <a  routerLink ="../NewCustomer" *ngIf ="newCusBtn" routerLink="../../customer/NewCustomer" class="btn primary-btn comBtn">New Customer</a> 
+              </div>
+            </div> -->
+          </div>
+          <!-- ======================================================================= -->
+          <!-- <p>{{disableContactTab}}</p> -->
+          <div class="row">
+            <div class="col-sm-12">
+              <mat-tab-group  #tabGroup [(selectedIndex)]="selectedIndex" (selectedTabChange)="tabChanged($event)">
+                <mat-tab label="Customer" [disabled]="CusId? false:true">
+                  <br>
+                  <app-Details (sendTabValue)="saveTabValue($event)" [CustIdForUpdate]="CusId" [jobId]="JobId"
+                    (sendCustomerDataValue)="sendCustomerDataValue($event)" [isUpdatingContact]="isUpdatingContact"
+                    [indexVal]="selectedIndex" (setTabIndex)="setTabIndex($event)">
+                  </app-Details>
+                </mat-tab>
+             
+                <mat-tab label="Contacts" [disabled]="CusId? false:true">
+                  <app-Contact (sendCusIdValue)="sendCusIdValue($event)" [CusId]="CusId" [indexVal]="selectedIndex"
+                    (setTabIndex)="setTabIndex($event)" [CustIdForUpdate]="CusId" [JobId]="JobId">
+                  </app-Contact>
+                </mat-tab>
+              
+                <mat-tab label="Job Details" [disabled]="CusId? false:true">
+                  <app-AddJobs (sendTabJobValue)="sendTabJobValue($event)" [isUpdatingJob]="isUpdatingJob"
+                    [customerData]="customerData" (sendCustomerDataValue)="sendCustomerDataValue($event)"
+                    [CusId]="CusId" [indexVal]="selectedIndex" (onCustomerSelection)="selectedUserFromJob($event)"
+                    (sendIndexValue)="sendIndexValue($event)">
+                  </app-AddJobs>
+                </mat-tab>
+                <mat-tab label="Items" [disabled]="JobId? false:true">
+                  <app-AddItems (sendJobIdToInvoiceValue)="sendJobIdToInvoiceValue($event)" [JobId]="JobId"
+                    [indexVal]="selectedIndex" [JobIdFromInvoice]="JobId"></app-AddItems>
+                </mat-tab>
+                <mat-tab label="Invoices" [disabled]="JobIdFromItems? false:true">
+                  <app-invoice (sendJobIdToPaymentValue)="sendJobIdToPaymentValue($event)" [JobId]="JobIdFromItems"
+                    [indexVal]="selectedIndex" (onSelectingJobId)="selectedJobfromInvoices($event)"></app-invoice>
+                </mat-tab>
+                <mat-tab label="Payments" [disabled]="JobIdFromInvoice? false:true">
+                  <app-Payments [JobId]="JobIdFromInvoice" [indexVal]="selectedIndex"></app-Payments>
+                </mat-tab>
+                <mat-tab label="Job Audit" *ngIf="JobId">
+                  <br>
+                  <app-JobAudit></app-JobAudit>
+                </mat-tab>
+              </mat-tab-group>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-spin-clockwise" [fullScreen] = "true">
+  <p style="color: white" > Loading... </p>
+</ngx-spinner> -->

@@ -1,0 +1,48 @@
+.disable {
+  background-color: #e9ecef;
+  color:black;
+}
+.none{
+  display: none;
+}
+
+.labelmsg{
+  color: rgba(0,0,0,0.5);
+}
+
+.mat-form-field + .mat-form-field {
+    margin-left: 8px;
+  }
+
+.help-block p{
+    color: red;
+    padding: 0;  
+} 
+
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.example-option-img {
+  vertical-align: middle;
+}
+
+// input.ng-invalid.ng-touched{
+//     border: 1px solid red;
+// }
+
+mat-dialog-container {
+  .loginWrapper {
+    height: 80vh;
+    overflow: hidden;
+    overflow-y: auto;
+    margin-top: 0;
+  }
+}
+

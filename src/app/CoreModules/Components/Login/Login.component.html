@@ -1,0 +1,38 @@
+<section class="mainScreen">
+  <div class="loginForm">
+    <h3 class="text-center">Login</h3>
+    <div class="loginSection">
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+
+        <div class="form-group">
+          <label>Username<sup>*</sup></label>
+          <input class="form-control" type="text" formControlName="username">
+          <div class="help-block" *ngIf="loginForm.get('username').invalid && loginForm.get('username').touched">
+            <p>Username is required</p>
+          </div>
+        </div>
+        
+
+        <div class="form-group">
+          <label>Password<sup>*</sup></label>
+          <input class="form-control" type="password" formControlName="password">
+          <div class="help-block" *ngIf="loginForm.get('password').invalid && loginForm.get('password').touched">
+            <p>Password is required</p>
+          </div>
+        </div>
+       
+
+        <!-- <div class="csRadioBtn form-group">
+          <label class="radioBtn checkBox">Remember me
+            <input type="checkbox" name="Types">
+            <span class="checkmark"></span>
+          </label>
+        </div> -->
+        <div class="actionBtn text-center mt-4">
+          <!-- <button type="button" class="btn primary-btn comBtn mr-1">Cancel</button> -->
+          <button type="submit" class="btn primary-btn comBtn">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,46 @@
+
+
+<!-- print div -->
+<section id="printDivTank">
+
+  <div class="container pb-3">
+    <div class="pagebreak loginWrapper">
+
+        <div class="headerWrapper">
+            <div class="row">
+              <div class="col-sm-12 col-md-6">
+                  <div class="addressWrapper1">
+                    <h3>Tank installed Date</h3>
+                  </div>
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                  <div class="table-responsive removeLastBorder">
+                    <table  class="table ">
+                      <thead>
+                        <tr>
+                          <td>Date Installed</td>
+                          <td>Customer Name</td>
+                          <td>Address</td>
+                        </tr>
+                        <!-- <tr>
+                          <th colspan="4">210 Days Overdue</th>
+                        </tr> -->
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let data of tankInstalledDateList">
+                          <td>{{data.tankDateInstalled | date}}</td>
+                          <td>{{data.customerName}}</td>
+                          <td>{{data.jobAddress}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</section>

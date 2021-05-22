@@ -1,0 +1,16 @@
+.mat-icon-button {
+    padding: 0;
+    min-width: 0;
+    width: auto;
+    height: auto;
+    flex-shrink: 0;
+    line-height: 40px;
+    border-radius: 50%;
+}
+button:focus {
+    outline: 0px dotted;
+    outline: none;
+}
+.cross-icon{
+    transform: rotate(45deg);
+}
