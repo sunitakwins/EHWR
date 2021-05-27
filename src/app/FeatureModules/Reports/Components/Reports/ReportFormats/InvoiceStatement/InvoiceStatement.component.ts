@@ -5,8 +5,9 @@ import { ReportsService } from 'src/app/FeatureModules/Reports/Services/Reports.
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import * as _moment from 'moment';
-import { Moment} from 'moment';
+import { Moment } from 'moment';
 import { MatDatepicker } from '@angular/material/datepicker';
+import { ExcelService } from 'src/app/FeatureModules/Reports/Services/Excel.service';
 // const moment = _rollupMoment || _moment;
 const moment = _moment;
 
@@ -58,8 +59,10 @@ export class InvoiceStatementComponent implements OnInit {
   date = new FormControl(moment());
   finalDate: string;
   startDate: string;
+  startDate1: string;
+  finalDate1: string;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: FormBuilder, private excelService: ExcelService,
     private reportService: ReportsService) {
 
   }
@@ -70,9 +73,11 @@ export class InvoiceStatementComponent implements OnInit {
       // from : [moment().startOf('month').format(),Validators.required],
       // to: [new Date(), Validators.required],
       // date: new FormControl(moment()),
-      customerId: [null],
+      customerId: [''],
     })
     this.getCustomerBySearch();
+
+
   }
 
 
@@ -81,7 +86,7 @@ export class InvoiceStatementComponent implements OnInit {
     this.cusTypeId = this.invoiceStatementBoolean.custTypeId;
     //console.log('Invoice Paid :',this.jobByEmployeeBoolean);
   }
-  
+
 
   // Month year datepicker function
   chosenYearHandler(normalizedYear: Moment) {
@@ -90,16 +95,16 @@ export class InvoiceStatementComponent implements OnInit {
     this.date.setValue(ctrlValue);
   }
 
+
   chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
     const ctrlValue = this.date.value;
     ctrlValue.month(normalizedMonth.month());
     this.date.setValue(ctrlValue);
     const _month = (normalizedMonth["_i"].month) + 1;
-    this.startDate = normalizedMonth["_i"].date+"/"+_month +"/"+normalizedMonth["_i"].year;
-    const monthYear = normalizedMonth["_i"].year+"-"+_month;
+    this.startDate = normalizedMonth["_i"].date + "/" + _month + "/" + normalizedMonth["_i"].year;
+    const monthYear = normalizedMonth["_i"].year + "-" + _month;
     const days = moment(monthYear, "YYYY-MM").daysInMonth();
-    this.finalDate = days + "/"+ _month +"/"+normalizedMonth["_i"].year;
-    // console.log(finalDate);
+    this.finalDate = days + "/" + _month + "/" + normalizedMonth["_i"].year;
     datepicker.close();
   }
 
@@ -128,8 +133,8 @@ export class InvoiceStatementComponent implements OnInit {
   // clear dates
   clearDate() {
     this.JobTypePrintForm.patchValue({
-      from: [],
-      to: [],
+      // from: [],
+      // to: [],
       // EmployeeId:[],
       // months:[]
     })
@@ -137,270 +142,320 @@ export class InvoiceStatementComponent implements OnInit {
 
   clearFilter() {
     this.JobTypePrintForm.patchValue({
-     customer:[],
+      customer: [],
     })
     this.date = null;
   }
 
+  // get Data
 
-
-  // Print Data
-  print() {
+  getInvoiceStmtData(){
+        // get date at the time of page initialilization
+        const ctrlValue = this.date.value._d;
+        let StartDate1 = ctrlValue.getFullYear() + '/' + (ctrlValue.getMonth() + 1) + '/' + '01';
+        let days = moment(ctrlValue.getMonth(), "YYYY-MM").daysInMonth();
+        let finalDate1 = ctrlValue.getFullYear() + '/' + (ctrlValue.getMonth() + 1) + '/' + days;
     
-    //  const employeeId = this.JobTypePrintForm.value.EmployeeId.employeeId;
-      const customerId = this.JobTypePrintForm.value.customerId;
+    
+        //  api request params 
+        const customerId = this.JobTypePrintForm.value.customerId.customerId;
         const params = {
-          // EmployeeId:(employeeId == null)? -1: employeeId,
-          // CustomerTypeId: (this.cusTypeId != 5 && this.cusTypeId != undefined) ? this.cusTypeId : -1,
-
-          CustomerId : (customerId == null)? -1: customerId,
+          CustomerId: (customerId == null) ? -1 : customerId,
           CustomerTypeId: (this.cusTypeId != 5 && this.cusTypeId != undefined) ? this.cusTypeId : -1,
-          ReportStartDate: moment(new Date(this.startDate)).format('yyyy-MM-DD'),
-          ReportEndDate: moment(this.JobTypePrintForm.value.to).format('yyyy-MM-DD')
+          StartDate: this.startDate == undefined ? StartDate1 : this.startDate,
+          EndDate: this.finalDate == undefined ? finalDate1 : this.finalDate
         }
-
+    
         console.log(params);
-        // if(this.JobTypePrintForm.valid){
+        if (this.JobTypePrintForm.valid) {
           this.reportService.getInvoiceStatement(params).subscribe(res => {
-           
-             console.log(res);
-          //  this.jobsByEmployeeData = res;
-
+            console.log('Invoice Stmt :', res);
+            this.invoiceStatementData = res;
           }, error => {
             console.log(error);
           });
-        // }else{
-        //   const controls = this.JobTypePrintForm.controls
-        //   Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
-        //   return false;
-        // }
-
-//     setTimeout(() => {
-//       let printContents, popupWin, printbutton;
-//       printbutton = document.getElementById('inputprintbutton12').style.display = "none";
-//       printContents = document.getElementById('printDivJobsByEmployee').innerHTML;
-//       popupWin = window.open('', 'top=0,left=0,height=100%,width=auto');
-//       popupWin.document.open();
-//       popupWin.document.write(`
-//     <html>
-//     <head>
-//       <title>Print tab</title>
-//       <style media="print">
-      
-// * {
-// -webkit-print-color-adjust: exact; /*Chrome, Safari */
-// color-adjust: exact;  /*Firefox*/
-// box-sizing: border-box;
-// font-family: Roboto, "Helvetica Neue", sans-serif;
-// }
-// .pagebreak {page-break-after: always;}
-
-//   .page-break  { display: block; page-break-before: always; }
-// .row {
-//   display: flex;
-//   flex-wrap: wrap;
-// }
-// .col-sm-12 {
-// flex: 0 0 100%;
-// max-width: 100%;
-// position: relative;
-// }
-// .col-md-6 {
-//   flex: 0 0 50%;
-//   max-width: 50%;
-//   position: relative;
-// }
-// header {
-//   background-color: transparent;
-// }
-// .loginWrapper {
-//   background-color: rgba(255, 255, 255, 0.97);
-//   padding: 0px;
-//   border-radius: 5px;
-//   margin-top: 0px !important;
-// }
-// .headerWrapper {
-//   padding: 15px;
-// }
-// h4.logoText {
-// margin: 0 !important;
-// line-height: 20px !important;
-// font-size: 1.25rem;
-// padding: 0 !important;
-// }
-// h4.logoText span {
-// font-size: 16px;
-// font-weight: normal;
-// line-height: 18px !important;
-// position: relative;
-// top: 10px;        
-// }
-// span.mickyLogo img {
-// width: 58px;
-// }
-// h6 {
-// font-size: 16px;
-// font-weight: normal;
-// line-height: 18px !important;
-// margin: 0 0 20px !important;
-// padding: 0 !important;
-// }
-// .headerWrapper .invoiceRecipt {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: flex-end;
-//   margin-top: 25px;
-// }
-// td.minWidth {
-// min-width: 280px;
-// }
-// .font-size{
-// font-size: 13px;
-// position: fixed;
-// bottom: 0;
-// padding-bottom: 2rem !important;
-// }
-
-// .addressWrapper p ,.addressWrapper2 p{
-// font-size: 13px;
-// margin: 0 !important;
-// line-height: 18px !important;
-// padding: 0 !important;
-// }
-// .addressWrapper2 {
-// max-width: 470px;
-// text-align: center !important;
-// margin-top: 15px;
-// }
-// .invoiceRecipt{
-// margin-top: 80px;
-// }
-
-// .table-responsive{
-// overflow-x: hidden;
-// }
-// .lgTable.table-responsive{
-// overflow-x: auto;
-// }
-// .table-responsive .table{
-// width : 100% ;
-// }
-
-// .table-responsive .tableBodyScroll td {
-// border-right: 1px solid #ccc;
-// padding: 15px 15px;
-// border-top: none;
-// }
-// .table-responsive .tableBodyScroll tr:last-child td {
-// border-right: 1px solid #ccc;
-// padding: 15px 15px;
-// border-top: 1px solid #ccc;
-// }
-// .removeLastBorder.table-responsive .tableBodyScroll tr:last-child td {
-// border-top: none;
-// }
-// .table-responsive .tableBodyScroll th {
-// padding: 10px 15px;
-// }
-// .text-center {
-// text-align: center !important;
-// }
-// .text-center h6 {
-// text-align: center !important;
-// margin: 0 0  !important;
-// padding: 0 !important;
-// }
-// .invoiceRecipt td {
-//   border: 1px solid #ccc;
-//   padding: 5px 10px;
-// }
-// .invoiceRecipt th {
-// padding: 5px 10px 0px;
-// font-size:20px;
-// line-height:20px;
-// }
-
-// .invoiceRecipt td {
-// border: 1px solid #ccc;
-// padding: 5px 10px;
-// }
-// .invoiceRecipt td.dynamicDate {
-// border: none;
-// text-align: right;
-// }
-// .borderBox {
-// display: inline-block;
-// border: 1px solid #ccc;
-// padding: 10px 15px;
-// min-width: 260px;
-// border-radius: 5px;
-// }
-// .borderBox p {
-// font-size: 16px;
-// margin: 0 0 5px!important;
-// line-height: 18px !important;
-// padding: 0 !important;
-// }
-// .text-right {
-// text-align: right !important;
-// }
-// .invoiceRecipt {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: flex-end;
-// }
-// .invoiceRecipt ul {
-//   padding: 0;
-//   list-style: none;
-// }
-// .invoiceRecipt ul li strong {
-//   min-width: 70px;
-//   display: inline-block;
-// }
-// .dueDateCol .addressWrapper {
-//   display: flex;
-//   align-items: flex-end;
-//   flex-direction: column;
-// }
-// .table-responsive table thead tr:first-child {
-//   background-color: #04773B;
-//   color: #fff;
-// }
-// .table-responsive table thead th.comWidth {
-//   min-width: 120px;
-// }
-// .table-responsive table tbody td .alPrice h6 span {
-//   font-weight: normal;
-//   font-size: 18px;
-//   margin-left: 15px;
-// }
-// .table-responsive table tbody td .tgInclusive {
-//   border-top: 1px solid #eee;
-//   padding-top: 8px;
-// }
-// .mt-5, .my-5 {
-//   margin-top: 3rem !important;
-// }
-// .pb-3{
-// padding-top: 2rem !important;
-// padding-bottom: 4rem !important;
-// }
-// .pt-5{
-// padding-top: 5rem !important;
-// }
-
-//       </style>
-//       </head>
-//       <body onload="window.print();window.close()"> 
-
-//       ${printContents}
-      
-//       </body>
-//       </html>`)
-//       printbutton = document.getElementById('inputprintbutton12').style.display = "inline-block";
-//       popupWin.document.close();
-//     }, 2000)
+        } else {
+          const controls = this.JobTypePrintForm.controls
+          Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
+          return false;
+        }
   }
 
+  // export to excel
+  // ================Export to Excel Data =================================
+ excelExport(){
+  debugger
+ this.getInvoiceStmtData();
+ setTimeout(() => {
+ let element, fileName;
+ fileName = 'InvoiceStatementData.xlsx';
+ element = document.getElementById(`InvoiceStatementExcelData`);
+ this.excelService.exportexcel(element , fileName);
+ }, 2000);
+}
 
+  // Print Data
+  print() {
+   this.getInvoiceStmtData();
+    setTimeout(function () {
+      let printContents, popupWin, printbutton;
+      printbutton = document.getElementById('inputprintbutton1').style.display = "none";
+      printContents = document.getElementById('printDiv').innerHTML;
+      popupWin = window.open('', 'top=0,left=0,height=100%,width=100%');
+      popupWin.document.open();
+      popupWin.document.write(`
+      <html>
+        <head>
+      
+          <title>Print tab</title>
+          <style media="print">dis
+
+          *{
+            font-family: Roboto, sans-serif ;
+            box-sizing: border-box;
+          }
+          
+          .page-break { display:block; page-break-after: always; }
+
+          .taxInvoice {   
+              margin: 0 auto;
+              display: flex;
+              padding: 10px ;
+              background-color: #fff;
+              box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+              font-size: 11px;
+              flex-direction: column;
+              width: 100%;
+              justify-content: flex-start;          
+          }
+          .taxInvoice th,.taxInvoice td {
+              vertical-align: top;
+          }
+          .taxInvoice table, .taxInvoice table thead, .taxInvoice table tbody, .taxInvoice table tr {
+              width: 100%;
+          }
+          .tiLeftCol {
+              width: 100%;
+            padding-right: 6px;
+          }
+          .tiLeftCol h5 {
+              font-size: 18px;
+              margin: 0;
+            text-align: right;
+            padding-right: 20px;
+          }
+          .tiLeftCol h6 {
+              margin: 0;
+              font-size: 14px;
+              text-align: right;
+              font-weight: 500;
+              text-shadow: 3px 3px 4px rgb(0 0 0 / 80%);
+            padding-right: 10px;
+            color:#014711;
+          }
+          .tiWrapper {
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+             width: 100%;
+            //  padding-left: 25px;
+          }
+          .tiRighttCol {
+            width: 190px;
+            // margin-top: -20px;
+          }
+          .tiLeftInnerWrap {
+              display: flex;
+          }
+          .printTableWrapper {
+            width: 100%;
+          }
+          .tiContent p {
+              margin: 0;
+              font-size: 13px;
+            text-align: left;
+            white-space: nowrap;
+          }
+          .tiContent {
+              padding-left: 5px;
+          }
+          .tiContentWrap .tiPriceMatch {
+              margin-left: 10px;
+          }
+          .redColor{
+            color:#f00;
+          }
+          .tiRighttCol p {
+              font-size: 12px;
+              font-weight: 500;
+            margin: 2px 0;
+          }
+          .tiLeftInnerWrap .tiContentWrap {
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+          }
+          .taxInvoice .mdText {
+            margin: 10px 0 0;
+            font-size: 18px;
+            height: 40px;
+            display: block;
+            text-align: left;
+            width:100%;
+            float:left;
+          }
+          .mdText span{
+            position: relative;
+            top: -10px !important;
+            display:inline-block;
+            margin-top: -10px !important;
+            left:20px !important;
+          }
+          .mdText img{
+            position: relative;
+            top: 10px !important;
+            display:inline-block;
+            margin-top: 10px !important;
+            margin-left: 23px;
+          }
+          
+          .tableBodyContent {
+              display: flex;
+            justify-content: space-between;
+          }
+          .tableBodyContent .tbRightCol,.tableBodyContent .tbLeftCol{
+              display: flex;
+            width:100%;
+            flex-direction: column;
+          }
+          
+          .dateWrapper {
+              margin-top: 60px;
+          }
+          .invoiveIdWrapper {
+              display: flex;
+              flex-direction: column;
+              justify-content: flex-end;
+              width: 100%;
+              align-items: flex-end;
+          }
+          .invoiveIdWrapper h1 {
+              margin: 0;
+              font-size: 26px;
+              text-transform: uppercase;
+          }
+          .invoiveIdWrapper p{
+             margin: 0px;
+          }
+          .jobAddressWrapper {
+              margin-top: 12px;
+          }
+          .addressWrapper {
+              margin-top: 15px;
+          }
+          .addressWrapper p {
+              margin: 0;
+              line-height: 18px;
+              font-weight: 400;
+              font-size: 15px;
+          }
+          .jobAddressWrapper p.textJustify {
+              font-size: 15px;
+          }
+          .smSpace {
+              margin: 0 15px;
+          }
+          .workComplete {
+              margin-top: 30px;
+          }
+          .workComplete .smCaption {
+              margin-bottom: 0;
+          }
+          .workComplete p {
+              margin: 0;
+          }
+          table.taxInvoiceTable {
+              margin-top: 30px;
+              position:relative;
+              top:30px;
+              width:auto;
+              display:block !important;
+          }
+          
+          .taxInvoiceTable table, .taxInvoiceTable table thead, .taxInvoiceTable table tbody, 
+          .taxInvoiceTable table tr,.fullwidthCol,.taxInvoiceTable{
+            width: auto;
+          }
+          .taxInvoiceTable th {
+              text-align: left;
+              font-size: 15px;
+              vertical-align: middle;
+              text-transform: uppercase;
+          }
+          
+          
+          
+          .taxInvoiceTable th,.taxInvoiceTable td{
+            padding: 10px;
+            text-align: right;
+          }
+          .taxInvoiceTable th:first-child {
+            text-align: left;
+          }
+          .taxInvoiceTable td:first-child {
+            text-align: left;
+          }
+          ul.amountTotal {
+              padding: 10px 0 0;
+              margin: 0;
+              list-style: none;
+              border-top: 1px solid #eee;
+              width: 300px;
+              float: right;
+          }   
+          ul.amountTotal li{
+             display: flex;
+              justify-content: space-between;
+            padding: 5px 10px;
+          }
+              
+          ul.amountTotal li strong,ul.amountTotal li span {
+              width: 100%;
+              text-align: right;
+          }
+          ul.amountTotal li strong{
+              text-transform: uppercase;
+          }
+          .dueBalance {
+            background: #f5f5f5 !important;
+            padding: 10px;
+            box-shadow: inset 0px 0px 70px rgb(0 0 0 / 10%) !important;
+          }
+          .banlDetails {
+            border-top: 1px solid #eee;
+              margin: 10px 0 0;
+              padding-top: 10px;
+          }
+          .banlDetails p {
+              margin: 0 0 4px;
+          }
+          .table-responsive table thead tr { 
+            background-color: #f5f5f5 ;
+            background: #f5f5f5 ;
+            box-shadow: inset 0px 0px 70px rgb(0 0 0 / 10%) !important;
+          }
+
+</style>
+        </head>
+    <body onload="window.print();window.close()"> 
+
+    ${printContents}
+    
+    </body>
+      </html>`
+      );
+      printbutton = document.getElementById('inputprintbutton1').style.display = "inline-block";
+      popupWin.document.close();
+    }, 2000);
+  }
 }

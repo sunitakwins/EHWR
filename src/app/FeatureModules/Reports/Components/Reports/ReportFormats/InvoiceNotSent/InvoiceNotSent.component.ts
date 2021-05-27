@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ExcelService } from 'src/app/FeatureModules/Reports/Services/Excel.service';
 
 @Component({
   selector: 'app-InvoiceNotSent',
@@ -6,11 +7,22 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./InvoiceNotSent.component.scss']
 })
 export class InvoiceNotSentComponent implements OnInit {
-  @Input('invoiceNotSentList') invoiceNotSentList:any;
-  constructor() { }
+  @Input('invoiceNotSentList') invoiceNotSentList: any;
+  constructor(private excelService : ExcelService) { }
 
   ngOnInit() {
-    
+
+  }
+
+  // ================Export to Excel Data =================================
+  excelExport() {
+    debugger
+    // setTimeout(() => {
+      let element, fileName;
+      fileName = 'invoiceNotSentData.xlsx';
+      element = document.getElementById(`invoiceNotSentData`);
+      this.excelService.exportexcel(element, fileName);
+    // }, 2000);
   }
 
   print() {

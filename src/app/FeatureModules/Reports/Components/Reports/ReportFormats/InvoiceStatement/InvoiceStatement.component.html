@@ -50,5 +50,40 @@
     </div>
   </form>
 </div>
+<!-- =======Table for export=========================================== -->
+<!-- <div class="col-sm-12 d-none">
+  <div class="table-responsive ">
+    <table  class="table tableBodyScroll1" id ="InvoiceStatementExcelData">
+      <thead>
+        <tr>
+          <th>Page No.</th>
+          <th> Job no.</th>
+          <th>Customer Name</th>
+          <th>Address</th>
+          <th>Job Date</th>
+          <th>Due Date</th>
+          <th>Amount</th>
+          <th>Date Paid</th>
+          <th>Amount Paid</th> 
+        </tr>
+      </thead>
+      <tbody class="boxscroll">
+        <tr *ngFor="let data of invoiceStatementData; let i = index">
+          <td>{{data.pageNo}}</td>
+          <td>{{data.jobOrderId}}</td>
+          <td>{{data.customerName}}</td>
+          <td>{{data.address}}</td>
+          <td>{{data.jobDate | date: 'dd/MM/yyyy'}}</td>
+          <td>{{data.dateDue | date: 'dd/MM/yyyy'}}</td>
+          <td>{{data.amount}}</td>
+          <td  *ngIf = "data.datePaid > '0001-01-01T00:00:00' ? data.datePaid : null">
+            {{data.datePaid | date: 'dd/MM/yyyy'}}</td>
+          <td>{{data.amountPaid}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> -->
 
+<!-- ============================================================================================= -->
 <!-- Print Format -->

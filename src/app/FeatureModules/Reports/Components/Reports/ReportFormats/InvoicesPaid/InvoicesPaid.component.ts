@@ -1,13 +1,34 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import * as moment from 'moment';
+import { ExcelService } from 'src/app/FeatureModules/Reports/Services/Excel.service';
 import { ReportsService } from 'src/app/FeatureModules/Reports/Services/Reports.service';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'LL',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM-YYYY',
+
+  },
+};
 
 @Component({
   selector: 'app-InvoicesPaid',
   templateUrl: './InvoicesPaid.component.html',
-  styleUrls: ['./InvoicesPaid.component.scss']
+  styleUrls: ['./InvoicesPaid.component.scss'],
+  providers: [
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ],
 })
+
 export class InvoicesPaidComponent implements OnInit {
   @Input('invoicePaidBoolean') invoicePaidBoolean: any
   public JobTypePrintForm: FormGroup;
@@ -22,14 +43,13 @@ export class InvoicesPaidComponent implements OnInit {
   displayData: any = [
     {
       column1: "Page No.",
-      column2: "Job Id",
-      column3: "Invoice",
-      column4: "Customer Name",
-      column5: "Job Date",
-      // column6: "Due Date",
-      column7:  "Amount",
-      column8: "Date Paid" ,
-      column9: "Amt. Paid",
+      column2: "Invoice",
+      column3: "Customer Name",
+      column4: "Job Date",
+      column5: "Due Date",
+      column6:  "Amt.",
+      column7: "Date Paid" ,
+      column8: "Amt.Paid",
     }
   ]
 
@@ -50,7 +70,7 @@ export class InvoicesPaidComponent implements OnInit {
   // ];
 
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: FormBuilder, private excelService: ExcelService,
   
     private reportService: ReportsService) { }
 
@@ -93,10 +113,7 @@ export class InvoicesPaidComponent implements OnInit {
   //  let years = this.years;
   }
 
-  
-  // print Function
-  print() {
-    
+  getInvoicePaidData(){
     const params = {
       CustomerTypeId: (this.cusTypeId != 5 && this.cusTypeId != undefined) ? this.cusTypeId : -1,
       ReportStartDate: moment(this.JobTypePrintForm.value.from).format('MM/DD/yyyy'),
@@ -105,9 +122,6 @@ export class InvoicesPaidComponent implements OnInit {
     if(this.JobTypePrintForm.valid){
       this.reportService.getInvoicePaid(params).subscribe(res => {
         this.invoicePaidArray = res;
-        console.log('invoice Paid :', this.invoicePaidArray);
-        // this.printData = res;
-        // this.totalAmountPaid = res[0].totalAmountPaid;
       }, error => {
         console.log(error);
       })
@@ -116,8 +130,23 @@ export class InvoicesPaidComponent implements OnInit {
       Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
       return false;
     }
-    
+  }
 
+  // Export to Excel
+  excelExport(){
+    debugger
+    this.getInvoicePaidData();
+   setTimeout(() => {
+   let element, fileName;
+   fileName = 'invoicePaidData.xlsx';
+   element = document.getElementById(`invoicePaidData`);
+   this.excelService.exportexcel(element , fileName);
+   }, 2000);
+ }
+
+  // print Function
+  print() {
+    this.getInvoicePaidData();
     setTimeout(() => {
       let printContents, popupWin, printbutton;
       printbutton = document.getElementById('inputprintbutton4').style.display = "none";
@@ -138,6 +167,45 @@ font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 .pagebreak {page-break-after: always;}
 
+.table-responsive table thead tr:first-child {
+  background-color: #04773B;
+  color: #fff;
+}
+.table-responsive table tbody td .alPrice h6 span {
+  font-weight: normal;
+  font-size: 18px;
+  margin-left: 15px;
+}
+.table-responsive .table{
+  width : 100% ;
+  }
+  .removeLastBorder.table-responsive .tableBodyScroll tr:last-child td {
+    border-top: none;
+    }
+    
+    .table-responsive table thead th.comWidth {
+      min-width: 120px;
+    }
+    
+.table-responsive table tbody td .tgInclusive {
+  border-top: 1px solid #eee;
+  padding-top: 8px;
+}
+.table-responsive .tableBodyScroll th {
+  border-right: 1px solid #ccc;
+padding: 5px;
+border-top: none;
+}
+.table-responsive .tableBodyScroll tr:last-child td {
+  border-right: 1px solid #ccc;
+  padding: 5px;
+  border-top: 1px solid #ccc;
+}
+.table-responsive .tableBodyScroll td {
+    border-right: 1px solid #ccc;
+    padding: 5px ;
+    border-top: none;
+}
   .page-break  { display: block; page-break-before: always; }
 .row {
   display: flex;
@@ -195,7 +263,7 @@ padding: 0 !important;
   margin-top: 25px;
 }
 td.minWidth {
-min-width: 280px;
+// min-width: 280px;
 }
 .font-size{
 font-size: 13px;
@@ -225,26 +293,10 @@ overflow-x: hidden;
 .lgTable.table-responsive{
 overflow-x: auto;
 }
-.table-responsive .table{
-width : 100% ;
-}
 
-.table-responsive .tableBodyScroll td {
-border-right: 1px solid #ccc;
-padding: 15px 15px;
-border-top: none;
-}
-.table-responsive .tableBodyScroll tr:last-child td {
-border-right: 1px solid #ccc;
-padding: 15px 15px;
-border-top: 1px solid #ccc;
-}
-.removeLastBorder.table-responsive .tableBodyScroll tr:last-child td {
-border-top: none;
-}
-.table-responsive .tableBodyScroll th {
-padding: 10px 15px;
-}
+
+
+
 .text-center {
 text-align: center !important;
 }
@@ -305,22 +357,8 @@ text-align: right !important;
   align-items: flex-end;
   flex-direction: column;
 }
-.table-responsive table thead tr:first-child {
-  background-color: #04773B;
-  color: #fff;
-}
-.table-responsive table thead th.comWidth {
-  min-width: 120px;
-}
-.table-responsive table tbody td .alPrice h6 span {
-  font-weight: normal;
-  font-size: 18px;
-  margin-left: 15px;
-}
-.table-responsive table tbody td .tgInclusive {
-  border-top: 1px solid #eee;
-  padding-top: 8px;
-}
+
+
 .mt-5, .my-5 {
   margin-top: 3rem !important;
 }

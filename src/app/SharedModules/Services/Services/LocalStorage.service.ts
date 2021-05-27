@@ -10,7 +10,12 @@ export class LocalStorageService {
   // storing current tab Index value
   CURRENT_TAB_INDEX_VALUE: string = 'TabIndexVal';
 
+ // storing current Logged In USER ID
+ CURRENT_LOGGED_IN_USER_ID: string = 'USERID';
 
+
+
+// storing header name
   storeHeaderName(data) {
     
     localStorage.setItem(this.LOCALSTORAGE_SET_HEADERVALUE_KEY, JSON.stringify(data));
@@ -36,5 +41,17 @@ export class LocalStorageService {
     return { CurrentTabIndex : null};  
   }
 
+  
+  // setting Logged In User ID
+   setUserId(data){
+     localStorage.setItem(this.CURRENT_LOGGED_IN_USER_ID, JSON.stringify(data));
+   }
+
+   getUserId(){
+     let UserId = localStorage.getItem(this.CURRENT_LOGGED_IN_USER_ID);
+     if(UserId)
+       return Number(UserId);
+      return {UserId : null};
+   }
  
 }

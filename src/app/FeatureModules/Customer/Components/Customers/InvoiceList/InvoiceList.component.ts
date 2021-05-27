@@ -3,15 +3,13 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { GetAllInvoicesModel, InvoicesListModel, jobInvoiceRequestModel } from '../../../Models/Invoice/Invoice/InvoiceRequest.model';
 import { InvoiceService } from '../../../Services/InvoiceService/Invoice.service';
-import { union } from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { InfiniteScrollModel } from 'src/app/SharedModules/Models/InfiniteScroll.model';
 import { MatDialog } from '@angular/material/dialog';
 import { NotesGridModalComponent } from '../../../Modal/NotesGridModal/NotesGridModal.component';
-import { InvoiceModalComponent } from '../../../Modal/InvoiceModal/InvoiceModal.component';
-import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SendAllUnsentInvoicesModalComponent } from '../../../Modal/SendAllUnsentInvoicesModal/SendAllUnsentInvoicesModal.component';
 
 @Component({
   selector: 'app-InvoiceList',
@@ -139,42 +137,12 @@ export class InvoiceListComponent implements OnInit {
 
   // Send All Unsent Invoices Functionality
   sendAllUnsentInvoices(event) {
-
+   
     event.stopPropagation();
-    this.allunsentInvoicesRequestModel.Printtype = 'AllCustomer';
-    this.allunsentInvoicesRequestModel.CustomerId = -1;
-    this.allunsentInvoicesRequestModel.InvoiceId = 0;
-    this.invoiceService.getPrintAllInvoices(this.allunsentInvoicesRequestModel).subscribe((res)=>{
 
-      this.spinner.show();
-        if(res){
-          let msg = "All unsent invoices has been sent.";
-          this.openSnackBar(msg, 'hello');
-          setTimeout(()=>{
-            this.spinner.hide();
-          },200)
-        }else{
-          let msg = "Please try again.";
-          this.openSnackBar(msg, 'hello');
-          setTimeout(()=>{
-            this.spinner.hide();
-          },200)
-        }
-    },error=>{
-      let msg = "Please try again.";
-      this.openSnackBar(msg, 'hello');
-      setTimeout(()=>{
-        this.spinner.hide();
-      },200)
-    });
-  }
-
-  // open Snack bar
-  openSnackBar(message: string, panelClass: string) {
-    this.snackBar.openFromComponent(MatSnackBarComponent, {
-      data: message,
-      panelClass: panelClass,
-      duration: 2000
+    this.dialog.open(SendAllUnsentInvoicesModalComponent, {
+      width: '350px',
+      data: ""
     });
   }
 }

@@ -6,11 +6,11 @@
           <label>Date Range </label>
           <div class="d-flex align-items-center dateRange mb-3 justify-content-between">
             From:<sup style="color: red;"><strong>*</strong></sup><div class="datePickerCol f-flex">
-              <input class="form-control" formControlName="from"  matInput [matDatepicker]="fromDate" placeholder="mm/dd/yyyy"
-                readonly required>
+              <input class="form-control " formControlName="from"  matInput [matDatepicker]="fromDate"
+              placeholder="dd/mm/yyyy" readonly>
               <div class="pickerIconCol">
                 <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
-                <mat-datepicker #fromDate></mat-datepicker>
+                <mat-datepicker  #fromDate></mat-datepicker>
               </div>
               <div class="help-block" *ngIf="JobTypePrintForm.get('from').invalid && JobTypePrintForm.get('from').touched">
                 <p class="mt-4 ml-3 mb-1">Select date</p>
@@ -20,10 +20,11 @@
   
           <div class="d-flex align-items-center dateRange justify-content-between">
             To:<sup style="color: red;"><strong>*</strong></sup> <div class="datePickerCol f-flex">
-              <input class="form-control" formControlName="to" matInput [matDatepicker]="toDate" placeholder="mm/dd/yyyy" readonly required>
+              <input class="form-control " formControlName="to"  matInput [matDatepicker]="toDate"
+              placeholder="dd/mm/yyyy" readonly>
               <div class="pickerIconCol">
                 <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
-                <mat-datepicker #toDate></mat-datepicker>
+                <mat-datepicker  #toDate></mat-datepicker>
               </div>
               <div class="help-block" *ngIf="JobTypePrintForm.get('to').invalid && JobTypePrintForm.get('to').touched">
                 <p class="mt-4 ml-3 mb-1">Select date</p>
@@ -89,8 +90,8 @@
 
             <div class="row">
               <div class="col-sm-12">
-                  <div class="table-responsive removeLastBorder">
-                    <table  class="table tableBodyScroll">
+                  <div class="table-responsive ">
+                    <table  class="table tableBodyScroll" id ="invoiceSentData">
                       <thead>
                         <tr *ngFor ="let res of displayData">
                           <th>{{res.column1}}</th>
@@ -109,16 +110,16 @@
                           <td>{{data.pageNo}}</td>
                           <td>{{data.invoiceId}}</td>
                           <td>{{data.customerName}} <br> {{data.customerAddress}}</td>
-                          <td>{{data.completedDate | date}}</td>
-                          <td>{{data.dueDate | date}}</td>
+                          <td>{{data.completedDate | date: 'dd/MM/yyyy'}}</td>
+                          <td>{{data.dueDate | date: 'dd/MM/yyyy'}}</td>
                           <td>{{data.amountInvoice}}</td>
-                          <td>{{data.paymentDate | date}}</td>
+                          <td>{{data.paymentDate | date: 'dd/MM/yyyy'}}</td>
                           <td>{{data.amountPayment}}</td>
                         </tr>
                           
                         <tr>
-                          <!-- <td><strong>Total:{{totalAmountDue}}</strong></td> 
-                           <td><strong>{{totalAmountPaid}}</strong></td>  -->
+                          <!-- <td><strong>Total:{{data.totalAmountDue}}</strong></td> 
+                           <td><strong> {{data.totalAmountPaid}}</strong></td>  -->
                         </tr>
                       </tbody>
                     </table>

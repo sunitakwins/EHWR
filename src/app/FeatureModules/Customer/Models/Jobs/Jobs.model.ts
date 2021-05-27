@@ -33,7 +33,7 @@ export class JobModel{
     suburb: number=0;
     state: string='';
     postCode:number= 0;
-    pageNo:number= 0;
+    pageNo:string= '';
     position: string='';
     tankDateInstalled:  string='';
     createdBy: string='';

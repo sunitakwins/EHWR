@@ -1099,7 +1099,7 @@ ngAfterViewInit(){
         "createdBy": "Micheal"
       }
       
-      debugger
+      
       this.disableBtnClick = false;
       // console.log(requestParams);
       this.spinner.show();

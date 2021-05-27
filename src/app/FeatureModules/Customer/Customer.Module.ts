@@ -47,6 +47,7 @@ import { StripePaymentModalComponent } from './Modal/StripePaymentModal/StripePa
 // third- party module
 import { IConfig, NgxMaskModule } from 'ngx-mask';
 import { CreditCardDirectivesModule } from 'angular-cc-library';
+import { SendAllUnsentInvoicesModalComponent } from './Modal/SendAllUnsentInvoicesModal/SendAllUnsentInvoicesModal.component';
 
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
@@ -85,7 +86,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         PaymentListComponent,
         PaymentsComponent,
         NotesGridModalComponent,
-        StripePaymentModalComponent
+        StripePaymentModalComponent,
+        SendAllUnsentInvoicesModalComponent
     ],
     imports:[
         CustomerRouting,

@@ -17,8 +17,8 @@
 
             <div class="row">
               <div class="col-sm-12">
-                  <div class="table-responsive removeLastBorder">
-                    <table  class="table ">
+                  <div class="table-responsive">
+                    <table  class="table " id ="jobExceptionData">
                       <thead>
                         <tr *ngFor="let res of displayData">
                           <th>{{res.column1}}</th>
@@ -41,7 +41,8 @@
                           <td>{{data.employeeId}}</td>
                           <td>{{data.customerName}}</td>
                           <td>{{data.address}}</td>
-                          <td>{{data.completedDate | date}}</td>
+                          <td *ngIf = "data.completedDate > '0001-01-01T00:00:00' ? data.completedDate : null">
+                            {{data.completedDate | date: 'dd/MM/yyyy'}}</td>
                           <td>{{data.amountInvoice}}</td>
                           <td>{{data.exception}}</td>
                         </tr>

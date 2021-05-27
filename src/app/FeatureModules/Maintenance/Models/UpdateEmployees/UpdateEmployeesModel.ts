@@ -1,6 +1,7 @@
 export class UpdateEmployeesModel {
   EmployeeId: number;
   FirstName: string;
-  SurName: number;
+  SurName: string;
+  IsActive : boolean
   ModifiedBy: string;
 }

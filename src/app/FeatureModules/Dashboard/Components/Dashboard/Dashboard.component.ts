@@ -24,14 +24,10 @@ export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
-  yaxis: ApexYAxis | ApexYAxis[];
-  title: ApexTitleSubtitle;
-  labels: string[];
-  stroke: ApexStroke;
   dataLabels: ApexDataLabels;
-  fill: ApexFill;
-  tooltip: ApexTooltip;
- 
+  grid: ApexGrid;
+  stroke: ApexStroke;
+  title: ApexTitleSubtitle;
 };
 
 export type ChartOptions2 = {
@@ -65,12 +61,14 @@ export class DashboardComponent implements OnInit {
   public jobcount = [];
 
   public jobMonthYear =[];
+  monthYear =[];
 
   public jobAmount: any;
   public jobAmountData: any;
 
   public jobOverduecount =[];
   public jobOverdueAmount = [];
+  MonthList: any[];
   
 
   constructor(private spinner: NgxSpinnerService,private dashboardService: DashboardService, private router: Router,public snackBar:MatSnackBar) {
@@ -84,52 +82,43 @@ export class DashboardComponent implements OnInit {
 
   public jobAmountGraph(){
     // chart 1
-    this.chartOptions = {
+
+     this.chartOptions = {
       series: [
         {
-          name: "Jobs",
-          type: "column",
-          data: this.jobOverduecount.reverse()
-        },
-        {
           name: "Amount",
-          type: "line",
           data: this.jobOverdueAmount.reverse()
-        }
+        },
+
       ],
       chart: {
         height: 350,
-        type: "line"
-      },
-      stroke: {
-        width: [0,4]
-      },
-      title: {
-        text: "Monthly Earning"
+        type: "bar",
+        zoom: {
+          enabled: false
+        }
       },
       dataLabels: {
-        enabled: true,
-        enabledOnSeries: [1]
+        enabled: false
       },
-      labels: this.jobMonthYear.reverse(),
-      // ["Jan", "Feb", "Mar","Apr", "May","Jun", "Jul", "Aug","Sep", "Oct", "Nov", "Dec" ],
-      xaxis: {
-        // type: "datetime"
+      stroke: {
+        curve: "straight"
       },
-      yaxis: [
-        {
-          title: {
-            text: "Jobs"
-          }
-        },
-        {
-          opposite: true,
-          title: {
-            text: "Amount"
-          }
+      title: {
+        text: "Monthly Earning (Amount in $)",
+        align: "left"
+      },
+      grid: {
+        row: {
+          colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+          opacity: 0.5
         }
-      ]
-    };
+      },
+      xaxis: {
+        categories: this.monthYear.reverse()
+      },
+      
+   };
   }
 
    // job overdue graph
@@ -145,7 +134,7 @@ export class DashboardComponent implements OnInit {
         this.jobOverdueAmount.push(item.JobAmount);
       })
       this.jobAmountData.map(item =>{
-        this.jobMonthYear.push(item.MonthName + item.YearValue)
+        this.monthYear.push(item.MonthName + item.YearValue);
       })
       setTimeout(() => {
         /* spinner ends after 5 seconds */

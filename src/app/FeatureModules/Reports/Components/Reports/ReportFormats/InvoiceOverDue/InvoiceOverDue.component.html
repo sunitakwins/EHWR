@@ -14,8 +14,8 @@
             </div>
             <div class="card-body">
               <div class="row pageBreakWrapper" *ngFor="let data of dataArray">
-                <div class="col-sm-12">
-                    <div class="table-responsive removeLastBorder">
+                  <div class="col-sm-12">
+                    <div class="table-responsive">
                       <table  class="table">
                         <thead>
                           <tr>
@@ -64,9 +64,8 @@
                         </tbody>
                       </table>
                     </div>
-                    
+                  </div>
                 </div>
-              </div>
             <div class="row">
               <div class="col-sm-12">
                 <tr >
@@ -77,6 +76,71 @@
               </div>
             </div>
           </div>
+
+          <div class="card-body" class ="d-none">
+            <div class="row" *ngFor="let data of dataArray">
+                <div class="col-sm-12">
+                  <div class="table-responsive">
+                    <table  class="table" id ="invoiceOverDueData">
+                      <thead>
+                        <tr>
+                          <td>Page</td>
+                          <td>Invoice No.</td>
+                          <td>Customer Name</td>
+                          <td>Job Address</td>
+                          <td>Job Date</td>
+                          <td>Date Due</td>
+                          <td>Amount Due </td>
+                          <td>Amount Paid</td>
+                          <td>Date </td>
+                          <td>Notes</td>
+                        </tr>
+                      </thead>
+                    
+                      <tbody>
+                        <tr>
+                          <th colspan="4">{{data.days}}</th>
+                        </tr>
+                        <tr></tr>
+                        <tr *ngFor="let data2 of data.invoiceDetails">
+                          <td>{{data2.PageNo}}</td>
+                          <td>{{data2.InvoiceId}}</td>
+                          <td >{{data2.CustomerName}}</td>
+                          <td>{{data2.JobAddress}}</td>
+                          <td>{{data2.JobDate | date : 'dd/MM/yyyy'}}</td>
+                          <td>{{data2.DateDue | date : 'dd/MM/yyyy'}}</td>
+                          <td>{{data2.AmountDue}}</td>
+                          <td>{{data.AmountPaid}}</td>
+                          <!-- <tr *ngFor ="let dataNotes of data2.invoiceNotes">
+                            <td>{{dataNotes}}</td>
+                          </tr> -->
+                        </tr>
+                        <tr></tr>
+                        <tr>
+                          <td colspan="4">TotalAmountDue :  {{data.totalAmountDue }}</td>
+                          <!-- <td colspan="4">{{data2.Invoice}}</td> -->
+                          <td colspan="4">TotalAmountPaid : {{data.totalAmountPaid}}</td>
+                        </tr> 
+                        <tr></tr>
+                        <!-- <tr >
+                          <td colspan="4">Grand Total of Amount Due :  {{grandTotalOfAmountDue}} </td>
+                          <td colspan="4">Grand Total of Amount Paid  : {{grandTotalOfAmountPaid}}</td>
+                        </tr> -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <tr >
+                <td colspan="4"><strong>Grand Total of Amount Due :  {{grandTotalOfAmountDue1}}</strong> </td>
+                &nbsp;
+                <td colspan="4"><strong>Grand Total of Amount Paid  : {{grandTotalOfAmountPaid1}}</strong></td>
+              </tr>
+            </div>
+          </div>
+        </div>
         </div>
       </div>
     </div>

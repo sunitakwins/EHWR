@@ -110,6 +110,7 @@ export class PaymentsComponent implements OnInit, OnChanges {
       methodRef: [''],
     });
     this.dataService.setOption('PaymentForm', this.paymentForm);
+    // this.getCustomerId();
   }
 
 
@@ -118,19 +119,18 @@ export class PaymentsComponent implements OnInit, OnChanges {
     this.route.queryParams.subscribe((params: Params) => {
       this.jobId = params['jobOrderId'];
     })
-
     this.getCustomerId();
   }
+
 
   ngOnChanges() {
     this.route.queryParams.subscribe((params: Params) => {
       this.jobId = params['jobOrderId'];
       this.invoiceId = params['invoiceId'];
-    })
-    this.getCustomerId();
+    });
     
+    this.getCustomerId();
   
-
     const headerName = this.localStorage.getHeaderName();
     if (headerName == "payment") {
       this.indexVal = 0;
@@ -160,10 +160,10 @@ export class PaymentsComponent implements OnInit, OnChanges {
 
   //=======fetching Customer Id from job Id
   public getCustomerId() {
-    this.spinner.show();
     this.jobRequestModel.JobOrderId = this.jobId ? this.jobId : 0;
+    this.spinner.show();
     this.jobService.getJobList(this.jobRequestModel).subscribe(res => {
-
+      
       if (res.length > 0) {
         this.customerName = res[0].customerName;
         this.customerId = res[0].customerId;
@@ -179,9 +179,9 @@ export class PaymentsComponent implements OnInit, OnChanges {
       }
       setTimeout(() => {
         this.spinner.hide();
-      }, 2500);
+      },200);
     }, error => {
-      console.log(error);
+      // console.log(error);
       setTimeout(() => {
         this.spinner.hide();
       }, 500);
@@ -410,7 +410,7 @@ export class PaymentsComponent implements OnInit, OnChanges {
       }, 500);
     
       dialogRef.afterClosed().subscribe(result => {
-        debugger
+        
         if(result){
           this.getInvoicesOutstandingListData(this.customerId);
           this.getPaymentPaidListData(this.customerId);

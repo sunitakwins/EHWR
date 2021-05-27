@@ -26,7 +26,7 @@
         <label></label>
         <div class="actionBtn mb-4 text-center">
           <button class="btn primary-btn comBtn" type="button"
-                  (click)="updateEmployeeData(firstName.value,lastName.value)" *ngIf="isUpdate">Update
+                  (click)="updateEmployeeData()" *ngIf="isUpdate">Update
           </button>
           <button class="btn primary-btn comBtn" type="button"
                   (click)="saveEmployeeData(firstName.value,lastName.value)" *ngIf="!isUpdate">Save
@@ -50,14 +50,25 @@
         <ng-container matColumnDef="employeeName">
           <th *matHeaderCellDef mat-header-cell mat-sort-header>Employee Name</th>
           <td *matCellDef="let element" mat-cell> {{element.employeeName}} </td>
+        </ng-container>
 
+         <!-- employeeStatus Column -->
+         <ng-container matColumnDef="employeeStatus">
+          <th *matHeaderCellDef mat-header-cell>Employee Status</th>
+          <td *matCellDef="let element" mat-cell> 
+            <label class="switch toggleSwitch">
+              <input type="checkbox" [checked]="element.isActive"
+               (change) ="onSlide(element,$event)">
+              <span class="slider round"></span>
+            </label>
+           </td>
         </ng-container>
 
         <!-- action Column -->
         <ng-container matColumnDef="action">
           <th *matHeaderCellDef mat-header-cell> Action</th>
           <td *matCellDef="let element" mat-cell>
-            <button (click)="onDeleteItem(element)" color="warn" matTooltip="Delete" mat-button>
+            <button (click)="onDeleteItem(element,$event)" color="warn" matTooltip="Delete" mat-button>
               <mat-icon>delete</mat-icon>
             </button>
           </td>

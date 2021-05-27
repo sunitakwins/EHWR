@@ -15,8 +15,8 @@
 
             <div class="row">
               <div class="col-sm-12">
-                  <div class="table-responsive removeLastBorder">
-                    <table  class="table ">
+                  <div class="table-responsive">
+                    <table  class="table" id ="invoiceNotSentData"> 
                       <thead>
                         <tr>
                           <td>Page</td>
@@ -37,10 +37,10 @@
                           <td>{{data.pageNo}}</td>
                           <td>{{data.invoiceId}}</td>
                           <td>{{data.customerName}}  <br> {{data.customerAddress}} </td>
-                          <td>{{data.completedDate}}</td>
-                          <td>{{data.dueDate}}</td>
+                          <td>{{data.completedDate | date: 'dd/MM/yyyy'}}</td>
+                          <td>{{data.dueDate | date: 'dd/MM/yyyy' }}</td>
                           <td>{{data.amountInvoice}}</td>
-                          <td>{{data.paymentDate}}</td>
+                          <td>{{data.paymentDate | date: 'dd/MM/yyyy'}}</td>
                           <td>{{data.amountPayment}}</td>
                         </tr>
                       </tbody>

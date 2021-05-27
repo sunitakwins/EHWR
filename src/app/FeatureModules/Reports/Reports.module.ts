@@ -23,6 +23,7 @@ import { InvoiceNotSentComponent } from './Components/Reports/ReportFormats/Invo
 import { InvoiceOverDueComponent } from './Components/Reports/ReportFormats/InvoiceOverDue/InvoiceOverDue.component';
 import { InvoiceStatementComponent } from './Components/Reports/ReportFormats/InvoiceStatement/InvoiceStatement.component';
 import { MaterialModule } from 'src/app/MaterialModule/Material/Material.module';
+import { ExcelService } from './Services/Excel.service';
 
 
 
@@ -57,7 +58,7 @@ import { MaterialModule } from 'src/app/MaterialModule/Material/Material.module'
         SharedModule,
        
     ],
-    providers:[ReportsService],
+    providers:[ReportsService, ExcelService],
     bootstrap:[]
 })
 export class ReportsModule{

@@ -686,8 +686,7 @@ export class ReportsComponent implements OnInit {
       this.invoiceNotSentPrintBtn = false;
       this.invoiceStatementPrintBtn = false;
     }
-    console.log(data);
-    // console.log(data.reportName);
+    // console.log(data);
     
     // if(data.param1Name == "Date_From_To" && data.param2Name == "Month_Year" && data.param3Name == "Employees List")
     // {
@@ -725,7 +724,11 @@ export class ReportsComponent implements OnInit {
   printDefault(){
     const message="Select report type from the list.";
       this.openSnackBar(message, 'hello');
-    
+  }
+
+  exportToExcelDefault(){
+    const message="Select report type from the list.";
+    this.openSnackBar(message, 'hello');
   }
 
   public  openSnackBar(message: string, panelClass: string): void {

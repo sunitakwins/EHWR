@@ -7,6 +7,8 @@ import {UpdateEmployeesRequestModel} from '../../Models/UpdateEmployees/UpdateEm
 import {AddEmployeeModel} from '../../Models/UpdateEmployees/AddEmployeeModel';
 import { UserLoggedRequestModel } from '../../Models/UserLogged/userLoggedRequestMOdel';
 import { UpdateSettableDays } from '../../Models/SettableDays/UpdateDays.model';
+import { UpdateEmployeesModel } from '../../Models/UpdateEmployees/UpdateEmployeesModel';
+import { UpdateEmpStatusModel } from '../../Models/Models/UpdateEmployees/UpdateEmployeesModel';
 
 
 
@@ -45,22 +47,32 @@ export class MaintenanceService {
     const params = new HttpParams()
       .set('FirstName', `${addEmployeeModel.FirstName}`)
       .set('SurName', `${addEmployeeModel.SurName}`)
+      .set('IsActive', `${addEmployeeModel.IsActive}`)
       .set('CreatedBy', `${addEmployeeModel.CreatedBy}`);
     return this.http.post<any>(this.Url + '/Employee', addEmployeeModel, {params});
   }
 
- 
-  deleteEmployee(params: any) {
-    return this.http.delete(this.Url + '/Employee?', {params});
+  updateEmployees(updateEmployeesModel: UpdateEmployeesModel): Observable<any> {
+    const params = new HttpParams()
+      .set('EmployeeId', `${updateEmployeesModel.EmployeeId}`)
+      .set('FirstName', `${updateEmployeesModel.FirstName}`)
+      .set('SurName', `${updateEmployeesModel.SurName}`)
+      .set('IsActive', `${updateEmployeesModel.IsActive}`)
+      .set('ModifiedBy', `${updateEmployeesModel.ModifiedBy}`);
+    return this.http.put<any>(this.Url + '/Employee?', updateEmployeesModel, {params});
   }
 
-  updateEmployees(updateEmployeesModel: any): Observable<any> {
+  updateEmployeeStatus(data :UpdateEmpStatusModel) : Observable<any>{
     const params = new HttpParams()
-      .set('EmployeeId', `${updateEmployeesModel.employeeId}`)
-      .set('FirstName', `${updateEmployeesModel.firstName}`)
-      .set('SurName', `${updateEmployeesModel.surName}`)
-      .set('ModifiedBy', 'Micheal Sharma');
-    return this.http.put<any>(this.Url + '/Employee?', updateEmployeesModel, {params});
+    .set('EmployeeId', `${data.EmployeeId}`)
+    .set('IsActive', `${data.IsActive}`)
+    .set('ActionPerformedBy', `${data.ActionPerformedBy}`)
+    return this.http.put<any>(this.Url + '/Employee/EmployeeToggle?', data, {params});
+  }
+
+  
+  deleteEmployee(params: any) {
+    return this.http.delete(this.Url + '/Employee?', {params});
   }
 
   deleteItem(params) {

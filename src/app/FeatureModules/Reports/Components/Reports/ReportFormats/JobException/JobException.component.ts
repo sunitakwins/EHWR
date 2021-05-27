@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ExcelService } from 'src/app/FeatureModules/Reports/Services/Excel.service';
 
 @Component({
   selector: 'app-JobException',
@@ -20,11 +21,21 @@ export class JobExceptionComponent implements OnInit {
     }
   ]
 
-  constructor() { }
+  constructor( private excelService : ExcelService) { }
 
   ngOnInit() {
   }
 
+  // Export to Excel
+  excelExport(){
+    debugger
+  //  setTimeout(() => {
+   let element, fileName;
+   fileName = 'jobExceptionData.xlsx';
+   element = document.getElementById(`jobExceptionData`);
+   this.excelService.exportexcel(element , fileName);
+  //  }, 2000);
+ }
 
   print() {
     let printContents, popupWin, printbutton;
@@ -46,6 +57,45 @@ font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 .pagebreak {page-break-after: always;}
 
+.table-responsive table thead tr:first-child {
+  background-color: #04773B;
+  color: #fff;
+}
+.table-responsive table tbody td .alPrice h6 span {
+  font-weight: normal;
+  font-size: 18px;
+  margin-left: 15px;
+}
+.table-responsive .table{
+  width : 100% ;
+  }
+  .removeLastBorder.table-responsive .tableBodyScroll tr:last-child td {
+    border-top: none;
+    }
+    
+    .table-responsive table thead th.comWidth {
+      min-width: 120px;
+    }
+    
+.table-responsive table tbody td .tgInclusive {
+  border-top: 1px solid #eee;
+  padding-top: 8px;
+}
+.table-responsive .tableBodyScroll th {
+  border-right: 1px solid #ccc;
+padding: 5px;
+border-top: none;
+}
+.table-responsive .tableBodyScroll tr:last-child td {
+  border-right: 1px solid #ccc;
+  padding: 5px;
+  border-top: 1px solid #ccc;
+}
+.table-responsive .tableBodyScroll td {
+    border-right: 1px solid #ccc;
+    padding: 5px ;
+    border-top: none;
+}
   .page-break  { display: block; page-break-before: always; }
 .row {
   display: flex;
@@ -103,7 +153,7 @@ padding: 0 !important;
   margin-top: 25px;
 }
 td.minWidth {
-min-width: 280px;
+// min-width: 280px;
 }
 .font-size{
 font-size: 13px;
@@ -133,26 +183,10 @@ overflow-x: hidden;
 .lgTable.table-responsive{
 overflow-x: auto;
 }
-.table-responsive .table{
-width : 100% ;
-}
 
-.table-responsive .tableBodyScroll td {
-border-right: 1px solid #ccc;
-padding: 15px 15px;
-border-top: none;
-}
-.table-responsive .tableBodyScroll tr:last-child td {
-border-right: 1px solid #ccc;
-padding: 15px 15px;
-border-top: 1px solid #ccc;
-}
-.removeLastBorder.table-responsive .tableBodyScroll tr:last-child td {
-border-top: none;
-}
-.table-responsive .tableBodyScroll th {
-padding: 10px 15px;
-}
+
+
+
 .text-center {
 text-align: center !important;
 }
@@ -213,22 +247,8 @@ text-align: right !important;
   align-items: flex-end;
   flex-direction: column;
 }
-.table-responsive table thead tr:first-child {
-  background-color: #04773B;
-  color: #fff;
-}
-.table-responsive table thead th.comWidth {
-  min-width: 120px;
-}
-.table-responsive table tbody td .alPrice h6 span {
-  font-weight: normal;
-  font-size: 18px;
-  margin-left: 15px;
-}
-.table-responsive table tbody td .tgInclusive {
-  border-top: 1px solid #eee;
-  padding-top: 8px;
-}
+
+
 .mt-5, .my-5 {
   margin-top: 3rem !important;
 }

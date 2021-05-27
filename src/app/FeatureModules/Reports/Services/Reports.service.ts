@@ -132,9 +132,12 @@ export class ReportsService {
   }
 
   public getInvoiceStatement(param){
+    debugger
     const params = new HttpParams()
     .set('CustomerTypeId', `${param.CustomerTypeId}`)
     .set('CustomerId', `${param.CustomerId}`)
+    .set('StartDate', `${param.StartDate}`)
+    .set('EndDate',`${param.EndDate}`)
     return this.http.get(this.url+ '/Reports/InvoiceStatement?',{params})
   }
 

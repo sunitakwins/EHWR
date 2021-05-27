@@ -28,7 +28,6 @@ export class ConfirmationBoxComponent implements OnInit {
   }
 
   onYesClick(){
-    
     this.dialogRef.close(true);
   }
 

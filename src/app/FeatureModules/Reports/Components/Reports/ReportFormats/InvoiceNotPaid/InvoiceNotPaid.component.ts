@@ -1,12 +1,32 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import * as moment from 'moment';
+import { ExcelService } from 'src/app/FeatureModules/Reports/Services/Excel.service';
 import { ReportsService } from 'src/app/FeatureModules/Reports/Services/Reports.service';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'LL',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM-YYYY',
+
+  },
+};
 
 @Component({
   selector: 'app-InvoiceNotPaid',
   templateUrl: './InvoiceNotPaid.component.html',
-  styleUrls: ['./InvoiceNotPaid.component.scss']
+  styleUrls: ['./InvoiceNotPaid.component.scss'],
+  providers: [
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ],
 })
 export class InvoiceNotPaidComponent implements OnInit {
   @Input('invoiceNotPaidBoolean') invoiceNotPaidBoolean: any
@@ -33,7 +53,7 @@ export class InvoiceNotPaidComponent implements OnInit {
     }
   ]
  
-  constructor(private fb: FormBuilder, private reportService: ReportsService) { }
+  constructor(private fb: FormBuilder, private reportService: ReportsService, private excelService: ExcelService) { }
 
   ngOnInit() {
     this.JobTypePrintForm = this.fb.group({
@@ -60,32 +80,46 @@ export class InvoiceNotPaidComponent implements OnInit {
       // months:[]
     })
   }
+// get Data from api
+getInvoiceNotPaidData(){
+        
+  const params = {
+    CustomerTypeId: (this.cusTypeId != 5 && this.cusTypeId != undefined) ? this.cusTypeId : -1,
+    ReportStartDate: moment(this.JobTypePrintForm.value.from).format('MM/DD/yyyy'),
+    ReportEndDate: moment(this.JobTypePrintForm.value.to).format('MM/DD/yyyy')
+  }
+  if(this.JobTypePrintForm.valid){
+    this.reportService.getInvoiceNotPaid(params).subscribe(res => {
+      // console.log(res);
+      
+      this.printData = res;
+      this.totalAmountPaid =res[0].totalAmountPaid
+      this.totalAmount = res[0].totalAmount
+    }, error => {
+      // console.log(error);
+    })
+  }else{
+    const controls = this.JobTypePrintForm.controls
+    Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
+    return false;
+  }
+}
+
+   // Export to Excel
+   excelExport(){
+    debugger
+   this.getInvoiceNotPaidData();
+   setTimeout(() => {
+   let element, fileName;
+   fileName = 'InvoiceNotPaidData.xlsx';
+   element = document.getElementById(`InvoiceNotPaidData`);
+   this.excelService.exportexcel(element , fileName);
+   }, 2000);
+ }
 
     // print Function
     print() {
-      
-      const params = {
-        CustomerTypeId: (this.cusTypeId != 5 && this.cusTypeId != undefined) ? this.cusTypeId : -1,
-        ReportStartDate: moment(this.JobTypePrintForm.value.from).format('MM/DD/yyyy'),
-        ReportEndDate: moment(this.JobTypePrintForm.value.to).format('MM/DD/yyyy')
-      }
-      if(this.JobTypePrintForm.valid){
-        this.reportService.getInvoiceNotPaid(params).subscribe(res => {
-          // console.log(res);
-          
-          this.printData = res;
-          this.totalAmountPaid =res[0].totalAmountPaid
-          this.totalAmount = res[0].totalAmount
-        }, error => {
-          // console.log(error);
-        })
-      }else{
-        const controls = this.JobTypePrintForm.controls
-        Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
-        return false;
-      }
-      
-  
+      this.getInvoiceNotPaidData();
       setTimeout(() => {
         let printContents, popupWin, printbutton;
         printbutton = document.getElementById('inputprintbutton6').style.display = "none";

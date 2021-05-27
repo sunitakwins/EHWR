@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ExcelService } from 'src/app/FeatureModules/Reports/Services/Excel.service';
 import { JsonParsePipe } from 'src/app/SharedModules/Pipes/jsonParse.pipe';
 
 @Component({
@@ -33,50 +34,68 @@ export class InvoiceOverDueComponent implements OnInit {
   }];
 
 
-  constructor() { }
+  constructor( private excelService: ExcelService) { }
 
   ngOnInit() { }
 
+  // get Data from api
+ getInvoiceOverDueData(){
+  const data = this.invoiceOverDueList;
+  this.dataArray = [];
+  this.invoiceOverDueList.forEach(data => {
 
-  print() {
-    
-    const data = this.invoiceOverDueList;
-    this.dataArray = [];
-    this.invoiceOverDueList.forEach(data => {
-
-      let dataInvoiceDetail = JSON.parse(data.invoiceDetails)
-      dataInvoiceDetail.forEach(data2 => {
-        let invoiceNotes = JSON.parse(data2.Notes);
-        invoiceNotes.forEach(dataNotes => {
-          let objData = {
-            days: data.days,
-            totalAmountDue: data.totalAmountDue,
-            totalAmountPaid: data.totalAmountPaid,
-            grandTotalOfAmountDue: data.grandTotalOfAmountDue,
-            grandTotalOfAmountPaid: data.grandTotalOfAmountPaid,
-            invoiceDetails: [{
-              InvoiceId: data2.InvoiceId,
-              PageNo: data2.PageNo,
-              CustomerName: data2.CustomerName,
-              JobAddress: data2.JobAddress,
-              JobDate: data2.JobDate,
-              DateDue: data2.DateDue,
-              AmountDue: data2.AmountDue,
-              Notes:[{
-                // Date:dataNotes.,
-                // Notes :'',
-              }]
+    let dataInvoiceDetail = JSON.parse(data.invoiceDetails)
+    dataInvoiceDetail.forEach(data2 => {
+      let invoiceNotes = JSON.parse(data2.Notes);
+      invoiceNotes.forEach(dataNotes => {
+        let objData = {
+          days: data.days,
+          totalAmountDue: data.totalAmountDue,
+          totalAmountPaid: data.totalAmountPaid,
+          grandTotalOfAmountDue: data.grandTotalOfAmountDue,
+          grandTotalOfAmountPaid: data.grandTotalOfAmountPaid,
+          invoiceDetails: [{
+            InvoiceId: data2.InvoiceId,
+            PageNo: data2.PageNo,
+            CustomerName: data2.CustomerName,
+            JobAddress: data2.JobAddress,
+            JobDate: data2.JobDate,
+            DateDue: data2.DateDue,
+            AmountDue: data2.AmountDue,
+            Notes:[{
+              // Date:dataNotes.,
+              // Notes :'',
             }]
-          }
-          this.dataArray.push(objData);
+          }]
+        }
+        this.dataArray.push(objData);
 
-        });
-       
       });
-       this.grandTotalOfAmountDue1 = data.grandTotalOfAmountDue;
-       this.grandTotalOfAmountPaid1 = data.grandTotalOfAmountPaid;
+     
     });
+     this.grandTotalOfAmountDue1 = data.grandTotalOfAmountDue;
+     this.grandTotalOfAmountPaid1 = data.grandTotalOfAmountPaid;
+  });
+
+ }
+
+  // Export to excel
+// ================Export to Excel Data =================================
+excelExport(){
+  debugger
+ this.getInvoiceOverDueData();
  setTimeout(() => {
+ let element, fileName;
+ fileName = 'invoiceOverDueData.xlsx';
+ element = document.getElementById(`invoiceOverDueData`);
+ this.excelService.exportexcel(element , fileName);
+ }, 2000);
+}
+
+// Print 
+print() {
+    this.getInvoiceOverDueData();
+    setTimeout(() => {
     let printContents, popupWin, printbutton;
     printbutton = document.getElementById('inputprintbutton5').style.display = "none";
     printContents = document.getElementById('printDivInvoiceOverDue').innerHTML;

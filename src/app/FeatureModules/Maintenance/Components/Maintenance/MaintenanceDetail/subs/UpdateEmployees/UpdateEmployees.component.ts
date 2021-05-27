@@ -11,6 +11,9 @@ import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-Snack
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatSort, Sort } from '@angular/material/sort';
+import { UpdateEmployeesModel } from 'src/app/FeatureModules/Maintenance/Models/UpdateEmployees/UpdateEmployeesModel';
+import { UpdateEmpStatusComponent } from 'src/app/FeatureModules/Maintenance/Modals/UpdateEmpStatus/UpdateEmpStatus.component';
+import { UpdateEmpStatusModel } from 'src/app/FeatureModules/Maintenance/Models/Models/UpdateEmployees/UpdateEmployeesModel';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -19,12 +22,14 @@ import { MatSort, Sort } from '@angular/material/sort';
   styleUrls: ['./UpdateEmployees.component.scss']
 })
 export class UpdateEmployeesComponent implements OnInit {
-  displayedColumns: string[] = ['EmployeeId', 'employeeName', 'action'];
+  displayedColumns: string[] = ['EmployeeId', 'employeeName','employeeStatus', 'action'];
   public requestModel = new ItemsRequestModel();
+  public updateEmpRequestModel = new UpdateEmployeesModel();
   public dataSource: any;
   public result: any;
   public fName = '';
   public sName = '';
+  public activeStatus : boolean;
   public Name: any;
   addEmployeeForm: FormGroup;
   // tslint:disable-next-line:max-line-length
@@ -33,6 +38,7 @@ export class UpdateEmployeesComponent implements OnInit {
   public isUpdate = false;
 
   @ViewChild('sort', { static: true })sort!: MatSort;
+  employeeId: any;
 
   // tslint:disable-next-line:max-line-length
   constructor(public snackBar:MatSnackBar,public maintenanceService: MaintenanceService, public dialog: MatDialog,
@@ -52,7 +58,7 @@ export class UpdateEmployeesComponent implements OnInit {
       if (res.length > 0) {
         // const finalArray = union(this.result, res);
         const finalArray = res; 
-        console.log(finalArray);
+        // console.log(finalArray);
         this.dataSource = new MatTableDataSource(finalArray);
         this.result = finalArray;
       }
@@ -60,17 +66,22 @@ export class UpdateEmployeesComponent implements OnInit {
       console.log(error);
     });
   }
-  // tslint:disable-next-line:no-shadowed-variable
+ 
   showUpdateEmployeeData(element: any) {
-    // console.log('Show Data......');
+   
     this.isUpdate = true;
-    this.fName = element.firstName;
-    this.sName = element.surName;
-
+    this.addEmployeeForm.patchValue({
+      firstnameFormControl : element.firstName,
+      lastnameFormControl : element.surName
+    });
+    this.activeStatus = element.isActive;
     this.updateEmployeeDetails = element;
-    this.isUpdate = true;
-    // console.log('First Name : ' + this.fName);
-    // console.log('Surname : ' + this.sName);
+
+    // this.fName = element.firstName;
+    // this.sName = element.surName;
+    // this.activeStatus = element.isActive;
+
+    // this.updateEmployeeDetails = element;
   }
 
   public sortData(sort: Sort): void {
@@ -82,27 +93,28 @@ export class UpdateEmployeesComponent implements OnInit {
 
   saveEmployeeData(firstname: string, lastname: string) {
     if(this.addEmployeeForm.valid){
-     
-      // --------------- TEST CODE FOR SAVING EMPLOYEE DETAILS ---------------
       const requestParams = {
         FirstName: firstname,
         SurName: lastname,
+        IsActive :true,
         CreatedBy: 'Micheal'
       };
       // console.log(requestParams);
       this.spinner.show();
+      debugger
       this.maintenanceService.addEmployeeDetails(requestParams).subscribe(res => {
-       
+        // this.employeeId = res['keyId'];
         this.addEmployeeForm.reset();
         this.getEmployeeList();
-        this.savedMessage();
+        let msg = res['responseMessage'];
         setTimeout(() => {
           this.spinner.hide();
           }, 500);
+        this.showMessage(msg);  
       }, error => {
         setTimeout(() => {
           this.spinner.hide();
-          }, 500);
+          }, 200);
       });
       
     }else{
@@ -113,8 +125,9 @@ export class UpdateEmployeesComponent implements OnInit {
     }
   }
 
-  onDeleteItem(val: any){
-
+  onDeleteItem(val: any, event){
+    debugger
+    event.stopPropagation();
     const params = {
       Id: val.employeeId,
       DeletedBy: 'Micheal'
@@ -130,12 +143,19 @@ export class UpdateEmployeesComponent implements OnInit {
         this.spinner.show();
         this.maintenanceService.deleteEmployee(params).subscribe(res => {
           this.setRequesetParams();
-          this.deletedMessage();
+          this.isUpdate = false;
+          let msg = res['responseMessage'];
+          
           setTimeout(() => {
             this.spinner.hide();
             }, 500);
+
+            this.showMessage(msg);  
         }, error => {
           console.log(error);
+          setTimeout(() => {
+            this.spinner.hide();
+            }, 200);
         });
       }
     });
@@ -149,37 +169,47 @@ export class UpdateEmployeesComponent implements OnInit {
     this.getEmployeeList();
   }
 
-  updateEmployeeData(updateFirstName: string, updateLastName: string): void {
-    // console.log(updateFirstName + ' ' + updateLastName);
-    
-    this.updateEmployeeDetails.firstName = updateFirstName;
-    this.updateEmployeeDetails.surName = updateLastName;
-    this.maintenanceService.updateEmployees(this.updateEmployeeDetails).subscribe(res => {
+  // update Employee
+  updateEmployeeData() {
+
+    this.updateEmployeeDetails;
+    const requestParams: UpdateEmployeesModel = {
+      EmployeeId: this.updateEmployeeDetails.employeeId,
+      FirstName: this.addEmployeeForm.value.firstnameFormControl,
+      SurName: this.addEmployeeForm.value.lastnameFormControl,
+      IsActive : this.updateEmployeeDetails.isActive,
+      ModifiedBy: 'Michael'
+    }
+
+    this.spinner.show();
+    this.maintenanceService.updateEmployees(requestParams).subscribe(res => {
       //console.log(res);
       this.setRequesetParams();
-      this.updatedMessage()
+      let msg = res['responseMessage'];
+      // this.EmployeeId = -1;
       this.isUpdate = false;
+      this.addEmployeeForm.patchValue({
+        firstnameFormControl : null,
+        lastnameFormControl : null
+      });
+      setTimeout(() => {
+        this.spinner.hide();
+        }, 500);
+      this.showMessage(msg);
     }, error => {
-      console.log(error);
+      // console.log(error);
+      let msg = "Please try again later";
+      this.showMessage(msg);
+      setTimeout(() => {
+        this.spinner.hide();
+        }, 200);
     });
   }
 
-  public deletedMessage() {
-    const deleteMessage = "Employee Deleted Successfully"
-    this.openSnackBar(deleteMessage,'hello');
+
+  showMessage(mes :any){
+    this.openSnackBar(mes, 'hello');
   }
-
-  public savedMessage() {
-    const saveMessage = "Employee Added Successfully"
-    this.openSnackBar(saveMessage,'hello');
-  }
-
-  public updatedMessage() {
-    const updatedMessage = "Employee Updated Successfully"
-    this.openSnackBar(updatedMessage,'hello');
-  }
-
-
 
   public  openSnackBar(message: string, panelClass: string) {
   this.snackBar.openFromComponent(MatSnackBarComponent, {
@@ -194,4 +224,53 @@ export class UpdateEmployeesComponent implements OnInit {
   OnSelectedRow(data){
     this.showUpdateEmployeeData(data);
  } 
+
+ // employee status
+ onSlide(input,event){
+
+  this.addEmployeeForm.patchValue({
+    firstnameFormControl : null,
+    lastnameFormControl : null
+  });
+  this.isUpdate = false;
+
+  
+  const dialogRef =  this.dialog.open(UpdateEmpStatusComponent, {
+    width: '350px',
+    data: {input} 
+  });
+  
+  dialogRef.afterClosed().subscribe(result => {
+    if(result) {
+      // if yes then update toggle status
+      const params : UpdateEmpStatusModel ={
+        EmployeeId : input.employeeId,
+        IsActive : event.target.checked,
+        ActionPerformedBy: 'Michael'
+      };
+      // console.log(params);
+      this.spinner.show();
+      debugger
+      this.maintenanceService.updateEmployeeStatus(params).subscribe( res =>{
+         let msg = res['responseMessage'];
+         this.getEmployeeList();
+         setTimeout(() => {
+           this.spinner.hide(); 
+         },500);
+         this.showMessage(msg);
+      },error =>{
+        setTimeout(() => {
+          this.spinner.hide(); 
+        },500);
+      });
+    }else{
+      // if no then set toggle original status
+      event.target.checked = !event.target.checked;
+    }
+    setTimeout(()=>{
+    },500);
+  });
+ }
+
+ 
 }

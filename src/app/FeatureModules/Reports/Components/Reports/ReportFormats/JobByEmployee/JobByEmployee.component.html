@@ -7,11 +7,11 @@
           <div class="d-flex align-items-center dateRange mb-3 justify-content-between">
             From:<sup style="color: red;"><strong>*</strong></sup>
             <div class="datePickerCol f-flex">
-              <input class="form-control" formControlName="from" matInput [matDatepicker]="fromDate"
-                placeholder="mm/dd/yyyy" readonly required>
+              <input class="form-control " formControlName="from"  matInput [matDatepicker]="fromDate"
+              placeholder="dd/mm/yyyy" readonly>
               <div class="pickerIconCol">
                 <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
-                <mat-datepicker #fromDate></mat-datepicker>
+                <mat-datepicker  #fromDate></mat-datepicker>
               </div>
               <div class="help-block"
                 *ngIf="JobTypePrintForm.get('from').invalid && JobTypePrintForm.get('from').touched">
@@ -23,11 +23,11 @@
           <div class="d-flex align-items-center dateRange justify-content-between">
             To:<sup style="color: red;"><strong>*</strong></sup>
             <div class="datePickerCol f-flex">
-              <input class="form-control" formControlName="to" matInput [matDatepicker]="toDate"
-                placeholder="mm/dd/yyyy" readonly required>
+              <input class="form-control " formControlName="to"  matInput [matDatepicker]="toDate"
+              placeholder="dd/mm/yyyy" readonly>
               <div class="pickerIconCol">
                 <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
-                <mat-datepicker #toDate></mat-datepicker>
+                <mat-datepicker  #toDate></mat-datepicker>
               </div>
               <div class="help-block" *ngIf="JobTypePrintForm.get('to').invalid && JobTypePrintForm.get('to').touched">
                 <p class="mt-4 ml-3 mb-1">Select date</p>
@@ -84,7 +84,7 @@
       <div class="col-sm-12 mb-3">
         <div class="actionBtn mb-2 mt-2 reportBtn">
           <button type="button" class="btn primary-btn comBtn" (click)="clearDate()">Clear Dates</button>
-          <button type="button" class="btn primary-btn comBtn" (click)="clearFilter()">Clear Filter</button>
+          <!-- <button type="button" class="btn primary-btn comBtn" (click)="clearFilter()">Clear Filter</button> -->
         </div>
       </div>
     </div>
@@ -109,8 +109,8 @@
 
         <div class="row">
           <div class="col-sm-12">
-            <div class="table-responsive removeLastBorder">
-              <table class="table ">
+            <div class="table-responsive ">
+              <table class="table " id ="jobsByEmployeeData">
                 <thead>
                   <tr>
                     <th>Job</th>
@@ -126,7 +126,7 @@
                     <td>{{data.jobOrderId}}</td>
                     <td>{{data.customerName}}</td>
                     <td>{{data.jobAddress}}</td>
-                    <td>{{data.completedDate | date}}</td>
+                    <td>{{data.completedDate | date: 'dd/MM/yyyy'}}</td>
                     <td>{{data.amount}}</td>
                     <td> 
                         <div *ngFor="let employee of data.employees | jsonParse">

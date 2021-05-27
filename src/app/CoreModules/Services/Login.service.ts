@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 /*rxjs*/
 import { Observable } from 'rxjs';
 /*Models */
-import { Login } from '../Models/Login.model';
+import { Login, Logout } from '../Models/Login.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable()
@@ -24,8 +24,13 @@ constructor(private http:HttpClient) {
 
 public onLogin(data:Login):Observable<any>{
   
- return this.http.post(this.url+"/Account",data,{ headers: this.headers });
+ return this.http.post(this.url+"/Auth/Login",data,{ headers: this.headers });
 }
+
+public onLogOut(params : Logout){
+  
+  return this.http.post(this.url+"/Auth/Logout", params );
+ }
 
 
 }

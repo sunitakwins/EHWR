@@ -12,11 +12,12 @@ import { UpdateEmployeesComponent } from './Components/Maintenance/MaintenanceDe
 import { AddItemsMainComponent } from './Components/Maintenance/MaintenanceDetail/subs/AddItemsMain/AddItemsMain.component';
 import { MaterialModule } from 'src/app/MaterialModule/Material/Material.module';
 import { MaintenanceService } from './Services/Maintenance/Maintenance.service';
-import { UpdateUserComponent } from './Components/Maintenance/MaintenanceDetail/subs/UpdateUser/UpdateUser.component';
-import { PriceMaintenanceComponent } from './Modals/Modals/PriceMaintenance/PriceMaintenance.component';
 import { SharedModule } from 'src/app/SharedModules/Shared.module';
 import { SettableDaysComponent } from './Components/Maintenance/MaintenanceDetail/subs/SettableDays/SettableDays.component';
 import { JsonParsePipe } from 'src/app/SharedModules/Pipes/jsonParse.pipe';
+import { UpdateEmpStatusComponent } from './Modals/UpdateEmpStatus/UpdateEmpStatus.component';
+import { UpdateUserComponent } from './Components/Maintenance/MaintenanceDetail/subs/UpdateUser/UpdateUser.component';
+import { PriceMaintenanceComponent } from './Modals/PriceMaintenance/PriceMaintenance.component';
 
 
 
@@ -28,7 +29,8 @@ import { JsonParsePipe } from 'src/app/SharedModules/Pipes/jsonParse.pipe';
        AddItemsMainComponent,
        UpdateUserComponent,
        SettableDaysComponent,
-       PriceMaintenanceComponent
+       PriceMaintenanceComponent,
+       UpdateEmpStatusComponent
     ],
     imports:[
         MaintenanceRouting,

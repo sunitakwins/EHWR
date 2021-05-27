@@ -16,7 +16,7 @@
           <ng-container matColumnDef="logOutDateTime">
             <th *matHeaderCellDef mat-header-cell mat-sort-header>Logout Date</th>
             <td *matCellDef="let element" mat-cell>
-              <div  *ngIf ="element.invoiceSendDate > '0001-01-01T00:00:00' ? element.invoiceSendDate : null ">
+              <div  *ngIf ="element.logOutDateTime > '0001-01-01T00:00:00' ? element.logOutDateTime : null ">
                 {{element.logOutDateTime | date: 'dd-MM-yyyy'}}
               </div>  
                </td>

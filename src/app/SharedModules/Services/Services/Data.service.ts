@@ -6,19 +6,20 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class DataService {
 
-  constructor() {
+  constructor(  ) {
     
   }
 
   public data = {};  
   
-  setOption(option, value) {  
-    ;  
+  setOption(option, value) {
+    debugger  
     this.data[option] = value;  
   }  
   
-  // getOption() {  
-  //   return this.data;  
-  // }  
+  getOption() {  
+    return this.data;  
+  }  
+  
   
 }

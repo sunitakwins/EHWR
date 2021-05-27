@@ -4,3 +4,9 @@ export class UpdateEmployeesModel {
   SurName: number;
   ModifiedBy: string;
 }
+
+export class UpdateEmpStatusModel{
+  EmployeeId : string;
+  IsActive : boolean;
+  ActionPerformedBy: string;
+}

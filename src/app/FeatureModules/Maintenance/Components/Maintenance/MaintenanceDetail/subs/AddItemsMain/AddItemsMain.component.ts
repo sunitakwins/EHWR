@@ -5,12 +5,11 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { PriceMaintenanceComponent } from 'src/app/FeatureModules/Maintenance/Modals/Modals/PriceMaintenance/PriceMaintenance.component';
+import { PriceMaintenanceComponent } from 'src/app/FeatureModules/Maintenance/Modals/PriceMaintenance/PriceMaintenance.component';
 import { AddItemsMainRequestModel } from 'src/app/FeatureModules/Maintenance/Models/AddItemsMain/AddItemsMainRequestModel';
 import { MaintenanceService } from 'src/app/FeatureModules/Maintenance/Services/Maintenance/Maintenance.service';
 import { DeleteDialogComponent } from 'src/app/SharedModules/Components/DeleteDialog/DeleteDialog.component';
 import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
-// import {InvoiceModalComponent} from '../../../../../../Customer/Modal/InvoiceModal/InvoiceModal.component';
 
 
 @Component({

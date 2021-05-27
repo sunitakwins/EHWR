@@ -137,7 +137,7 @@ export class InvoiceModalComponent implements OnInit {
   // Get all print Invoices
   public getPrintAllInvoices() {
     this.invoiceService.getPrintAllInvoices(this.requestModel).subscribe(res => {
-      
+      this.notFoundData = res.length > 0 ? false : true;
       this.spinner.show();
       if(res.length > 0){
       res.map(data => {
@@ -147,7 +147,6 @@ export class InvoiceModalComponent implements OnInit {
       this.dataSource = res;
       this.storeInvoiceData = res;
      }
-      this.notFoundData = res.length > 0 ? false : true;
       //this.allCheckBox(Event);
       setTimeout(() => {
         this.spinner.hide();
@@ -160,7 +159,7 @@ export class InvoiceModalComponent implements OnInit {
   }
 
   public allCheckBox(value) {
-    ;
+ 
     this.check = !this.check;
     if (this.check == true) {
 
@@ -184,7 +183,7 @@ export class InvoiceModalComponent implements OnInit {
   // Checkbox click
   listCheckbox(index: number, value: any, invoiceId: number) {
     if (value.checked == true) {
-      //ss
+      
       this.checkBox = value.checked;
       this.dataSource[index].checkbox = value.checked;
       const ind = this.storeDeletedIndex.findIndex(x => x.invoiceId == invoiceId);
@@ -213,23 +212,6 @@ export class InvoiceModalComponent implements OnInit {
     // this.invoiceDataList;
   }
 
-
-  // listCheckboxA(index: number, value: any, invoiceId: number) {
-  //   if (value.checked == true) {
-  //     this.checkBox == true;
-  //     const ind = this.storeDeletedIndex.findIndex(x => x.invoiceId == invoiceId);
-  //     if (ind > -1) {
-  //       this.invoiceDataList.push(this.storeDeletedIndex[ind]);
-  //     } else {
-  //       this.invoiceDataList.push(this.storeInvoiceData[index]);
-  //     }
-
-  //   } else {
-  //     this.checkBox == false;
-  //     this.storeDeletedIndex.push(this.invoiceDataList[index]);
-  //     this.invoiceDataList.splice(index, 1);
-  //   }
-  // }
 
   print(){
     // console.log(this.storeInvoiceData);

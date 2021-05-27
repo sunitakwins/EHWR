@@ -7,3 +7,11 @@ export class Login {
 
   }
 }
+
+export class Logout{
+  // constructor(public userName: string )
+  constructor(public userId: number, public actionPerformedBy: string )
+  {
+
+  }
+}

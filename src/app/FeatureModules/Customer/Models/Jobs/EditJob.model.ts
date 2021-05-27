@@ -35,7 +35,7 @@ export class NewEditJobModels{
         suburb: number;  
         state: number;
         postCode: number;
-        pageNo: number;
+        pageNo: string;
         // position: string;
         tankDateInstalled: string;
         modifiedBy: string;

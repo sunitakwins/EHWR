@@ -1,44 +1,64 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import * as moment from 'moment';
 import { EmployeeRequestModel } from 'src/app/FeatureModules/Customer/Models/Jobs/EmployeeRequestModel.model';
+import { ExcelService } from 'src/app/FeatureModules/Reports/Services/Excel.service';
 import { ReportsService } from 'src/app/FeatureModules/Reports/Services/Reports.service';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'LL',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM-YYYY',
+
+  },
+};
 
 @Component({
   selector: 'app-JobByEmployee',
   templateUrl: './JobByEmployee.component.html',
-  styleUrls: ['./JobByEmployee.component.scss']
+  styleUrls: ['./JobByEmployee.component.scss'],
+  providers: [
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ],
 })
 export class JobByEmployeeComponent implements OnInit {
   @Input('jobByEmployeeBoolean') jobByEmployeeBoolean: any
   public jobByEmpValue1: boolean = false;
-  public cusTypeId:any;
+  public cusTypeId: any;
 
-  public allEmployees:any;
-  public employeeOptions :any;
+  public allEmployees: any;
+  public employeeOptions: any;
 
-  public jobsByEmployeeData:any;
+  public jobsByEmployeeData: any;
 
   public employeeRequestModel = new EmployeeRequestModel();
 
 
 
   // =-====
-  JobTypePrintForm:FormGroup;
-  constructor(private fb: FormBuilder,
+  JobTypePrintForm: FormGroup;
+  constructor(private fb: FormBuilder, private excelService: ExcelService,
     private reportService: ReportsService) { }
 
   ngOnInit() {
     this.JobTypePrintForm = this.fb.group({
-      from : [moment().startOf('month').format(),Validators.required],
+      from: [moment().startOf('month').format(), Validators.required],
       to: [new Date(), Validators.required],
-      EmployeeId:[''],
+      EmployeeId: [''],
       // month:[moment().format('MMMM,YYYYY')]
       // months:[],
       // years:[]
     })
     this.getEmployeeBySearch();
-    
+
   }
 
   ngOnChanges() {
@@ -48,44 +68,44 @@ export class JobByEmployeeComponent implements OnInit {
   }
 
   // clear dates
-  clearDate(){
+  clearDate() {
     this.JobTypePrintForm.patchValue({
-      from : [],
+      from: [],
       to: [],
-     // EmployeeId:[],
+      // EmployeeId:[],
       // months:[]
     })
   }
 
-  clearFilter(){
+  clearFilter() {
     this.JobTypePrintForm.patchValue({
-      from : [],
+      from: [],
       to: [],
-      EmployeeId:[],
+      EmployeeId: [],
       // months:[]
     })
   }
 
-  
+
   // get employees
   public displayEmployee(result?: any): string | undefined {
     ;
     return result ? result.employeeName : undefined;
   }
-  
+
   public searchEmployee(val) {
     this.employeeRequestModel.SearchValue = val;
     this.getEmployeeBySearch();
   }
-  
+
   // public filterEmployee(val) {
   //   const filterValue = val.toUpperCase();
   //   console.log(filterValue);
   //   this.allEmployees = this.employeeOptions.filter(option => option.employeeName.indexOf(filterValue) === 0);
   // }
-  
+
   private getEmployeeBySearch() {
-  
+
     this.reportService.getEmployees(this.employeeRequestModel).subscribe(res => {
       //console.log(res);
       this.allEmployees = res;
@@ -95,42 +115,59 @@ export class JobByEmployeeComponent implements OnInit {
     })
   }
 
-
-
-  // Print  =====================================================================
-  print() {
+  // get Data 
+  getJobByEmployeeData() {
     const employeeId = this.JobTypePrintForm.value.EmployeeId.employeeId;
-    
+
     const params = {
-      EmployeeId:(employeeId == null)? -1: employeeId,
+      EmployeeId: (employeeId == null) ? -1 : employeeId,
       CustomerTypeId: (this.cusTypeId != 5 && this.cusTypeId != undefined) ? this.cusTypeId : -1,
       ReportStartDate: moment(this.JobTypePrintForm.value.from).format('MM/DD/yyyy'),
       ReportEndDate: moment(this.JobTypePrintForm.value.to).format('MM/DD/yyyy')
     }
 
     // console.log(params);
-    if(this.JobTypePrintForm.valid){
+    if (this.JobTypePrintForm.valid) {
       this.reportService.getJobsByEmployee(params).subscribe(res => {
-        
-      //  console.log(res);
-       this.jobsByEmployeeData = res;
-       
+
+        //  console.log(res);
+        this.jobsByEmployeeData = res;
+
       }, error => {
         console.log(error);
       })
-    }else{
+    } else {
       const controls = this.JobTypePrintForm.controls
       Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
       return false;
     }
-    
+  }
+
+  // ================Export to Excel Data =================================
+  excelExport() {
+    debugger
+    this.getJobByEmployeeData();
     setTimeout(() => {
-    let printContents, popupWin, printbutton;
-    printbutton = document.getElementById('inputprintbutton12').style.display = "none";
-    printContents = document.getElementById('printDivJobsByEmployee').innerHTML;
-    popupWin = window.open('', 'top=0,left=0,height=100%,width=auto');
-    popupWin.document.open();
-    popupWin.document.write(`
+      let element, fileName;
+      fileName = 'jobsByEmployeeData.xlsx';
+      element = document.getElementById(`jobsByEmployeeData`);
+      this.excelService.exportexcel(element, fileName);
+    }, 2000);
+  }
+
+
+  // Print  =====================================================================
+  print() {
+
+    this.getJobByEmployeeData();
+
+    setTimeout(() => {
+      let printContents, popupWin, printbutton;
+      printbutton = document.getElementById('inputprintbutton12').style.display = "none";
+      printContents = document.getElementById('printDivJobsByEmployee').innerHTML;
+      popupWin = window.open('', 'top=0,left=0,height=100%,width=auto');
+      popupWin.document.open();
+      popupWin.document.write(`
     <html>
     <head>
       <title>Print tab</title>
@@ -346,12 +383,12 @@ padding-top: 5rem !important;
       
       </body>
       </html>`)
-    printbutton = document.getElementById('inputprintbutton12').style.display = "inline-block";
-    popupWin.document.close();
-  }, 2000)
+      printbutton = document.getElementById('inputprintbutton12').style.display = "inline-block";
+      popupWin.document.close();
+    }, 2000)
 
   }
 
-  
+
 
 }

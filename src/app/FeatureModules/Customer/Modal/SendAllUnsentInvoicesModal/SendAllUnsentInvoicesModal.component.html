@@ -1,0 +1,103 @@
+<div class="modal fade" id="moveJob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title">Sent All Unsent Invoices Section</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeDialog()">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <form [formGroup]="InvoicesForm" class="invoicesFormModal">
+                  <div class="row">
+                      <div class="col-sm-12 mt-4">
+                          <div class="csRadioBtn form-group">
+                              <label class="radioBtn radio">Print All Invoices
+                                  <input type="checkbox" name="Types" [checked] ="check" (click)="allCheckBox($event)">
+                                  <span class="checkmark"></span>
+                              </label>
+                          </div>
+                      </div>
+                      <div class="col-md-12">
+                          <div class="table-responsive popupTable">
+                              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                                  <ng-container matColumnDef="print">
+                                      <th mat-header-cell *matHeaderCellDef> Print </th>
+                                      <td mat-cell *matCellDef="let element; let i = index">
+                                          <div class="csRadioBtn unsendInvoiceWrap form-group">
+                                              <label class="radioBtn checkBox">
+                                                 <input #activeCheckbox type="checkbox" name="Types"
+                                                      [checked]="check ? checkBox : element.checkBox"
+                                                      (click)="listCheckbox(i, activeCheckbox, element.invoiceId)">
+                                                  <span class="checkmark"></span>
+                                              </label>
+                                          </div>
+                                      </td>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="invoiceNo">
+                                      <th mat-header-cell *matHeaderCellDef> Invoice No </th>
+                                      <td mat-cell *matCellDef="let element"> #{{element.invoiceId}} </td>
+                                  </ng-container>
+
+
+                                  <ng-container matColumnDef="pageNo">
+                                      <th mat-header-cell *matHeaderCellDef> Page No. </th>
+                                      <td mat-cell *matCellDef="let element"> {{element.pageNo}} </td>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="customer">
+                                      <th mat-header-cell *matHeaderCellDef> Customer </th>
+                                      <td mat-cell *matCellDef="let element"> {{element.customerName}} </td>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="amount">
+                                      <th mat-header-cell *matHeaderCellDef> Amount </th>
+                                      <td mat-cell *matCellDef="let element"> ${{element.amount}} </td>
+                                  </ng-container>
+
+                                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                              </table>
+                              <div class="text-center p-2" *ngIf="notFoundData">Not Found Records</div>
+                          </div>
+
+                    <!-- 
+                          <div class="table-responsive1 popupTable d-none" id="printDivModal">
+                              <table class="table tableBodyScroll">
+                                  <thead>
+                                      <tr>
+                                          <th>Invoice No.</th>
+                                          <th>Page No.</th>
+                                          <th>Customer</th>
+                                          <th>Completed Date</th>
+                                          <th>Amount(Incl.GST)</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr *ngFor="let data of invoiceDataList">
+                                          <td>#{{data.invoiceId}}</td>
+                                          <td>{{data.pageNo}}</td>
+                                          <td>{{data.customerName}}</td>
+                                          <td>{{data.completedDate | date}}</td>
+                                          <td>${{data.amount}}</td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div> -->
+
+                      </div>
+                  </div>
+              </form>
+
+          </div>
+          <div class="modal-footer">
+              <button mat-raised-button type="button" color="primary" (click)="Send()" id="inputprintbuttonModal"
+                  class="btn Update-btn comBtn">Send</button>&nbsp;
+              <button mat-raised-button type="button" class="btn Discard-btn comBtn"
+                  (click)="closeDialog()">Cancel</button>
+          </div>
+      </div>
+  </div>
+</div>
