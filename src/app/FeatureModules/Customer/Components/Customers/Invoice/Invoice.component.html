@@ -216,7 +216,7 @@
                       </div> -->
                     </div>
                   </div>
-                  <div class="table-responsive popupTable tableMinWidth border-bottom-0 tablewidth" >
+                  <div class="table-responsive jobInvoiceWrapper popupTable tableMinWidth border-bottom-0 tablewidth" >
                     <table mat-table [dataSource]="dataSource2" matSort class="mat-elevation-z8 table tableBodyScroll jobInvoieTable">
                       <ng-container matColumnDef="invoiceNo">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header="invoiceId"> # Invoice </th>
@@ -255,18 +255,23 @@
                         <th mat-header-cell *matHeaderCellDef> Action </th>
                         <td mat-cell *matCellDef="let element">
                           <button mat-button color="primary" matTooltip="View Invoice"
-                            id="printPreviewBtn" (click)="openInvoicePreview(element.invoiceId)">
+                            id="printPreviewBtn" (click)="openInvoicePreview(element)">
                             <mat-icon>visibility</mat-icon>
                             <!-- (click)="openInvoicePreview(element.invoiceId)" -->
                           </button>
-                          <button mat-button color="primary" matTooltip="Note"
-                            (click)="openNotesDialog(element.invoiceId)">
-                            <mat-icon>note_add</mat-icon>
-                          </button>
-                          <button mat-button color="primary" matTooltip="Print" id="inputprintbutton1"
-                            (click)="print(element.invoiceId)" [disabled]="printInvoice" 
+                          <!-- <button mat-button color="primary" matTooltip="Resend Invoice"
+                            *ngIf ="element.tickIfInvoiceNotRequired == false">
+                            <mat-icon>replay</mat-icon>
+                          </button> -->
+                          <!-- (click)="resendInvoice(element.invoiceId)" -->
+                          <button mat-button color="primary" matTooltip="Print Invoice" id="inputprintbutton1"
+                            (click)="print(element)" [disabled]="printInvoice" 
                             *ngIf ="element.tickIfInvoiceNotRequired == false">
                             <mat-icon>print</mat-icon>
+                          </button>
+                          <button mat-button color="primary" matTooltip=" Add Notes"
+                            (click)="openNotesDialog(element.invoiceId)">
+                            <mat-icon>note_add</mat-icon>
                           </button>
                           <button mat-button color="warn" matTooltip="Delete" (click)="commonDeleteDialog(element, 2)">
                             <mat-icon>delete</mat-icon>
@@ -345,6 +350,7 @@
 <!-- class="d-none" id="printDiv" [class.show]="show" *ngIf ="newArr" -->
 <section class="taxInvoice d-none" id="printDiv"  [class.show]="show" *ngIf ="newArr">
   <div class="printTableWrapper ">
+  <!-- <div class="watermarkbg"><img src="/assets/images/tax-invoice-logo.jpg" alt="images"></div> -->
     <table cellpadding="0" cellspacing="0" > 
       <thead>
         <div *ngFor="let printData of newArr; let i = index;" >

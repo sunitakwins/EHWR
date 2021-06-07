@@ -2,7 +2,6 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {MaintenanceService} from '../../../../../Services/Maintenance/Maintenance.service';
 import {ItemsRequestModel} from '../../../../../../Customer/Models/Items/ItemsRequestModel';
 import {MatTableDataSource} from '@angular/material/table';
-import {union} from 'lodash';
 import {DeleteDialogComponent} from 'src/app/SharedModules/Components/DeleteDialog/DeleteDialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -101,7 +100,7 @@ export class UpdateEmployeesComponent implements OnInit {
       };
       // console.log(requestParams);
       this.spinner.show();
-      debugger
+      
       this.maintenanceService.addEmployeeDetails(requestParams).subscribe(res => {
         // this.employeeId = res['keyId'];
         this.addEmployeeForm.reset();
@@ -126,7 +125,7 @@ export class UpdateEmployeesComponent implements OnInit {
   }
 
   onDeleteItem(val: any, event){
-    debugger
+    
     event.stopPropagation();
     const params = {
       Id: val.employeeId,
@@ -186,12 +185,12 @@ export class UpdateEmployeesComponent implements OnInit {
       //console.log(res);
       this.setRequesetParams();
       let msg = res['responseMessage'];
-      // this.EmployeeId = -1;
       this.isUpdate = false;
       this.addEmployeeForm.patchValue({
         firstnameFormControl : null,
         lastnameFormControl : null
       });
+      this.addEmployeeForm.markAsUntouched();
       setTimeout(() => {
         this.spinner.hide();
         }, 500);
@@ -250,7 +249,7 @@ export class UpdateEmployeesComponent implements OnInit {
       };
       // console.log(params);
       this.spinner.show();
-      debugger
+      
       this.maintenanceService.updateEmployeeStatus(params).subscribe( res =>{
          let msg = res['responseMessage'];
          this.getEmployeeList();

@@ -1603,12 +1603,17 @@ input {
 .dueDateWrapper{
   .dueDateCol {
     display: flex;
+    position: relative;
     button{
       svg{
-        width: 30px;
-        height: 30px;
+        width: 25px;
+        height: 35px;
       }
     }
+    .pickerIconCol {
+      position: absolute;
+      right: 15px;
+  }
   }
 }
 .unsendInvoiceWrap{

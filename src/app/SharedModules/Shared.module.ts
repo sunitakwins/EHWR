@@ -25,8 +25,8 @@ import { ConfirmationBoxComponent } from './Components/ConfirmationBox/Confirmat
         HeaderComponent,
         DeleteDialogComponent,
         LogoutComponent,
-        // WarningDialogComponent,
-        // ConfirmationBoxComponent,
+        WarningDialogComponent,
+        ConfirmationBoxComponent,
         JsonParsePipe 
     ],
     imports:[

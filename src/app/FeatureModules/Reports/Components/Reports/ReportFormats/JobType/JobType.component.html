@@ -7,7 +7,7 @@
           <div class="d-flex align-items-center dateRange mb-3 justify-content-between">
             From<sup style="color: red;"><strong>*</strong></sup>: 
             <div class="datePickerCol f-flex">
-              <input class="form-control " formControlName="from"  matInput [matDatepicker]="fromDate"
+              <input class="form-control" formControlName="from"  matInput [matDatepicker]="fromDate"
               placeholder="dd/mm/yyyy" readonly>
               <div class="pickerIconCol">
                 <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
@@ -37,16 +37,7 @@
         </div>
       </div>
       <div class="col-sm-12 col-md-12 col-lg-6">
-        <!-- <div class="form-group">
-          <label>Month</label>
-          <div class="datePickerCol f-flex">
-            <input class="form-control" matInput [matDatepicker]="month" formControlName="month"  placeholder="mm/yyyy"  readonly>
-            <div class="pickerIconCol">
-              <mat-datepicker-toggle matSuffix [for]="month"></mat-datepicker-toggle>
-              <mat-datepicker #month></mat-datepicker>
-            </div>
-          </div>
-        </div> -->
+        <app-MonthYear (monthYearValue) ="onMonthYearChange($event)"></app-MonthYear>
       </div>
       <div class="col-sm-12 mb-3">
         <div class="actionBtn mb-2 mt-2 reportBtn">
@@ -58,9 +49,9 @@
   </form>
 </div>
 <!-- Print div -->
-<section id="jobTypePrintDiv" class="d-none" >
+<section id="jobTypePrintDiv" class="d-none"  >
   <div class="container pb-3">
-    <div class="pagebreak loginWrapper">
+    <div class="pagebreak loginWrapper" >
       <header>
         <div class="headerWrapper">
             <div class="row">
@@ -74,7 +65,7 @@
             <div class="row">
               <div class="col-sm-12">
                   <div class="table-responsive" >
-                    <table  class="table tableBodyScroll" id ="jobTypeExcelData">
+                    <table  class="table tableBodyScroll" id ="jobTypeExcelData" >
                       <thead>
                         <tr>
                           <th class="comWidth">ReportType</th>
@@ -83,7 +74,6 @@
                       </thead>
                       <tbody class="boxscroll">
                         <tr *ngFor="let res of printData;let i=index">
-
                           <td>{{res.jobItemDescription}}</td>
                           <td>{{res.itemCount}}</td>
                         </tr>
@@ -97,7 +87,7 @@
                   </div>
               </div>
             </div>
-
+            <div *ngIf ="noDataFound" class="text-center noDataFound">No Record Found</div>
         </div>
       </header>
     </div>

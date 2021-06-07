@@ -30,14 +30,14 @@ export class InvoicesOutstandingModel{
     "jobOrderId" : number;
     "methodPayId": number;
     "methodRefrenceNumberPayment": number;
-    // "invoiceTo": string;
+    "methodPayName": string;
     "paymentDate": Date;
     "amountPayment": number;
     "cardName": string;
     "cardNumber" : string;
-    "cvv": number;
-    "month": string;
-    "year":string;
+    "cvv": string;
+    "month": number;
+    "year":number;
     "createdBy": "Micheal"
 }
 

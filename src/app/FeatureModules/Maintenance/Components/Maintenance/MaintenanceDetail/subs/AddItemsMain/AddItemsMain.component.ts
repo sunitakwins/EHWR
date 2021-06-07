@@ -37,16 +37,24 @@ export class AddItemsMainComponent implements OnInit {
     this.getItemList();
   }
   public searchJobs(val: any): void{
-    this.requestModel.SearchValue = val;
-    this.setRequesetParams();
+    if (val.length === 0)
+    {
+       this.requestModel.SearchValue = '';
+       this.setRequesetParams();
+    }else {
+      this.requestModel.SearchValue = val;
+      this.setRequesetParams();
+    }   
 }
-public empty(val: any){
-  if (val.length === 0)
-  {
-     this.requestModel.SearchValue = '';
-     this.setRequesetParams();
-  }
-}
+
+// public empty(val: any){
+//   if (val.length === 0)
+//   {
+//      this.requestModel.SearchValue = '';
+//      this.setRequesetParams();
+//   }
+// }
+
 public sortData(sort: Sort): void {
 
   this.requestModel.SortColumn = sort.active;

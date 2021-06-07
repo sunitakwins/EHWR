@@ -6,7 +6,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { InfiniteScrollModel } from 'src/app/SharedModules/Models/InfiniteScroll.model';
 import { InvoicesOutstandingList, InvoicesOutstandingRequestModel } from '../../../Models/Payments/Payments.model';
 import { PaymentService } from '../../../Services/PaymentServices/Payment.service';
-import { union } from 'lodash';
 import { NotesGridModalComponent } from '../../../Modal/NotesGridModal/NotesGridModal.component';
 import { MatDialog } from '@angular/material/dialog';
 

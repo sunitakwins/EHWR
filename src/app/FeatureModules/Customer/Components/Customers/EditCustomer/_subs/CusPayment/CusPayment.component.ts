@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
 import { CustomerService } from 'src/app/FeatureModules/Customer/Services/CustomerServices/Customer.service';
-import { union } from 'lodash';
+// import { union } from 'lodash';
 import { Sort } from '@angular/material/sort';
 import { PaymentService } from 'src/app/FeatureModules/Customer/Services/PaymentServices/Payment.service';
 import { PaymentPaidList, PaymentPaidRequestModel } from 'src/app/FeatureModules/Customer/Models/Payments/Payments.model';
@@ -57,7 +57,7 @@ private getPaymentPaidListData(){
       this.dataSource = new MatTableDataSource(res);    
       if (res.length > 0) {
         this.notFoundData = false;
-        const finalArray = union(this.result, res);
+        const finalArray = res;
         this.result = finalArray; 
       }
       else {

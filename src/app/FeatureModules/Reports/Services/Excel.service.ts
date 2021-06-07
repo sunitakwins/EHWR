@@ -4,6 +4,7 @@ export class ExcelService {
 	
 exportexcel( element : any, fileName : string)
     {
+        
        /* table id is passed over here */     
        const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
        

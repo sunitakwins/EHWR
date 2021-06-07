@@ -24,12 +24,15 @@ import { InvoiceOverDueComponent } from './Components/Reports/ReportFormats/Invo
 import { InvoiceStatementComponent } from './Components/Reports/ReportFormats/InvoiceStatement/InvoiceStatement.component';
 import { MaterialModule } from 'src/app/MaterialModule/Material/Material.module';
 import { ExcelService } from './Services/Excel.service';
+import { MonthYearComponent } from './Components/Reports/ReportFormats/MonthYear/MonthYear.component';
+
 
 
 
 @NgModule({
     declarations:[
        ReportsComponent,
+       MonthYearComponent,
 
        JobExceptionComponent,
        JobTypeComponent,

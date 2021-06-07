@@ -13,7 +13,6 @@ export class DataService {
   public data = {};  
   
   setOption(option, value) {
-    debugger  
     this.data[option] = value;  
   }  
   

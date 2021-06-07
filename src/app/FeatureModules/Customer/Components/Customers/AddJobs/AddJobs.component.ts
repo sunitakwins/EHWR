@@ -1082,7 +1082,7 @@ ngAfterViewInit(){
         "statusId": Number(this.addJobsForm.value.statusId),
         "jobEmail": this.contactFruits,
         "sameAsCustomer": this.addJobsForm.value.sameAsCustomer,
-        "customerContactReference": this.addJobsForm.value.customerContactReference,
+        "customerContactReference": (this.addJobsForm.value.customerContactReference).toString(),
         "employees": this.employeeId,
         "ownerName": this.addJobsForm.value.ownerName,
         "completedDate": this.addJobsForm.value.completedDate,
@@ -1093,13 +1093,13 @@ ngAfterViewInit(){
         "suburb": this.addJobsForm.value.suburb.localityId,
         "state": this.addJobsForm.value.state,
         "postCode": this.addJobsForm.value.postCode,
-        "pageNo": this.addJobsForm.value.pageNo,
+        "pageNo": (this.addJobsForm.value.pageNo).toString(),
         "position": "Manager",
         "tankDateInstalled": this.addJobsForm.value.tankDateInstalled,
         "createdBy": "Micheal"
       }
       
-      
+       
       this.disableBtnClick = false;
       // console.log(requestParams);
       this.spinner.show();
@@ -1170,7 +1170,7 @@ ngAfterViewInit(){
         "statusId": Number(this.addJobsForm.value.statusId),
         "jobEmail": this.contactFruits,
         "sameAsCustomer": this.addJobsForm.value.sameAsCustomer,
-        "customerContactReference": this.addJobsForm.value.customerContactReference,
+        "customerContactReference": (this.addJobsForm.value.customerContactReference).toString(),
         "employees": this.employeeId,
         "ownerName": this.addJobsForm.value.ownerName,
         "completedDate": this.addJobsForm.value.completedDate,
@@ -1181,7 +1181,7 @@ ngAfterViewInit(){
         "suburb": this.addJobsForm.value.suburb.localityId,
         "state": this.addJobsForm.value.state,
         "postCode": this.addJobsForm.value.postCode,
-        "pageNo": this.addJobsForm.value.pageNo,
+        "pageNo": (this.addJobsForm.value.pageNo).toString(),
         // "position": "SuperAdmin",
         "tankDateInstalled": this.addJobsForm.value.tankDateInstalled,
         "modifiedBy": "Micheal"

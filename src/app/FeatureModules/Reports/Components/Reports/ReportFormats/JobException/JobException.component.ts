@@ -28,16 +28,17 @@ export class JobExceptionComponent implements OnInit {
 
   // Export to Excel
   excelExport(){
-    debugger
-  //  setTimeout(() => {
-   let element, fileName;
-   fileName = 'jobExceptionData.xlsx';
-   element = document.getElementById(`jobExceptionData`);
-   this.excelService.exportexcel(element , fileName);
-  //  }, 2000);
+    setTimeout(() => {
+      let element, fileName;
+      fileName = 'jobExceptionData.xlsx';
+      element = document.getElementById(`jobExceptionData`);
+      this.excelService.exportexcel(element , fileName);
+      }, 2000);
+  
  }
 
   print() {
+    
     let printContents, popupWin, printbutton;
     printbutton = document.getElementById('inputprintbutton1').style.display = "none";
     printContents = document.getElementById('printDiv').innerHTML;

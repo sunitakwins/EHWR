@@ -843,7 +843,13 @@ export class InvoiceComponent implements OnInit {
   }
 
   // Print All invoices api call function
-  printAllInvoices(){
+  printAllInvoices(input){
+   
+   this.printRequestModel.Printtype = "SingleInvoice";
+   this.printRequestModel.InvoiceId = input.invoiceId;
+   this.printRequestModel.CustomerId = input.customerId;
+   this.printRequestModel.Dayoverdue = "";
+   this.printRequestModel.Dateprinted = "";
 
     this.invoiceService.getPrintAllInvoices(this.printRequestModel).subscribe(res => {
       this.printData = res;
@@ -911,14 +917,15 @@ export class InvoiceComponent implements OnInit {
 
 
   //  View mode Invoice ==========================================
-  public openInvoicePreview(invoiceId: number) {
-    this.printRequestModel.Printtype = "SingleInvoice";
-    this.printRequestModel.InvoiceId = invoiceId;
-    this.printRequestModel.CustomerId = 0;
-    this.printRequestModel.Dayoverdue = "";
-    this.printRequestModel.Dateprinted = "";
+  public openInvoicePreview(input: any) {
+    
+    // this.printRequestModel.Printtype = "SingleInvoice";
+    // this.printRequestModel.InvoiceId = input.invoiceId;
+    // this.printRequestModel.CustomerId = input.customerId;
+    // this.printRequestModel.Dayoverdue = "";
+    // this.printRequestModel.Dateprinted = "";
 
-    this.printAllInvoices();
+    this.printAllInvoices(input);
  
     setTimeout(function () {
       let printContents, popupWin;
@@ -1189,17 +1196,17 @@ export class InvoiceComponent implements OnInit {
 
   //============== Print function =====================================
 
-  print(element: number): void {
-
-    const invoiceId = element;
+  print(input: any) {
+    
+    // const invoiceId = element;
     // const tickInvoice = element[0].tickIfInvoiceNotRequired;
     this.printRequestModel.Printtype = "SingleInvoice";
-    this.printRequestModel.InvoiceId = invoiceId;
-    this.printRequestModel.CustomerId = 0;
+    this.printRequestModel.InvoiceId = input.invoiceId;
+    this.printRequestModel.CustomerId = input.customerId;
     this.printRequestModel.Dayoverdue = "";
     this.printRequestModel.Dateprinted = "";
 
-    this.printAllInvoices();
+    this.printAllInvoices(input);
     
     setTimeout(function () {
       let printContents, popupWin, printbutton;
@@ -1219,6 +1226,23 @@ export class InvoiceComponent implements OnInit {
             box-sizing: border-box;
           }
           
+          .watermarkbg{
+            position: absolute;
+            width:300px;
+            height:250px;
+            opacity:0.09;
+            z-index:999;
+            top:45%;
+            left:50%;
+            transform: translate(-50%, -50%) ;
+            -webkit-transform: translate(-50%, -50%) ;
+            -moz-transform: translate(-50%, -50%);
+          }
+          .watermarkbg img{
+            width:300px;
+            height:250px;
+          }
+
           .page-break { display:block; page-break-after: always; }
 
           .taxInvoice {   

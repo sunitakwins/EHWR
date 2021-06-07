@@ -1,5 +1,5 @@
 <!-- print div -->
-<section id="printDivInvoiceOverDue">
+<section id="printDivInvoiceOverDue" >
 
   <div class="container pb-3">
     <div class="loginWrapper">
@@ -13,10 +13,11 @@
                 </div>
             </div>
             <div class="card-body">
-              <div class="row pageBreakWrapper" *ngFor="let data of dataArray">
+              <div class="row pageBreak" *ngFor="let data of dataArray;  let i = index" >
+               
                   <div class="col-sm-12">
-                    <div class="table-responsive">
-                      <table  class="table">
+                    <div class="table-responsive" >
+                      <table  class="table" id ='invoiceOverDueData' >
                         <thead>
                           <tr>
                             <td>Page</td>
@@ -37,25 +38,29 @@
                             <th colspan="4">{{data.days}}</th>
                           </tr>
                           <tr></tr>
-                          <tr *ngFor="let data2 of data.invoiceDetails">
-                            <td>{{data2.PageNo}}</td>
-                            <td>{{data2.InvoiceId}}</td>
-                            <td >{{data2.CustomerName}}</td>
-                            <td>{{data2.JobAddress}}</td>
-                            <td>{{data2.JobDate | date : 'dd/MM/yyyy'}}</td>
-                            <td>{{data2.DateDue | date : 'dd/MM/yyyy'}}</td>
-                            <td>{{data2.AmountDue}}</td>
-                            <td>{{data.AmountPaid}}</td>
+                          <tr *ngFor="let data2 of data.invoiceDetails;">
+                            
+                              <td>{{data2.PageNo}}</td>
+                              <td>{{data2.InvoiceId}}</td>
+                              <td >{{data2.CustomerName}}</td>
+                              <td>{{data2.JobAddress}}</td>
+                              <td>{{data2.JobDate | date : 'dd/MM/yyyy'}}</td>
+                              <td>{{data2.DateDue | date : 'dd/MM/yyyy'}}</td>
+                              <td>{{data2.AmountDue}}</td>
+                              <td>{{data.AmountPaid}}</td>
+                         
                             <!-- <tr *ngFor ="let dataNotes of data2.invoiceNotes">
                               <td>{{dataNotes}}</td>
                             </tr> -->
                           </tr>
                           <tr></tr>
-                          <tr>
-                            <td colspan="4">TotalAmountDue :  {{data.totalAmountDue }}</td>
-                            <!-- <td colspan="4">{{data2.Invoice}}</td> -->
-                            <td colspan="4">TotalAmountPaid : {{data.totalAmountPaid}}</td>
-                          </tr> 
+                          <tr *ngFor="let data3 of dataArray;let i = index">
+                            <div *ngIf = "i===0">
+                              <td colspan="4">Total Records  : {{data3.totalRecords}}</td> 
+                              <td colspan="4">Total Amount Due : {{data3.totalAmountDue }}</td>
+                              <td colspan="4">TotalAmountPaid : {{data3.totalAmountPaid}}</td>
+                            </div>
+                          </tr>
                           <tr></tr>
                           <!-- <tr >
                             <td colspan="4">Grand Total of Amount Due :  {{grandTotalOfAmountDue}} </td>
@@ -65,84 +70,83 @@
                       </table>
                     </div>
                   </div>
-                </div>
+              </div>
             <div class="row">
-              <div class="col-sm-12">
-                <tr >
-                  <td colspan="4"><strong>Grand Total of Amount Due :  {{grandTotalOfAmountDue1}}</strong> </td>
+              <div class="col-sm-12" *ngFor="let data of dataArray; let  i = index">
+                <tr *ngIf ="i === 0">
+                  <td colspan="4"><strong>Grand Total of Amount Due :  {{data.grandTotalOfAmountDue}}</strong> </td>
                   &nbsp;
-                  <td colspan="4"><strong>Grand Total of Amount Paid  : {{grandTotalOfAmountPaid1}}</strong></td>
+                  <td colspan="4"><strong>Grand Total of Amount Paid  : {{data.grandTotalOfAmountPaid}}</strong></td>
                 </tr>
               </div>
             </div>
           </div>
-
-          <div class="card-body" class ="d-none">
-            <div class="row" *ngFor="let data of dataArray">
-                <div class="col-sm-12">
-                  <div class="table-responsive">
-                    <table  class="table" id ="invoiceOverDueData">
-                      <thead>
-                        <tr>
-                          <td>Page</td>
-                          <td>Invoice No.</td>
-                          <td>Customer Name</td>
-                          <td>Job Address</td>
-                          <td>Job Date</td>
-                          <td>Date Due</td>
-                          <td>Amount Due </td>
-                          <td>Amount Paid</td>
-                          <td>Date </td>
-                          <td>Notes</td>
-                        </tr>
-                      </thead>
-                    
-                      <tbody>
-                        <tr>
-                          <th colspan="4">{{data.days}}</th>
-                        </tr>
-                        <tr></tr>
-                        <tr *ngFor="let data2 of data.invoiceDetails">
-                          <td>{{data2.PageNo}}</td>
-                          <td>{{data2.InvoiceId}}</td>
-                          <td >{{data2.CustomerName}}</td>
-                          <td>{{data2.JobAddress}}</td>
-                          <td>{{data2.JobDate | date : 'dd/MM/yyyy'}}</td>
-                          <td>{{data2.DateDue | date : 'dd/MM/yyyy'}}</td>
-                          <td>{{data2.AmountDue}}</td>
-                          <td>{{data.AmountPaid}}</td>
-                          <!-- <tr *ngFor ="let dataNotes of data2.invoiceNotes">
-                            <td>{{dataNotes}}</td>
-                          </tr> -->
-                        </tr>
-                        <tr></tr>
-                        <tr>
-                          <td colspan="4">TotalAmountDue :  {{data.totalAmountDue }}</td>
-                          <!-- <td colspan="4">{{data2.Invoice}}</td> -->
-                          <td colspan="4">TotalAmountPaid : {{data.totalAmountPaid}}</td>
-                        </tr> 
-                        <tr></tr>
-                        <!-- <tr >
-                          <td colspan="4">Grand Total of Amount Due :  {{grandTotalOfAmountDue}} </td>
-                          <td colspan="4">Grand Total of Amount Paid  : {{grandTotalOfAmountPaid}}</td>
-                        </tr> -->
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-          <div class="row">
-            <div class="col-sm-12">
-              <tr >
-                <td colspan="4"><strong>Grand Total of Amount Due :  {{grandTotalOfAmountDue1}}</strong> </td>
-                &nbsp;
-                <td colspan="4"><strong>Grand Total of Amount Paid  : {{grandTotalOfAmountPaid1}}</strong></td>
-              </tr>
-            </div>
-          </div>
-        </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- ================= Export to Excel ===================================================== -->
+
+<!-- <div class="card-body" >
+  <div class="row" *ngFor="let data of dataArray; let i = index">
+      <div class="col-sm-12">
+        <div class="table-responsive">
+          <table  class="table" >
+            <thead>
+              <tr>
+                <td>Page</td>
+                <td>Invoice No.</td>
+                <td>Customer Name</td>
+                <td>Job Address</td>
+                <td>Job Date</td>
+                <td>Date Due</td>
+                <td>Amount Due </td>
+                <td>Amount Paid</td>
+                <td>Date </td>
+                <td>Notes</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="4">{{data.dueGroup}}</td>
+              </tr>
+              <tr></tr>
+              <tr *ngFor="let data2 of data.invoiceDetails">
+                <td>{{data2.PageNo}}</td>
+                <td>{{data2.InvoiceId}}</td>
+                <td >{{data2.CustomerName}}</td>
+                <td>{{data2.JobAddress}}</td>
+                <td>{{data2.JobDate | date : 'dd/MM/yyyy'}}</td>
+                <td>{{data2.DateDue | date : 'dd/MM/yyyy'}}</td>
+                <td>{{data2.AmountDue}}</td>
+                <td>{{data.AmountPaid}}</td>
+                <tr *ngFor ="let dataNotes of data2.invoiceNotes">
+                  <td>{{dataNotes}}</td>
+                </tr> 
+              </tr>
+              <tr></tr>
+              <tr *ngFor="let data2 of data.invoiceDetails" >
+                <div *ngIf="i === 0">
+                  <td colspan="4">Total Amount Due : {{data2.TotalAmountDue }}</td>
+                  <td colspan="4">Total Records  : {{data2.totalRecords}}</td> 
+                  <td colspan="4">TotalAmountPaid : {{data2.totalAmountPaid}}</td>
+                </div>
+              </tr>
+              <tr></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <div class="row" *ngFor="let data of dataArray;">
+  <div class="col-sm-12">
+    <tr >
+      <td colspan="4"><strong>Grand Total of Amount Due :  {{data.grandTotalOfAmountDue}}</strong> </td>
+      &nbsp;
+      <td colspan="4"><strong>Grand Total of Amount Paid  : {{data.grandTotalOfAmountPaid}}</strong></td>
+    </tr>
+  </div>
+</div>
+</div> -->

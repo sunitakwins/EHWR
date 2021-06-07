@@ -33,38 +33,9 @@
           </div>
         </div>
       </div>
-      <!-- <div class="col-sm-12 col-md-12 col-lg-6">
-        <div class="row">
-          <div class="col-md-7">
-            <div class="form-group">
-              <label>Month</label>
-              <mat-select class="form-control" [(ngModel)]="selectedValue" name="months" formControlName ="months">
-                <mat-option *ngFor="let month of months" [value]="month.value">
-                  {{month.viewValue}}
-                </mat-option>
-              </mat-select>
-            </div>
-          </div>
-          <div class="col-md-5">
-            <div class="form-group">
-              <label>Year</label>
-              <mat-select class="form-control" [(ngModel)]="selectedValue" name="years" formControlName ="years">
-                <mat-option *ngFor="let year of years" [value]="year.value">
-                  {{year}}
-                </mat-option>
-              </mat-select>
-            </div>
-          </div>
-        </div>
-         <div class="form-group">
-          <label>Month</label>
-          <mat-select class="form-control" [(ngModel)]="selectedValue" name="months" formControlName ="months">
-            <mat-option *ngFor="let month of months" [value]="month.value">
-              {{month.viewValue}}
-            </mat-option>
-          </mat-select>
-        </div>
-      </div> -->
+      <div class="col-sm-12 col-md-12 col-lg-6">
+        <app-MonthYear (monthYearValue) ="onMonthYearChange($event)"></app-MonthYear>
+      </div>
       <div class="col-sm-12 mb-3">
         <div class="actionBtn mb-2 mt-2 reportBtn">
           <button type="button"  class="btn primary-btn comBtn"(click)="clearDate()">Clear Dates</button>
@@ -75,105 +46,6 @@
   </form>
 </div>
 <!-- Print div -->
-<!-- <section id="invoicePaidPrintDiv" class="d-none" >
-
-  <div class="container pb-3">
-    <div class="pagebreak loginWrapper">
-      <header>
-        <div class="headerWrapper">
-            <div class="row">
-              <div class="col-sm-12 col-md-6">
-                <table>
-                  <tr>
-                    <td class="minWidth">
-                      <h4 class="logoText"><img src="assets/images/img-1.jpg" alt="logo"><span> hot water repairs</span></h4>                      
-                    </td>
-                    <td>
-                      <span class="mickyLogo"><img src="assets/images/img-2.jpg" alt=""></span>
-                    </td>
-                  </tr>
-                </table>
-    
-                <div class="addressWrapper2">
-                  <p class="mb-0 text-uppercase">87 Bunnerong Road, Kingsford, NSW, 2032</p>
-                  <p class="mb-0 text-uppercase">ABN78003998329</p>
-                  <h5 class="mb-0">Phone: 02 9344 6602 Fax: 02 9344 9529</h5>
-                  <p><strong>Email:</strong> ehwr@bigpond.com <strong>Website:</strong> www.emergencyhotwaterrepairs.com.au</p>
-				  <p class="mb-0 text-uppercase">Proudly servicing the eastern suburbs of Sydney for over 30 years</p>
-                </div>
-              </div>
-              <div class="col-sm-12 col-md-6">
-                <div class="invoiceRecipt">
-                  <table cellpadding="0" cellspacing="0">
-                    <tr>
-                      <th colspan="2" class="text-right">Statement of Invoices <br>for the Month of</th>
-                    </tr>
-                    <tr>
-                      <td class="dynamicDate"><strong>June, 2025</strong></td>   
-                    </tr>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <div class="row mt-5">
-              <div class="col-sm-12 col-md-6">
-                  <div class="addressWrapper1">
-                    <h4>Invoice To</h4>
-                    <div class="borderBox">
-                      <p class="mb-0">Anna (13a/5-11 Thornton)</p>
-                      <p class="mb-0">13a/5-11 Thornton Street</p>
-                      <p class="mb-0">Darling Point NSW 2027</p>
-                    </div>
-                  </div>
-                </div>
-            </div>
-
-            <div class="row">
-              <div class="col-sm-12">
-                  <div class="table-responsive">
-                    <table  class="table tableBodyScroll1">
-                      <thead>
-                        <tr *ngFor = "let res of displayData">
-                          <th>{{res.column1}}</th>
-                          <th>{{res.column2}}</th>
-                          <th>{{res.column3}}</th>
-                          <th>{{res.column4}}</th>
-                          <th>{{res.column5}}</th>
-                          <th>{{res.column6}}</th>
-                          <th>{{res.column7}}</th>
-                          <th>{{res.column8}}</th>
-                          <th>{{res.column9}}</th> 
-                        </tr>
-                      </thead>
-                      <tbody class="boxscroll">
-                        <tr *ngFor="let data of invoicePaidArray; let i = index">
-                          <td>{{data.page}}</td>
-                          <td>{{data.jobOrderId}}</td>
-                          <td>{{data.invoice}}</td>
-                          <td>{{data.customerName}}</td>
-                          <td>{{data.jobDate | date}}</td>
-                          <td>{{data.dueDate | date}}</td>
-                          <td>{{data.amountInvoice}}</td>
-                          <td>{{data.date_Paid | date}}</td>
-                          <td>{{data.amountPaid}}</td>
-                        </tr>
-                          
-                          <tr>
-                         <td><strong>Total:{{totalAmountDue}}</strong></td> 
-                           <td><strong>{{totalAmountPaid}}</strong></td> 
-                          </tr>
-                      </tbody>
-                    </table>
-                  </div>
-              </div>
-            </div>
-
-        </div>
-      </header>
-    </div>
-  </div>
-</section> -->
 
 <section id="invoicePaidPrintDiv" class ="d-none" >
   <div class="container pb-3">
@@ -225,7 +97,7 @@
                   </div>
               </div>
             </div>
-
+            <div *ngIf ="noDataFound" class="text-center noDataFound">No Record Found</div>
         </div>
       </header>
     </div>

@@ -1,9 +1,8 @@
+import { DecimalPipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CreditCardValidators } from 'angular-cc-library';
-import { CreditCardValidator } from 'ngx-credit-cards';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
 import { InvoicesOutstandingModel } from '../../Models/Payments/Payments.model';
@@ -13,6 +12,7 @@ import { PaymentService } from '../../Services/PaymentServices/Payment.service';
   selector: 'app-StripePaymentModal',
   templateUrl: './StripePaymentModal.component.html',
   styleUrls: ['./StripePaymentModal.component.scss']
+  // providers: [DecimalPipe]
 })
 export class StripePaymentModalComponent implements OnInit {
   invoiceId: number;
@@ -24,7 +24,8 @@ export class StripePaymentModalComponent implements OnInit {
 
     public dialogRef: MatDialogRef<StripePaymentModalComponent>, private spinner: NgxSpinnerService,
     private dialog: MatDialog, private fb: FormBuilder, private paymentService : PaymentService,
-     public snackBar: MatSnackBar,
+     public snackBar: MatSnackBar, 
+    //  private decimalPipe: DecimalPipe,
 
     @Inject(MAT_DIALOG_DATA) public data: any) 
      {
@@ -54,30 +55,38 @@ export class StripePaymentModalComponent implements OnInit {
   }
 
   onSubmit(){
-   
-    let expiryDate = (this.stripeForm.value.expirationDate);
-    let expiryDateArr = expiryDate.split('/');
-    let expiryMonth  = expiryDateArr[0];
-    let expiryYear = expiryDateArr[1];
+    let paymentArr,payment, paymentId, paymentMethodName, expiryDate, expiryDateArr, expiryMonth,expiryYear;
+     paymentArr = this.data.PaymentForm.value.paymentId;
+     payment = paymentArr.split(',');
+     paymentId = payment[0];
+     paymentMethodName = payment[1];
 
-
+     expiryDate = (this.stripeForm.value.expirationDate);
+     expiryDateArr = expiryDate.split('/');
+     expiryMonth  = expiryDateArr[0];
+     expiryYear = expiryDateArr[1];
+ 
+    // this.decimalPipe.transform(this.data.PaymentForm.value.amount, '1.2-2');
+ 
     if(this.stripeForm.valid){
       const params: InvoicesOutstandingModel = {
         "customerId": this.data.CusId,
         "invoiceId": Number(this.data.InvoiceId),
         "jobOrderId": Number(this.data.JobId),
-        "methodPayId": this.data.PaymentForm.value.paymentId > 0 ? Number(this.data.PaymentForm.value.paymentId) : null,
+        "methodPayId": paymentId > 0 ? Number(paymentId) : null,
+        "methodPayName" :paymentMethodName,
         "methodRefrenceNumberPayment": this.data.PaymentForm.value.methodRef > 0 ? Number(this.data.PaymentForm.value.methodRef > 0) : null,
         "paymentDate": new Date(),
-        "amountPayment": Number(this.data.PaymentForm.controls.amount.value),
+        "amountPayment": this.data.PaymentForm.value.amount,
         "cardName": this.stripeForm.value.cardName,
         "cardNumber" :this.stripeForm.value.cardNumber,
-        "cvv": Number(this.stripeForm.value.cvv),
-        "month": expiryMonth,
-        "year": expiryYear,
+        "cvv": this.stripeForm.value.cvv,
+        "month": Number(expiryMonth),
+        "year": Number(expiryYear),
         "createdBy": "Micheal"
       }; 
       this.spinner.show();
+      
       this.paymentService.addPayment(params).subscribe((res)=>{
           // console.log(res);
           this.messages(res.responseMessage);

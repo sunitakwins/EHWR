@@ -52,22 +52,7 @@ export class InvoicesPaidComponent implements OnInit {
       column8: "Amt.Paid",
     }
   ]
-
-  // months dropdown list 
-  // months: months[] = [
-  //   {value:0, viewValue: 'January'},
-  //   {value:1, viewValue: 'February'},
-  //   {value:2, viewValue: 'March'},
-  //   {value:3, viewValue:'April'},
-  //   {value:4, viewValue:'May'},
-  //   {value:5, viewValue:'June'},
-  //   {value:6, viewValue:'July'},
-  //   {value:7, viewValue:'August'},
-  //   {value:8, viewValue:'September'},
-  //   {value:9, viewValue:'October'},
-  //   {value:10, viewValue:'November'},
-  //   {value:11, viewValue:'December'}
-  // ];
+  noDataFound: boolean = false;
 
 
   constructor(private fb: FormBuilder, private excelService: ExcelService,
@@ -79,12 +64,8 @@ export class InvoicesPaidComponent implements OnInit {
     this.JobTypePrintForm = this.fb.group({
       from : [moment().startOf('month').format(),Validators.required],
       to: [new Date(), Validators.required],
-      // month:[moment().format('MMMM,YYYYY')]
-      // months:[],
-      // years:[]
     })
     this.getYearsList();
-    // console.log('Invoice Paid :',this.invoicePaidBoolean);
   }
 
   ngOnChanges(): void {
@@ -92,6 +73,18 @@ export class InvoicesPaidComponent implements OnInit {
     this.cusTypeId = this.invoicePaidBoolean.custTypeId;
     // console.log('Invoice Paid :',this.invoicePaidBoolean);
   }
+  
+  
+  // On month year change
+  onMonthYearChange(event : any){
+    let startDate = new Date(event.StartDate);
+    let finalDate = new Date(event.FinalDate);
+    this.JobTypePrintForm.patchValue({
+      from : startDate,
+      to : finalDate,
+    });
+  }
+   
   
   // clear dates
   clearDate(){
@@ -122,6 +115,7 @@ export class InvoicesPaidComponent implements OnInit {
     if(this.JobTypePrintForm.valid){
       this.reportService.getInvoicePaid(params).subscribe(res => {
         this.invoicePaidArray = res;
+        this.noDataFound = (this.invoicePaidArray.length > 0) ? false : true;
       }, error => {
         console.log(error);
       })
@@ -134,14 +128,20 @@ export class InvoicesPaidComponent implements OnInit {
 
   // Export to Excel
   excelExport(){
-    debugger
+   if(this.JobTypePrintForm.valid){
     this.getInvoicePaidData();
-   setTimeout(() => {
-   let element, fileName;
-   fileName = 'invoicePaidData.xlsx';
-   element = document.getElementById(`invoicePaidData`);
-   this.excelService.exportexcel(element , fileName);
-   }, 2000);
+    setTimeout(() => {
+    let element, fileName;
+    fileName = 'invoicePaidData.xlsx';
+    element = document.getElementById(`invoicePaidData`);
+    this.excelService.exportexcel(element , fileName);
+    }, 2000);
+   }else{
+    const controls = this.JobTypePrintForm.controls
+    Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
+    return false;
+   }
+  
  }
 
   // print Function

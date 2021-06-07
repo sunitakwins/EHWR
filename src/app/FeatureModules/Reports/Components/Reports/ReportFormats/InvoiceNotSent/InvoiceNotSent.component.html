@@ -43,6 +43,11 @@
                           <td>{{data.paymentDate | date: 'dd/MM/yyyy'}}</td>
                           <td>{{data.amountPayment}}</td>
                         </tr>
+                        <!-- <tr  *ngFor="let data of invoiceNotSentList; let i = index">
+                         <div *ngIf ="i=== 0">
+                          <td colspan="5"><strong>Total Records  : {{data.totalRows}}</strong> </td>
+                         </div>
+                        </tr> -->
                       </tbody>
                     </table>
                   </div>

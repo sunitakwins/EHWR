@@ -63,23 +63,7 @@ export class JobCompletedComponent implements OnInit {
       column9: "Amt. Paid"
     }
   ]
-
-  // months dropdown list 
-  months: months[] = [
-    {value:0, viewValue: 'January'},
-    {value:1, viewValue: 'February'},
-    {value:2, viewValue: 'March'},
-    {value:3, viewValue:'April'},
-    {value:4, viewValue:'May'},
-    {value:5, viewValue:'June'},
-    {value:6, viewValue:'July'},
-    {value:7, viewValue:'August'},
-    {value:8, viewValue:'September'},
-    {value:9, viewValue:'October'},
-    {value:10, viewValue:'November'},
-    {value:11, viewValue:'December'}
-  ];
-  
+  noRecordFound: boolean = false;
 
 
   constructor(private fb: FormBuilder, private excelService : ExcelService,
@@ -90,9 +74,6 @@ export class JobCompletedComponent implements OnInit {
     this.JobTypePrintForm = this.fb.group({
       from : [moment().startOf('month').format(),Validators.required],
       to: [new Date(), Validators.required],
-      // month:[moment().format('MMMM,YYYYY')]
-      // months:[],
-      // years:[]
     })
     this.getYearsList();
   }
@@ -101,6 +82,17 @@ export class JobCompletedComponent implements OnInit {
     this.jobCompValue1 = this.jobCompletedboolean.jobCompValue;
     this.cusTypeId = this.jobCompletedboolean.custTypeId;
     // console.log('Job comp :',this.jobCompletedboolean);
+  }
+
+
+  // On month year change
+  onMonthYearChange(event : any){
+    let startDate = new Date(event.StartDate);
+    let finalDate = new Date(event.FinalDate);
+    this.JobTypePrintForm.patchValue({
+      from : startDate,
+      to : finalDate,
+    });
   }
   
   // clear dates
@@ -133,10 +125,14 @@ export class JobCompletedComponent implements OnInit {
     if(this.JobTypePrintForm.valid){
       this.reportService.getJobCompleted(params).subscribe(res => {
         this.JobCompletedArray = res;
-        // console.log('abc', this.JobCompletedArray);
+        this.noRecordFound = (this.JobCompletedArray.length > 0) ?false : true;
+        if(res > 0){
         this.printData = res;
-        this.totalAmountPaid =res[0].totalAmountPaid
-        this.totalAmount = res[0].totalAmount
+        // this.totalAmountPaid =res[0].totalAmountPaid
+        // this.totalAmount = res[0].totalAmount
+        }
+        setTimeout(() => {
+        }, 500); 
       }, error => {
         console.log(error);
       })
@@ -148,256 +144,128 @@ export class JobCompletedComponent implements OnInit {
   }
  // ================Export to Excel Data =================================
  excelExport(){
-   debugger
-  this.getJobCompletedData();
-  setTimeout(() => {
-  let element, fileName;
-  fileName = 'JobCompletedData.xlsx';
-  element = document.getElementById(`JobCompletedExcelData`);
-  this.excelService.exportexcel(element , fileName);
-  }, 2000);
+  if(this.JobTypePrintForm.valid){
+    this.getJobCompletedData();
+    setTimeout(() => {
+    let element, fileName;
+    fileName = 'JobCompletedData.xlsx';
+    element = document.getElementById(`JobCompletedExcelData`);
+    this.excelService.exportexcel(element , fileName);
+    }, 2000);
+  }else{
+    const controls = this.JobTypePrintForm.controls
+      Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
+      return false;
+  } 
+ 
 }
 
   // ================ print Function======================================
   print() {
-     this.getJobCompletedData();
-
-    setTimeout(() => {
-      let printContents, popupWin, printbutton;
-      printbutton = document.getElementById('inputprintbutton3').style.display = "none";
-      printContents = document.getElementById('jobCompPrintDiv').innerHTML;
-      popupWin = window.open('', 'top=0,left=0,height=100%,width=auto');
-      popupWin.document.open();
-      popupWin.document.write(`
-      <html>
-      <head>
-        <title>Print tab</title>
-        <style media="print">
-        
-  * {
-  -webkit-print-color-adjust: exact; /*Chrome, Safari */
-  color-adjust: exact;  /*Firefox*/
-  box-sizing: border-box;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  }
-  .pagebreak {page-break-after: always;}
-  
-  .table-responsive table thead tr:first-child {
-    background-color: #04773B;
-    color: #fff;
-  }
-  .table-responsive table tbody td .alPrice h6 span {
-    font-weight: normal;
-    font-size: 18px;
-    margin-left: 15px;
-  }
-  .table-responsive .table{
-    width : 100% ;
+    if(this.JobTypePrintForm.valid){
+      this.getJobCompletedData();
+      // if(this.JobCompletedArray.length > 0){
+        setTimeout(() => {
+          let printContents, popupWin, printbutton;
+          printbutton = document.getElementById('inputprintbutton3').style.display = "none";
+          printContents = document.getElementById('jobCompPrintDiv').innerHTML;
+          popupWin = window.open('', 'top=0,left=0,height=100%,width=auto');
+          popupWin.document.open();
+          popupWin.document.write(`
+          <html>
+          <head>
+            <title>Print tab</title>
+            <style media="print">
+            
+      * {
+      -webkit-print-color-adjust: exact; /*Chrome, Safari */
+      color-adjust: exact;  /*Firefox*/
+      box-sizing: border-box;
+      font-family: Roboto, "Helvetica Neue", sans-serif;
+      }
+          
+      .page-break  { display: block; page-break-before: always; }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .col-sm-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        position: relative;
+      }
+      .font-size{
+        font-size: 13px;
+        position: fixed;
+        bottom: 0;
+        padding-bottom: 2rem !important;
+      }
+      
+      .mt-5, .my-5 {
+        margin-top: 3rem !important;
+      }
+      .pb-3{
+      padding-top: 2rem !important;
+      padding-bottom: 4rem !important;
+      }
+      .pt-5{
+      padding-top: 5rem !important;
+      }
+      .pagebreak {page-break-after: always;}
+      
+      table thead tr:first-child {
+        background-color: #04773B;
+        color: #fff;
+      }
+       table tbody td .alPrice h6 span {
+        font-weight: normal;
+        font-size: 18px;
+        margin-left: 15px;
+      }
+      table{
+        width : 100% ;
+      }  
+      
+      
+	   table tr td:first-child {
+        border-left: none;
+        padding: 2px;
+      }
+      table th {        
+        padding: 2px;
+        border-top: none;
+        border-left: 1px solid #ccc;
+      }
+      
+	  table td  {        
+         padding: 2px ;
+        border-top: none;
+		    border-left: 1px solid #ccc;
+      }
+      
+      table {
+        border-right: 1px solid #ccc;
+      }
+      
+            </style>
+            </head>
+            <body onload="window.print();window.close()"> 
+      
+            ${printContents}
+            
+            </body>
+            </html>`)
+          printbutton = document.getElementById('inputprintbutton3').style.display = "inline-block";
+          popupWin.document.close();
+        }, 2000)
+      // }else{
+      //    alert('No Record Found');
+      // }
+    }else{ 
+      const controls = this.JobTypePrintForm.controls
+      Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
+      return false;
     }
-    .removeLastBorder.table-responsive .tableBodyScroll tr:last-child td {
-      border-top: none;
-      }
-      
-      .table-responsive table thead th.comWidth {
-        min-width: 120px;
-      }
-      
-  .table-responsive table tbody td .tgInclusive {
-    border-top: 1px solid #eee;
-    padding-top: 8px;
-  }
-  .table-responsive .tableBodyScroll th {
-    border-right: 1px solid #ccc;
-  padding: 5px;
-  border-top: none;
-  }
-  .table-responsive .tableBodyScroll tr:last-child td {
-    border-right: 1px solid #ccc;
-    padding: 5px;
-    border-top: 1px solid #ccc;
-  }
-  .table-responsive .tableBodyScroll td {
-      border-right: 1px solid #ccc;
-      padding: 5px ;
-      border-top: none;
-  }
-    .page-break  { display: block; page-break-before: always; }
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .col-sm-12 {
-  flex: 0 0 100%;
-  max-width: 100%;
-  position: relative;
-  }
-  .col-md-6 {
-    flex: 0 0 50%;
-    max-width: 50%;
-    position: relative;
-  }
-  header {
-    background-color: transparent;
-  }
-  .loginWrapper {
-    background-color: rgba(255, 255, 255, 0.97);
-    padding: 0px;
-    border-radius: 5px;
-    margin-top: 0px !important;
-  }
-  .headerWrapper {
-    padding: 15px;
-  }
-  h4.logoText {
-  margin: 0 !important;
-  line-height: 20px !important;
-  font-size: 1.25rem;
-  padding: 0 !important;
-  }
-  h4.logoText span {
-  font-size: 16px;
-  font-weight: normal;
-  line-height: 18px !important;
-  position: relative;
-  top: 10px;        
-  }
-  span.mickyLogo img {
-  width: 58px;
-  }
-  h6 {
-  font-size: 16px;
-  font-weight: normal;
-  line-height: 18px !important;
-  margin: 0 0 20px !important;
-  padding: 0 !important;
-  }
-  .headerWrapper .invoiceRecipt {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-top: 25px;
-  }
-  td.minWidth {
-  // min-width: 280px;
-  }
-  .font-size{
-  font-size: 13px;
-  position: fixed;
-  bottom: 0;
-  padding-bottom: 2rem !important;
-  }
-  
-  .addressWrapper p ,.addressWrapper2 p{
-  font-size: 13px;
-  margin: 0 !important;
-  line-height: 18px !important;
-  padding: 0 !important;
-  }
-  .addressWrapper2 {
-  max-width: 470px;
-  text-align: center !important;
-  margin-top: 15px;
-  }
-  .invoiceRecipt{
-  margin-top: 80px;
-  }
-  
-  .table-responsive{
-  overflow-x: hidden;
-  }
-  .lgTable.table-responsive{
-  overflow-x: auto;
-  }
-  
-  
-  
-  
-  .text-center {
-  text-align: center !important;
-  }
-  .text-center h6 {
-  text-align: center !important;
-  margin: 0 0  !important;
-  padding: 0 !important;
-  }
-  .invoiceRecipt td {
-    border: 1px solid #ccc;
-    padding: 5px 10px;
-  }
-  .invoiceRecipt th {
-  padding: 5px 10px 0px;
-  font-size:20px;
-  line-height:20px;
-  }
-  
-  .invoiceRecipt td {
-  border: 1px solid #ccc;
-  padding: 5px 10px;
-  }
-  .invoiceRecipt td.dynamicDate {
-  border: none;
-  text-align: right;
-  }
-  .borderBox {
-  display: inline-block;
-  border: 1px solid #ccc;
-  padding: 10px 15px;
-  min-width: 260px;
-  border-radius: 5px;
-  }
-  .borderBox p {
-  font-size: 16px;
-  margin: 0 0 5px!important;
-  line-height: 18px !important;
-  padding: 0 !important;
-  }
-  .text-right {
-  text-align: right !important;
-  }
-  .invoiceRecipt {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-  .invoiceRecipt ul {
-    padding: 0;
-    list-style: none;
-  }
-  .invoiceRecipt ul li strong {
-    min-width: 70px;
-    display: inline-block;
-  }
-  .dueDateCol .addressWrapper {
-    display: flex;
-    align-items: flex-end;
-    flex-direction: column;
-  }
-  
-  
-  .mt-5, .my-5 {
-    margin-top: 3rem !important;
-  }
-  .pb-3{
-  padding-top: 2rem !important;
-  padding-bottom: 4rem !important;
-  }
-  .pt-5{
-  padding-top: 5rem !important;
-  }
-  
-        </style>
-        </head>
-        <body onload="window.print();window.close()"> 
-  
-        ${printContents}
-        
-        </body>
-        </html>`)
-      printbutton = document.getElementById('inputprintbutton3').style.display = "inline-block";
-      popupWin.document.close();
-
-    }, 2000)
-     
   }
 
 }

@@ -32,7 +32,8 @@
               "apexcharts",
               "jspdf",
               "jspdf-autotable",
-              "xlsx"
+              "xlsx",
+              "file-saver"
               ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",

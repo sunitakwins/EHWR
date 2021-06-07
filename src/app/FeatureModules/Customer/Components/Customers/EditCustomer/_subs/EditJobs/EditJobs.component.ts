@@ -6,7 +6,6 @@ import { Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MoveJobComponent } from 'src/app/FeatureModules/Customer/Modal/MoveJob/MoveJob.component';
-import { union } from 'lodash';
 import { Joblist } from 'src/app/FeatureModules/Customer/Models/Jobs/JoblistModel.model';
 import { JobsRequestModel } from 'src/app/FeatureModules/Customer/Models/Jobs/JobsRequest.model';
 import { CustomerService } from 'src/app/FeatureModules/Customer/Services/CustomerServices/Customer.service';
@@ -106,7 +105,8 @@ export class EditJobsComponent implements OnInit {
     this.customerService.getJobList(this.requestModel).subscribe((res: any) => {
       this.dataSource = new MatTableDataSource(res);
       if (res.length > 0) {
-        const finalArray = union(this.result, res);
+        // const finalArray = union(this.result, res);
+        const finalArray = res;
         this.notFoundData = false;
         this.result = finalArray;
       }
@@ -239,13 +239,13 @@ OnSelectedRow(element: any){
   public newArr: any;
 
   // Print function
-  print(invoiceId: number, invoiceStatus: any, event: any ): void {
+  print(input:any, event: any ): void {
    event.stopPropagation();
   //  console.log(this.invoiceStatus);
-    if (invoiceStatus == true) {
+    if (input.jobInvoiceStatus == true) {
       this.invoiceRequestModel.Printtype = "SingleInvoice";
-      this.invoiceRequestModel.InvoiceId = invoiceId;
-      this.invoiceRequestModel.CustomerId = 0;
+      this.invoiceRequestModel.InvoiceId = input.invoiceId;
+      this.invoiceRequestModel.CustomerId = input.customerId;
       this.invoiceRequestModel.Dayoverdue = "";
       this.invoiceRequestModel.Dateprinted = "";
       this.invoiceService.getPrintAllInvoices(this.invoiceRequestModel).subscribe(res => {

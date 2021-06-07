@@ -177,14 +177,16 @@ public itemPartsTypeGlobalCode() {
   // Save Item
   onSaveItem() {
     // this.data.input.itemId != null
-    if (this.data.input != null) {
+    
+    if (this.data != null) {
       this.priceDetailsWithData();
       this.updateItems();
     } else {
 
       this.priceDetailsWithData();
-
+       
       if (this.addItemsForm.valid) {
+
         const requestPrams: MaintenanceAddItemsModel = {
           itemType: Number(this.addItemsForm.value.itemType),
           accountId: Number(this.addItemsForm.value.accountId),
@@ -359,7 +361,8 @@ public itemPartsTypeGlobalCode() {
         this.maintenanceService.editItemPrice(requestParamsofPriceEffective).subscribe(res => {
       
           this.getItemPriceList();
-          this.messages(resp.responseMessage)
+          this.messages(resp.responseMessage);
+          this.onCancel();
         }, error => {
           console.log(error);
         })
@@ -380,10 +383,10 @@ public itemPartsTypeGlobalCode() {
     this.openSnackBar(message, 'hello');
   }
 
-  savedMessage() {
-    const message = "Items Saved Successfully";
-    this.openSnackBar(message, 'hello');
-  }
+  // savedMessage() {
+  //   const message = "Items Saved Successfully";
+  //   this.openSnackBar(message, 'hello');
+  // }
 
   public openSnackBar(message: string, panelClass: string) {
     this.snackBar.openFromComponent(MatSnackBarComponent, {

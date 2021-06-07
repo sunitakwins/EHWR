@@ -33,30 +33,9 @@
           </div>
         </div>
       </div>
-      <!-- <div class="col-sm-12 col-md-12 col-lg-6">
-        <div class="row">
-          <div class="col-md-7">
-            <div class="form-group">
-              <label>Month</label>
-              <mat-select class="form-control" [(ngModel)]="selectedValue" name="months" formControlName ="months">
-                <mat-option *ngFor="let month of months" [value]="month.value">
-                  {{month.viewValue}}
-                </mat-option>
-              </mat-select>
-            </div>
-          </div>
-          <div class="col-md-5">
-            <div class="form-group">
-              <label>Year</label>
-              <mat-select class="form-control" [(ngModel)]="selectedValue" name="years" formControlName ="years">
-                <mat-option *ngFor="let year of years" [value]="year.value">
-                  {{year}}
-                </mat-option>
-              </mat-select>
-            </div>
-          </div>
-        </div>
-      </div> -->
+      <div class="col-sm-12 col-md-12 col-lg-6">
+        <app-MonthYear (monthYearValue) ="onMonthYearChange($event)"></app-MonthYear>
+      </div>
       <div class="col-sm-12 mb-3">
         <div class="actionBtn mb-2 mt-2 reportBtn">
           <button type="button"  class="btn primary-btn comBtn"(click)="clearDate()">Clear Dates</button>
@@ -66,6 +45,7 @@
     </div>
   </form>
 </div>
+
 <!-- Print div -->
 <section id="jobCompPrintDiv" class="d-none" >
   <div class="container pb-3">
@@ -110,17 +90,23 @@
                             {{data.datePaid | date: 'dd/MM/yyyy'}}</td>
                           <td>{{data.amountPaid}}</td>
                         </tr>
-                          <!-- <tr>
-                            <td><strong>Total Amount: {{totalAmount}}</strong></td>
-                            <td><strong>Total Amount Paid : {{totalAmountPaid}}</strong></td>
-                          </tr> -->
+                          <tr *ngFor="let data of JobCompletedArray; let i = index">
+                            <div *ngIf ="i === 0">
+                              <td colspan="3" style="border-top: 1px solid #ccc; text-align: right;"><strong>Total Amount: {{data.totalRecords}} </strong></td>
+                              <td colspan="3" style="border-top: 1px solid #ccc; text-align: right;"><strong>Total Amount: {{data.totalAmount}} </strong></td>
+                              <td colspan="6" style="border-top: 1px solid #ccc; text-align: right;"><strong>Total Amount Paid : {{data.totalAmountPaid}} </strong></td>
+                            </div>
+                           
+                          </tr>
                       </tbody>
                     </table>
-                  </div>
+                  </div>  
               </div>
             </div>
+            <div *ngIf ="noRecordFound" class="text-center noDataFound">No Record Found</div>
         </div>
       </header>
     </div>
   </div>
+  
 </section>

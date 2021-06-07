@@ -53,7 +53,7 @@
                   <div class="form-group">
                     <label>Method</label>
                     <select class="form-control " formControlName="paymentId" *ngIf ="paymentMethod" (change)="onSelectPaymentMethod($event.target.value)">
-                      <option *ngFor="let method of paymentMethod" value="{{method.globalCodeId}}" >
+                      <option *ngFor="let method of paymentMethod" value="{{method.globalCodeId}},{{method.codeName}}" >
                         {{method.codeName}}
                       </option>
                     </select>
@@ -107,7 +107,7 @@
                       <ng-container matColumnDef="invoiceNo">
                         <th mat-header-cell *matHeaderCellDef> Invoice No.</th>
                         <td mat-cell *matCellDef="let element">
-                          <a style="color: #137d59;text-decoration: none;cursor: pointer;">
+                          <a style="color: #137d59;text-decoration: none;cursor: pointer;" >
                             #{{element.invoiceId}}
                           </a>
                         </td>
@@ -199,7 +199,7 @@
 
                       <ng-container matColumnDef="amount">
                         <th mat-header-cell *matHeaderCellDef>Amount Paid</th>
-                        <td mat-cell *matCellDef="let element"> ${{element.amountPayment}} </td>
+                        <td mat-cell *matCellDef="let element"> ${{element.amountPayment}}</td>
                       </ng-container>
 
 

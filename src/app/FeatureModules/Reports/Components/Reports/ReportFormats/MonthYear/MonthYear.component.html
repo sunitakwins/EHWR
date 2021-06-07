@@ -1,0 +1,12 @@
+<div class="dueDateWrapper">
+  <label>Month and Year</label>
+  <div class="dueDateCol">
+    <input matInput [matDatepicker]="dp" [formControl]="date" class="form-control">
+    <div class="pickerIconCol">
+      <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+      <mat-datepicker #dp startView="multi-year" (yearSelected)="chosenYearHandler($event)"
+        (monthSelected)="chosenMonthHandler($event, dp)" panelClass="example-month-picker">
+      </mat-datepicker>
+    </div>
+  </div>
+</div>

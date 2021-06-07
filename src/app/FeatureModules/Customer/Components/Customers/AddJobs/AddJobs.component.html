@@ -71,7 +71,7 @@
 
                     <div class="form-group">
                       <label>Customer Ref No.</label>
-                      <input class="form-control" type="text" formControlName="customerContactReference"
+                      <input class="form-control removeArrow" type="number" formControlName="customerContactReference"
                        placeholder="Customer ref no.">
                     </div>
 
@@ -207,7 +207,7 @@
                     </div>
                     <div class="form-group pt2">
                       <label>Page No.<sup>*</sup></label>
-                      <input class="form-control " type="text" formControlName="pageNo"
+                      <input class="form-control removeArrow" type="number" formControlName="pageNo" 
                         placeholder="Page No." required>
                       <div class="help-block"
                         *ngIf="submitted || addJobsForm.get('pageNo').invalid && addJobsForm.get('pageNo').touched">

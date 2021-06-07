@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { JobAuditList } from 'src/app/FeatureModules/Customer/Models/Jobs/JoblistModel.model';
 import { JobAuditRequestModel } from 'src/app/FeatureModules/Customer/Models/Jobs/JobsRequest.model';
 import { JobService } from 'src/app/FeatureModules/Customer/Services/JobService/Job.service';
-import { union } from 'lodash';
+// import { union } from 'lodash';
 import { Sort } from '@angular/material/sort';
 
 @Component({
@@ -73,7 +73,8 @@ getJobAuditData(JobId : any){
     this.dataSource = new MatTableDataSource(res);    
     if (res.length> 0) {
       this.notFoundData = false;
-      const finalArray = union(this.result, res);
+      // const finalArray = union(this.result, res);
+      const finalArray = res;
       this.result = finalArray; 
     }
     else {

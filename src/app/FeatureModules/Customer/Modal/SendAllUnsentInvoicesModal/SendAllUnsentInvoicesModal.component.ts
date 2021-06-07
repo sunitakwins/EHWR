@@ -75,7 +75,7 @@ export class SendAllUnsentInvoicesModalComponent implements OnInit {
     this.spinner.show();
     this.invoiceService.getPrintAllInvoices(this.requestModel).subscribe((res)=>{
      this.notFoundData = res.length > 0 ? false : true;
-     debugger
+     
      if(res.length > 0){
       res.map(data => {
         data.checkbox = false;
@@ -97,7 +97,7 @@ export class SendAllUnsentInvoicesModalComponent implements OnInit {
 
   
     public allCheckBox(value) {
-      debugger
+      
       this.check = !this.check;
       if (this.check == true) {
   
@@ -116,7 +116,7 @@ export class SendAllUnsentInvoicesModalComponent implements OnInit {
   
     // Checkbox click
     listCheckbox(index: number, value: any, invoiceId: number) {
-      debugger
+      
       if (value.checked == true) {
         //ss
         this.checkBox = value.checked;

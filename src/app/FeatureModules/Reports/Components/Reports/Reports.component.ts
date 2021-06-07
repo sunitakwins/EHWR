@@ -156,7 +156,7 @@ export class ReportsComponent implements OnInit {
       CustomerTypeId:(this.cusTypeId != 5 && this.cusTypeId != undefined) ? this.cusTypeId : -1
     };
      this.reportsService.getinvoiceOverDue(params).subscribe(res=>{
-      //  console.log('Invoice OverDue :', res);
+       console.log('Invoice OverDue :', res);
        this.invoiceOverDueData = res;
      },error=>{
        console.log(error);
@@ -686,40 +686,9 @@ export class ReportsComponent implements OnInit {
       this.invoiceNotSentPrintBtn = false;
       this.invoiceStatementPrintBtn = false;
     }
-    // console.log(data);
+    console.log(data);
     
-    // if(data.param1Name == "Date_From_To" && data.param2Name == "Month_Year" && data.param3Name == "Employees List")
-    // {
-    //   this.showFromToMonthAndEmployeeList = true;
-    //   this.showFromToAndMonth = false;
-    //   console.log('run1')
-    // }
-    //  else if(data.param1Name == "Month_Year" && data.param2Name == "Customer List")
-    // {
-    //   this.showFromToMonthAndEmployeeList = false;
-    //   this.showFromToAndMonth = false;
-    //   console.log('run2')
-    // }
-    // else if(data.param1Name == "Date_From_To" && data.param2Name == "Month_Year")
-    // {
-    //   console.log('run3');
-    //   this.showFromToAndMonth = true;
-    //   this.showFromToMonthAndEmployeeList = false;
-    // }
-    // else if(data.param1Name == "Date List")
-    // {
-    //   console.log('run4')
-    //   this.showFromToMonthAndEmployeeList = false;
-    //   this.showFromToAndMonth = false;
-    // }else{
-    //   console.log('run5');
-    //   this.showFromToMonthAndEmployeeList = false;
-    //   this.showFromToAndMonth = false;
-    //   if(data.reportId == 3){
-        
-    //   }
-    // }
-
+   
   }
   printDefault(){
     const message="Select report type from the list.";

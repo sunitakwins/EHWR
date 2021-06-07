@@ -36,7 +36,7 @@
 }
 .mat-column-status {
     flex: 0 0 18% !important;
-    width: 18% !important;
+    width: 20% !important;
 }
 .mat-column-Action {
     flex: 0 0 18% !important;
@@ -64,6 +64,21 @@
     tr {
         td {
             font-size: 13.0px;
+        }
+    }
+}
+.jobInvoiceWrapper{
+    th{
+        &.mat-header-cell{
+            &.cdk-header-cell{
+                &.cdk-column-Action{
+                    &.mat-column-Action{
+                        &.ng-star-inserted {
+                            width: inherit !important;
+                        }
+                    }
+                }
+            }
         }
     }
 }

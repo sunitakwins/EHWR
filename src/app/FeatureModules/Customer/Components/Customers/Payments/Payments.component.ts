@@ -26,12 +26,11 @@ import * as _moment from 'moment';
 
 // Modals
 import { NotesGridModalComponent } from '../../../Modal/NotesGridModal/NotesGridModal.component';
-import { NotesModal } from '../../../Modal/NotesModal/NotesModal.component';
-import { NumberSymbol } from '@angular/common';
 import * as moment from 'moment';
 import { WarningDialogComponent } from 'src/app/SharedModules/Components/WarningDialog/WarningDialog.component';
 import { DataService } from 'src/app/SharedModules/Services/Services/Data.service';
 import { StripePaymentModalComponent } from '../../../Modal/StripePaymentModal/StripePaymentModal.component';
+
 
 
 export const MY_FORMATS = {
@@ -277,6 +276,7 @@ export class PaymentsComponent implements OnInit, OnChanges {
 
   // on delete payment
   public onDeletePayment(input: any) {
+    
     this.invoiceId = input['invoiceId'];
     const data = {
       InvoiceId: input['invoiceId'],
@@ -377,6 +377,7 @@ export class PaymentsComponent implements OnInit, OnChanges {
     this.invoiceId = Number(input.invoiceId);
     this.paymentForm.patchValue({
       amount: input.amountDue,
+      paymentDate : input.dueDate,
     });
   }
 
@@ -393,15 +394,15 @@ export class PaymentsComponent implements OnInit, OnChanges {
   }
 
   // On Payment Method selection
-  onSelectPaymentMethod(paymentMethodId: number) {
- 
+  onSelectPaymentMethod(paymentMethodId: any) {
+    
     let PaymentForm = this.paymentForm;
     let InvoiceId = this.invoiceId;
     let JobId = this.jobId;
     let CusId = this.customerId;
     
    
-    if (paymentMethodId == 30 && this.dueDate != undefined) {
+    if (paymentMethodId === '30,Credit' && this.dueDate != undefined) {
      const dialogRef = this.dialog.open(StripePaymentModalComponent, {
         width: '960px', disableClose: true,
         data: { InvoiceId, PaymentForm, JobId, CusId },
@@ -439,16 +440,23 @@ export class PaymentsComponent implements OnInit, OnChanges {
 
   // On Payment Save
   public onSubmit() {
+    
+    let paymentArr,payment,paymentId,paymentMethodName;
+     paymentArr = this.paymentForm.value.paymentId;
+     payment = paymentArr.split(',');
+     paymentId = payment[0];
+     paymentMethodName = payment[1];
     if (this.isStatusPaid > 0) {
       if (this.invoiceId > -1) {
         if (this.paymentForm.valid) { 
+          
           const params: InvoicesOutstandingModel = {
             "customerId": this.customerId,
             "invoiceId": Number(this.invoiceId),
             "jobOrderId": Number(this.jobId),
-            "methodPayId": this.paymentForm.value.paymentId > 0 ? Number(this.paymentForm.value.paymentId) : null,
-            "methodRefrenceNumberPayment": this.paymentForm.value.methodRef > 0 ? Number(this.paymentForm.value.methodRef > 0) : null,
-            // "invoiceTo": "Dinesh",
+            "methodPayId": paymentId > 0 ? Number(paymentId) : null,
+            "methodPayName" :paymentMethodName,
+            "methodRefrenceNumberPayment": this.paymentForm.value.methodRef > 0 ? Number(this.paymentForm.value.methodRef > 0) : null, 
             "paymentDate": new Date(),
             "amountPayment": Number(this.paymentForm.controls.amount.value),
             "cardName": null,

@@ -17,7 +17,7 @@ import { ContactComponent } from './_subs/Contact/Contact.component';
 import { DetailsComponent } from './_subs/Details/Details.component';
 import { JobAuditComponent } from './_subs/JobAudit/JobAudit.component';
 import * as _ from 'underscore';
-import { interval, Observable, observable } from 'rxjs';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-NewCustomer',

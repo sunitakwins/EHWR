@@ -7,9 +7,10 @@ import { ExcelService } from 'src/app/FeatureModules/Reports/Services/Excel.serv
   styleUrls: ['./TankInstalledDate.component.scss']
 })
 export class TankInstalledDateComponent implements OnInit {
-
+  noDataFound : boolean = false;
   @Input('tankInstalledDateList') tankInstalledDateList:any;
   constructor(private excelService : ExcelService) { }
+
 
   ngOnInit() {
     
@@ -21,7 +22,7 @@ export class TankInstalledDateComponent implements OnInit {
   }
 
   excelExport() {
-    debugger
+    
     // setTimeout(() => {
       let element, fileName;
       fileName = 'TankDateInstalledData.xlsx';
@@ -31,6 +32,7 @@ export class TankInstalledDateComponent implements OnInit {
   }
 
   print() {
+    // this.noDataFound = (this.tankInstalledDateList.length > 0) ? false : true;
     let printContents, popupWin, printbutton;
     printbutton = document.getElementById('inputprintbutton15').style.display = "none";
     printContents = document.getElementById('printDivTank').innerHTML;

@@ -9,7 +9,6 @@ import { ItemService } from '../../../Services/ItemService/Item.service';
 import { InfiniteScrollModel } from 'src/app/SharedModules/Models/InfiniteScroll.model';
 
 /*** Lodash ***/
-import { union } from 'lodash';
 import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
@@ -78,8 +77,9 @@ public sortData(sort: Sort) {
     this.itemsService.getItemsList(this.requestModel).subscribe(res=>{
       //console.log(res);
       if(res.length > 0){
-        const finalArray = union(this.result, res);   
-        // console.log(finalArray);     
+        // const finalArray = union(this.result, res);   
+        // console.log(finalArray);  
+        const finalArray = res;   
         this.dataSource = new MatTableDataSource(finalArray);
         this.result = finalArray;
       }

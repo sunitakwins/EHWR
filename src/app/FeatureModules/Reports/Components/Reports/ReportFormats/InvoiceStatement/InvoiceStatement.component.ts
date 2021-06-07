@@ -8,6 +8,8 @@ import * as _moment from 'moment';
 import { Moment } from 'moment';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { ExcelService } from 'src/app/FeatureModules/Reports/Services/Excel.service';
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 // const moment = _rollupMoment || _moment;
 const moment = _moment;
 
@@ -56,11 +58,29 @@ export class InvoiceStatementComponent implements OnInit {
 
   JobTypePrintForm: FormGroup;
 
+  dataArray = [{
+    customerName: '',
+    customerAddress: '',
+    invoiceDetails: [{
+      InvoiceId: '',
+      // InvoiceTo: '',
+      // SendDate: '',
+      DueDate: '',
+      Amount: '',
+      Ref: '',
+      Address: '',
+      TotalAmountDue: ''
+    }]
+  }];
+
+
   date = new FormControl(moment());
   finalDate: string;
   startDate: string;
   startDate1: string;
   finalDate1: string;
+
+
 
   constructor(private fb: FormBuilder, private excelService: ExcelService,
     private reportService: ReportsService) {
@@ -70,9 +90,6 @@ export class InvoiceStatementComponent implements OnInit {
   ngOnInit() {
 
     this.JobTypePrintForm = this.fb.group({
-      // from : [moment().startOf('month').format(),Validators.required],
-      // to: [new Date(), Validators.required],
-      // date: new FormControl(moment()),
       customerId: [''],
     })
     this.getCustomerBySearch();
@@ -101,10 +118,11 @@ export class InvoiceStatementComponent implements OnInit {
     ctrlValue.month(normalizedMonth.month());
     this.date.setValue(ctrlValue);
     const _month = (normalizedMonth["_i"].month) + 1;
-    this.startDate = normalizedMonth["_i"].date + "/" + _month + "/" + normalizedMonth["_i"].year;
+    this.startDate =normalizedMonth["_i"].year  + "/" + _month + "/" + + normalizedMonth["_i"].date;
     const monthYear = normalizedMonth["_i"].year + "-" + _month;
     const days = moment(monthYear, "YYYY-MM").daysInMonth();
-    this.finalDate = days + "/" + _month + "/" + normalizedMonth["_i"].year;
+    this.finalDate = normalizedMonth["_i"].year  + "/" + _month + "/" +days ;
+
     datepicker.close();
   }
 
@@ -132,330 +150,398 @@ export class InvoiceStatementComponent implements OnInit {
 
   // clear dates
   clearDate() {
+    
     this.JobTypePrintForm.patchValue({
-      // from: [],
-      // to: [],
-      // EmployeeId:[],
-      // months:[]
+      customerId: null,
     })
+    this.date.setValue(moment());
   }
 
   clearFilter() {
     this.JobTypePrintForm.patchValue({
       customer: [],
     })
-    this.date = null;
+    this.date.setValue(new Date());
   }
 
-  // get Data
+  //=============== get Data from api =====================================
 
-  getInvoiceStmtData(){
-        // get date at the time of page initialilization
-        const ctrlValue = this.date.value._d;
-        let StartDate1 = ctrlValue.getFullYear() + '/' + (ctrlValue.getMonth() + 1) + '/' + '01';
-        let days = moment(ctrlValue.getMonth(), "YYYY-MM").daysInMonth();
-        let finalDate1 = ctrlValue.getFullYear() + '/' + (ctrlValue.getMonth() + 1) + '/' + days;
+  getInvoiceStmtData() {
+    // get date at the time of page initialilization
     
+    const ctrlValue = this.date.value._d;
+
+    // let sDay, sMonth, fDay, fMonth;
+
+    // if(normalizedMonth["_i"].date < 10){
+    //   sDay = '0'+ normalizedMonth["_i"].date
+    // }else{
+    //   sDay = normalizedMonth["_i"].date
+    // }
+
+    // if(_month < 10){
+    //   sMonth = '0'+ _month
+    // }else{
+    //   sMonth = _month
+    // }
+
+    // this.startDate1 = sMonth + '/'+ sDay +'/'+ normalizedMonth["_i"].year
     
-        //  api request params 
-        const customerId = this.JobTypePrintForm.value.customerId.customerId;
-        const params = {
-          CustomerId: (customerId == null) ? -1 : customerId,
-          CustomerTypeId: (this.cusTypeId != 5 && this.cusTypeId != undefined) ? this.cusTypeId : -1,
-          StartDate: this.startDate == undefined ? StartDate1 : this.startDate,
-          EndDate: this.finalDate == undefined ? finalDate1 : this.finalDate
-        }
+    // const monthYear = normalizedMonth["_i"].year + "-" + _month;
+    // fDay = moment(monthYear, "YYYY-MM").daysInMonth();
+
+    // if(_month < 10){
+    //   fMonth = '0'+ _month
+    // }else{
+    //   fMonth = _month
+    // }
+
+    // this.finalDate1 = fMonth + '/'+ fDay +'/'+ normalizedMonth["_i"].year;
+
+
+    let StartDate1 = ctrlValue.getFullYear() + '/' + (ctrlValue.getMonth() + 1) + '/' + '01';
+    let month = ctrlValue.getMonth() +1;
+    // let days = moment(month, "YYYY-MM").daysInMonth();
+    let days = new Date(ctrlValue.getFullYear(), month, 0).getDate();
+    let finalDate1 = ctrlValue.getFullYear() + '/' + (ctrlValue.getMonth() + 1) + '/' + days;
     
-        console.log(params);
-        if (this.JobTypePrintForm.valid) {
-          this.reportService.getInvoiceStatement(params).subscribe(res => {
-            console.log('Invoice Stmt :', res);
-            this.invoiceStatementData = res;
-          }, error => {
-            console.log(error);
-          });
-        } else {
-          const controls = this.JobTypePrintForm.controls
-          Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
-          return false;
-        }
+    //  api request params 
+    const customerId = this.JobTypePrintForm.value.customerId.customerId;
+    const params = {
+      CustomerId: (customerId == null) ? -1 : customerId,
+      CustomerTypeId: (this.cusTypeId != 5 && this.cusTypeId != undefined) ? this.cusTypeId : -1,
+      StartDate: this.startDate == undefined ? StartDate1 : this.startDate,
+      EndDate: this.finalDate == undefined ? finalDate1 : this.finalDate
+    }
+    // console.log(params);
+
+    if (this.JobTypePrintForm.valid) {
+      this.reportService.getInvoiceStatement(params).subscribe(res => {
+        console.log('Invoice Stmt :', res);
+        this.invoiceStatementData = res;
+        this.bindDataInTable();
+      }, error => {
+        console.log(error);
+      });
+    } else {
+      const controls = this.JobTypePrintForm.controls
+      Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
+      return false;
+    }
   }
 
-  // export to excel
+
+  // Bind data in table
+  bindDataInTable() {
+    
+    const data = this.invoiceStatementData;
+    this.dataArray = [];
+    this.invoiceStatementData.forEach(data => {
+      let dataInvoiceDetail = JSON.parse(data.invoices);
+      let objData = {
+        customerName: data.customerName,
+        customerAddress: data.customerAddress,
+        invoiceDetails: dataInvoiceDetail
+      };
+      this.dataArray.push(objData);
+    });
+  }
+
+
   // ================Export to Excel Data =================================
- excelExport(){
-  debugger
- this.getInvoiceStmtData();
- setTimeout(() => {
- let element, fileName;
- fileName = 'InvoiceStatementData.xlsx';
- element = document.getElementById(`InvoiceStatementExcelData`);
- this.excelService.exportexcel(element , fileName);
- }, 2000);
-}
 
-  // Print Data
+  // excelExport() {
+  //   this.getInvoiceStmtData();
+  //   setTimeout(() => {
+  //     const json  = this.invoiceStatementData;
+  //     let element, fileName;
+  //     fileName = 'InvoiceStatementData.xlsx';
+  //     element = document.getElementById(`InvoiceStatementExcelData`);
+  //     this.excelService.exportexcel(element, fileName);
+  //     // ==========================================
+  //   // const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
+  //   // console.log('worksheet',worksheet);
+  //   // const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+  //   // const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  //   // this.saveAsExcelFile(excelBuffer, fileName);
+  //   }, 2000);
+  // }
+
+  // =========== save excel file ========================
+  // private saveAsExcelFile(buffer: any, fileName: string): void {
+  //   const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  //   const EXCEL_EXTENSION = '.xlsx';
+  //   const data: Blob = new Blob([buffer], {
+  //     type: EXCEL_TYPE
+  //   });
+  //   FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
+  // }
+
+
+  // ====================Print Data ===========================
   print() {
-   this.getInvoiceStmtData();
-    setTimeout(function () {
-      let printContents, popupWin, printbutton;
-      printbutton = document.getElementById('inputprintbutton1').style.display = "none";
-      printContents = document.getElementById('printDiv').innerHTML;
-      popupWin = window.open('', 'top=0,left=0,height=100%,width=100%');
-      popupWin.document.open();
-      popupWin.document.write(`
-      <html>
-        <head>
-      
-          <title>Print tab</title>
-          <style media="print">dis
 
-          *{
-            font-family: Roboto, sans-serif ;
-            box-sizing: border-box;
-          }
-          
-          .page-break { display:block; page-break-after: always; }
+    if(this.JobTypePrintForm.valid){
+    this.getInvoiceStmtData();
 
-          .taxInvoice {   
-              margin: 0 auto;
-              display: flex;
-              padding: 10px ;
-              background-color: #fff;
-              box-shadow: 0 0 10px rgb(0 0 0 / 10%);
-              font-size: 11px;
-              flex-direction: column;
-              width: 100%;
-              justify-content: flex-start;          
-          }
-          .taxInvoice th,.taxInvoice td {
-              vertical-align: top;
-          }
-          .taxInvoice table, .taxInvoice table thead, .taxInvoice table tbody, .taxInvoice table tr {
-              width: 100%;
-          }
-          .tiLeftCol {
-              width: 100%;
-            padding-right: 6px;
-          }
-          .tiLeftCol h5 {
-              font-size: 18px;
-              margin: 0;
-            text-align: right;
-            padding-right: 20px;
-          }
-          .tiLeftCol h6 {
-              margin: 0;
-              font-size: 14px;
-              text-align: right;
-              font-weight: 500;
-              text-shadow: 3px 3px 4px rgb(0 0 0 / 80%);
-            padding-right: 10px;
-            color:#014711;
-          }
-          .tiWrapper {
-              display: flex;
-              flex-direction: row;
-              align-items: center;
-             width: 100%;
-            //  padding-left: 25px;
-          }
-          .tiRighttCol {
-            width: 190px;
-            // margin-top: -20px;
-          }
-          .tiLeftInnerWrap {
-              display: flex;
-          }
-          .printTableWrapper {
-            width: 100%;
-          }
-          .tiContent p {
-              margin: 0;
-              font-size: 13px;
-            text-align: left;
-            white-space: nowrap;
-          }
-          .tiContent {
-              padding-left: 5px;
-          }
-          .tiContentWrap .tiPriceMatch {
-              margin-left: 10px;
-          }
-          .redColor{
-            color:#f00;
-          }
-          .tiRighttCol p {
-              font-size: 12px;
-              font-weight: 500;
-            margin: 2px 0;
-          }
-          .tiLeftInnerWrap .tiContentWrap {
-              display: flex;
-              flex-direction: row;
-              align-items: center;
-          }
-          .taxInvoice .mdText {
-            margin: 10px 0 0;
-            font-size: 18px;
-            height: 40px;
-            display: block;
-            text-align: left;
-            width:100%;
-            float:left;
-          }
-          .mdText span{
-            position: relative;
-            top: -10px !important;
-            display:inline-block;
-            margin-top: -10px !important;
-            left:20px !important;
-          }
-          .mdText img{
-            position: relative;
-            top: 10px !important;
-            display:inline-block;
-            margin-top: 10px !important;
-            margin-left: 23px;
-          }
-          
-          .tableBodyContent {
-              display: flex;
-            justify-content: space-between;
-          }
-          .tableBodyContent .tbRightCol,.tableBodyContent .tbLeftCol{
-              display: flex;
-            width:100%;
-            flex-direction: column;
-          }
-          
-          .dateWrapper {
-              margin-top: 60px;
-          }
-          .invoiveIdWrapper {
-              display: flex;
-              flex-direction: column;
-              justify-content: flex-end;
-              width: 100%;
-              align-items: flex-end;
-          }
-          .invoiveIdWrapper h1 {
-              margin: 0;
-              font-size: 26px;
-              text-transform: uppercase;
-          }
-          .invoiveIdWrapper p{
-             margin: 0px;
-          }
-          .jobAddressWrapper {
-              margin-top: 12px;
-          }
-          .addressWrapper {
-              margin-top: 15px;
-          }
-          .addressWrapper p {
-              margin: 0;
-              line-height: 18px;
-              font-weight: 400;
-              font-size: 15px;
-          }
-          .jobAddressWrapper p.textJustify {
-              font-size: 15px;
-          }
-          .smSpace {
-              margin: 0 15px;
-          }
-          .workComplete {
-              margin-top: 30px;
-          }
-          .workComplete .smCaption {
-              margin-bottom: 0;
-          }
-          .workComplete p {
-              margin: 0;
-          }
-          table.taxInvoiceTable {
-              margin-top: 30px;
-              position:relative;
-              top:30px;
-              width:auto;
-              display:block !important;
-          }
-          
-          .taxInvoiceTable table, .taxInvoiceTable table thead, .taxInvoiceTable table tbody, 
-          .taxInvoiceTable table tr,.fullwidthCol,.taxInvoiceTable{
-            width: auto;
-          }
-          .taxInvoiceTable th {
-              text-align: left;
-              font-size: 15px;
-              vertical-align: middle;
-              text-transform: uppercase;
-          }
-          
-          
-          
-          .taxInvoiceTable th,.taxInvoiceTable td{
-            padding: 10px;
-            text-align: right;
-          }
-          .taxInvoiceTable th:first-child {
-            text-align: left;
-          }
-          .taxInvoiceTable td:first-child {
-            text-align: left;
-          }
-          ul.amountTotal {
-              padding: 10px 0 0;
-              margin: 0;
-              list-style: none;
-              border-top: 1px solid #eee;
-              width: 300px;
-              float: right;
-          }   
-          ul.amountTotal li{
-             display: flex;
-              justify-content: space-between;
-            padding: 5px 10px;
-          }
-              
-          ul.amountTotal li strong,ul.amountTotal li span {
-              width: 100%;
-              text-align: right;
-          }
-          ul.amountTotal li strong{
-              text-transform: uppercase;
-          }
-          .dueBalance {
-            background: #f5f5f5 !important;
-            padding: 10px;
-            box-shadow: inset 0px 0px 70px rgb(0 0 0 / 10%) !important;
-          }
-          .banlDetails {
-            border-top: 1px solid #eee;
-              margin: 10px 0 0;
-              padding-top: 10px;
-          }
-          .banlDetails p {
-              margin: 0 0 4px;
-          }
-          .table-responsive table thead tr { 
-            background-color: #f5f5f5 ;
-            background: #f5f5f5 ;
-            box-shadow: inset 0px 0px 70px rgb(0 0 0 / 10%) !important;
-          }
-
-</style>
-        </head>
-    <body onload="window.print();window.close()"> 
-
-    ${printContents}
-    
-    </body>
-      </html>`
-      );
-      printbutton = document.getElementById('inputprintbutton1').style.display = "inline-block";
-      popupWin.document.close();
-    }, 2000);
+    // if(this.invoiceStatementData.length > 0){
+      setTimeout(function () {
+        let printContents, popupWin, printbutton;
+        printbutton = document.getElementById('inputprintbutton7').style.display = "none";
+        printContents = document.getElementById('invoiceStatementPrintDiv').innerHTML;
+        popupWin = window.open('', 'top=0,left=0,height=100%,width=auto');
+        popupWin.document.open();
+        popupWin.document.write(`
+        <html>
+          <head>
+  
+            <title>Print tab</title>
+            <style media="print">
+  
+  * {
+  -webkit-print-color-adjust: exact; /*Chrome, Safari */
+  color-adjust: exact; /*Firefox*/
+  box-sizing: border-box;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
   }
+  .pagebreak {page-break-after: always;}
+  
+  .page-break { display: block; page-break-before: always; }
+  .row {
+  display: flex;
+  flex-wrap: wrap;
+  }
+  .ehwrLogo{
+    margin-top:35px;
+  }
+  .col-sm-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+  position: relative;
+  }
+  .col-md-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+  position: relative;
+  }
+  header {
+  background-color: transparent;
+  }
+  .loginWrapper {
+  background-color: rgba(255, 255, 255, 0.97);
+  box-shadow: none;
+  padding: 0px;
+  border-radius: 5px;
+  margin-bottom: 50px;
+  }
+  .headerWrapper {
+  padding: 15px;
+  }
+  h4.logoText {
+  margin: 0 !important;
+  line-height: 20px !important;
+  font-size: 2.2rem;
+  padding: 0 !important;
+  color:#f00;
+  }
+  h4.logoText span {
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 18px !important;
+  color:#000;
+  }
+  h6 {
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 18px !important;
+  margin: 0 0 20px !important;
+  padding: 0 !important;
+  }
+  .headerWrapper .invoiceRecipt {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-top: 25px;
+  float:right;
+  }
+  td.minWidth {
+  min-width: 400px;
+  }
+  td.minWidth h6{
+  text-align: center;
+  margin-top:8px;
+  }
+  td.minWidth img{
+  width:250px;
+  }
+  .colWidth{
+    width:250px;
+  }
+  .footerNote{
+  position: fixed;
+  bottom: 0;
+  padding-bottom: 2rem !important;
+  }
+  .footerNote p{
+    font-size: 13px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    
+    }
+  
+  .addressWrapper p ,.addressWrapper2 p{
+  font-size: 17px;
+  margin: 0 !important;
+  line-height: 20px !important;
+  padding: 0 !important;
+  }
+  .addressWrapper2 {
+  width: 450px;
+  text-align: center !important;
+  margin-top: -50px;
+  }
+  .invoiceRecipt{
+  margin-top: 40px;
+  }
+  
+  .queryContent thead th{
+  text-align:left;
+  }
+  
+  .table-responsive .table{
+  width : 100% ;
+  }
+  
+  .table-responsive .tableBodyScroll td {
+  border-right: 1px solid #ccc;
+  padding: 15px 15px;
+  }
+  .table-responsive .tableBodyScroll th {
+  padding: 10px 15px;
+  }
+  .text-center {
+  text-align: center !important;
+  }
+  .text-center h6 {
+  text-align: center !important;
+  margin: 0 0 !important;
+  padding: 0 !important;
+  }
+  .addressWrapper1 {
+  margin-top:20px;
+  margin-bottom:30px;
+  }
+  .addressWrapper1 h4{
+  font-size:25px;
+  line-height:25px;
+  margin:0;
+  padding:0;
+  }
+  .invoiceRecipt td {
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  }
+  .invoiceRecipt th {
+  text-align:enter;
+  padding: 5px 10px 20px;
+  font-size:25px;
+  }
+  .invoiceRecipt td {
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  }
+  .borderBox {
+  display: inline-block;
+  border: 1px solid #ccc;
+  padding: 10px 15px;
+  min-width: 260px;
+  }
+  .borderBox p {
+  font-size: 16px;
+  margin: 0 !important;
+  line-height: 18px !important;
+  padding: 0 !important;
+  }
+  
+  .invoiceRecipt {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width:240px;
+  }
+  .dueDateCol .invoiceRecipt {
+  width:240px;
+  display: block;
+  float:right;
+  }
+  .dueDateCol .invoiceRecipt table{
+  width:100%;
+  }
+  .invoiceRecipt ul {
+  padding: 0;
+  list-style: none;
+  }
+  .invoiceRecipt ul li strong {
+  min-width: 70px;
+  display: inline-block;
+  }
+  .dueDateCol .addressWrapper {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  }
+  .table-responsive table thead {
+  background-color: #095239;
+  color: #fff;
+  }
+  .table-responsive table thead th.comWidth {
+  min-width: 120px;
+  }
+  .table-responsive table tbody td .alPrice h6 span {
+  font-weight: normal;
+  font-size: 18px;
+  margin-left: 15px;
+  }
+  .table-responsive table tbody td .tgInclusive {
+  border-top: 1px solid #eee;
+  padding-top: 8px;
+  }
+  
+  .statementWrapper{
+    width:200px;
+    text-align:center;
+    margin-left:60px;
+    margin-top:15px;
+  }
+  .statementWrapper h5{
+    font-size:22px;
+    margin:0;
+  }
+  .statementWrapper h5.monthYearWrap{
+    margin-left:80px;
+  }
+  
+  
+  
+  </style>
+          </head>
+      <body onload="window.print();window.close()">
+  
+      ${printContents}
+  
+      </body>
+        </html>`
+        );
+  
+        printbutton = document.getElementById('inputprintbutton7').style.display = "inline-block";
+        popupWin.document.close();
+      }, 2000);
+    // }else{
+    //   alert('hii');
+    // }
+  }else{
+    const controls = this.JobTypePrintForm.controls
+    Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
+    return false;
+  }
+ }
 }

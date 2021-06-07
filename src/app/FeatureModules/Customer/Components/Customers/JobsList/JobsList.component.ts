@@ -13,7 +13,7 @@ import { InfiniteScrollModel } from 'src/app/SharedModules/Models/InfiniteScroll
 import { JobService } from '../../../Services/JobService/Job.service';
 
 /*** Lodash ***/
-import { union } from 'lodash';
+// import { union } from 'lodash';
 import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MoveJobComponent } from '../../../Modal/MoveJob/MoveJob.component';
@@ -121,7 +121,8 @@ public sortData(sort: Sort) {
        this.noFoundData = (res.length > 0) ? false : true;
         if(res.length > 0){
          // this.noFoundData = false;
-          const finalArray = union(this.result, res);   
+          // const finalArray = union(this.result, res);   
+          const finalArray = res;
           // console.log(finalArray);     
           //this.dataSource = new MatTableDataSource(finalArray);
           if(this.searchVal == true){
