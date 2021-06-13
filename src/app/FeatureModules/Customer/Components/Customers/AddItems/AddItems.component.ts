@@ -216,8 +216,9 @@ export class AddItemsComponent implements OnInit {
   public onChangeItemSource(id) {
    
     this.stockType = Number(id);
-   
+    
     if (this.stockType == 15) {
+      this.getAllItemSource(15);
       this.addItemsForm.patchValue({
         itemId: null,
         unitPrice: null,
@@ -225,8 +226,7 @@ export class AddItemsComponent implements OnInit {
         jobOrderItemId: null,
         totalPrice: null,
         jobItemDescription: null,
-      })
-      this.getAllItemSource(15);
+      });
     } else {
       this.getAllItemSource(14);
       this.nullValues();
@@ -244,7 +244,7 @@ export class AddItemsComponent implements OnInit {
   }
 
   private getAllItemSource(stockType : number) {
-    
+    // this.spinner.show();
     this.itemSourceRequestModel.CustomerType = this.customerType ? this.customerType : 0;
     this.itemSourceRequestModel.ItemType = Number(stockType);
     this.itemService.getItems(this.itemSourceRequestModel).subscribe(res => {
@@ -253,7 +253,7 @@ export class AddItemsComponent implements OnInit {
         this.allItemSource = res;
         this.itemsOptions = res;
         setTimeout(()=>{
-
+          // this.spinner.hide();
         },200);
       }
 
@@ -262,8 +262,7 @@ export class AddItemsComponent implements OnInit {
     })
   }
 
-
-
+  
   //calculate total amount=======================
   onBlurCalculateTotalAmount() {
     this.totalPrice = this.addItemsForm.value.unitPrice * this.addItemsForm.value.quantity * 1.1;
@@ -314,6 +313,7 @@ export class AddItemsComponent implements OnInit {
  
   // get all Itemsource------------------------ 
   public displayItemSource(result?: any): string | undefined {
+    
       if (result || result > 0) {
         if(result.itemPrice){
           let priceItem= JSON.parse(result.itemPrice);
@@ -330,7 +330,6 @@ export class AddItemsComponent implements OnInit {
          this.totalPrice = result.totalPrice == undefined ? this.totalPrice : result.totalPrice
         return result.itemName;
       } else return undefined;
-    
   }
 
   
@@ -416,7 +415,6 @@ export class AddItemsComponent implements OnInit {
             }
        
           }, error => {
-            // console.log(error);
           })
         }
       });
@@ -497,10 +495,7 @@ export class AddItemsComponent implements OnInit {
                 this.spinner.hide();
               }, 500);
             }, error => {
-              // this.dialog.open(WarningDialogComponent, {
-              //   width: '350px',
-              //   data: "This item is not availble. Please choose the item from the list." 
-              // });
+
               setTimeout(() => {
                 this.spinner.hide();
               }, 200);

@@ -71,8 +71,8 @@
 
                     <div class="form-group">
                       <label>Customer Ref No.</label>
-                      <input class="form-control removeArrow" type="number" formControlName="customerContactReference"
-                       placeholder="Customer ref no.">
+                      <input class="form-control removeArrow" type="text" formControlName="customerContactReference"
+                       placeholder="Customer ref no."> 
                     </div>
 
                    
@@ -228,7 +228,7 @@
                           <input placeholder="Add Employees"  #employees formControlName="employees" 
                             [matAutocomplete]="auto" [matChipInputFor]="chipList"
                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-                            (matChipInputTokenEnd)="add($event)" (keyup)="searchEmployee($event.target.value)">
+                            (matChipInputTokenEnd)="add($event)" (keyup)="searchEmployee($event.target.value)" multiple>
                         </mat-chip-list>
 
                         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">

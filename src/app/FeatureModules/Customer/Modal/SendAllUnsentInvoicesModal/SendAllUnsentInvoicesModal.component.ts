@@ -151,15 +151,17 @@ export class SendAllUnsentInvoicesModalComponent implements OnInit {
 
   // Send all Unsent Invoices method
     Send(){
+      
       // console.log(this.storeInvoiceData);
       if(this.invoiceDataList.length > 0 && this.checkBox ){
   
         this.invoiceDataListNew = this.removeDuplicates(this.invoiceDataList, "customerId");
         // this.invoiceDataList = [];
         this.invoiceDataList =  this.invoiceDataListNew;
-        // this.printData()
-        let msg = "All unsent invoices has been sent.";
-        this.messages(msg);
+
+        // let msg = "All unsent invoices has been sent.";
+        // this.messages(msg);
+
       }else{
           const message = "Please select record to be sent.";
           this.messages(message);

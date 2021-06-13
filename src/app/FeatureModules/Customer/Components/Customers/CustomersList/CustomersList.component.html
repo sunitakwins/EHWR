@@ -94,10 +94,11 @@
                      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click) ="OnSelectedRow(row.customerId)"   ></tr>
                   </table>
                   <!-- (click) ="OnSelectedRow(row.customerId)"  -->
-                  <!-- <div *ngIf="noFoundData" class="text-center noDataFound">No record found</div> -->
+                 
                   </div> 
                </div>
               </div>
+               <div *ngIf="noFoundData" class="text-center noDataFound">No record found</div>
            </div>
         </div>
      </div>

@@ -8,6 +8,9 @@ import { InvoicesOutstandingList, InvoicesOutstandingRequestModel } from '../../
 import { PaymentService } from '../../../Services/PaymentServices/Payment.service';
 import { NotesGridModalComponent } from '../../../Modal/NotesGridModal/NotesGridModal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { InvoiceService } from '../../../Services/InvoiceService/Invoice.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
 
 @Component({
   selector: 'app-PaymentList',
@@ -20,7 +23,7 @@ export class PaymentListComponent implements OnInit {
   public searchVal : boolean =false;
   public result:Array<InvoicesOutstandingList> =[];
   public requestModel = new InvoicesOutstandingRequestModel();
-  public displayedColumnsInvoice: string[] = ['invoiceNo', 'dateDue', 'pageNo', 'jobAddress','amountInvoice', 'amountDue','Notes'];
+  public displayedColumnsInvoice: string[] = ['invoiceNo', 'dateDue', 'pageNo', 'jobAddress','amountInvoice', 'amountDue','action'];
 
   @ViewChild('sort', { static: true }) sort!: MatSort;
 
@@ -31,7 +34,9 @@ export class PaymentListComponent implements OnInit {
   dataNotFound: boolean = false;
   
   constructor(private paymentService : PaymentService, private activeRouter:ActivatedRoute, 
-    private spinner: NgxSpinnerService, private dialog: MatDialog,private router : Router ) { }
+    private spinner: NgxSpinnerService, private snackBar : MatSnackBar,
+    private invoiceService : InvoiceService,
+    private dialog: MatDialog,private router : Router ) { }
   
   ngOnInit() {
     this.activeRouter.queryParams.subscribe(params => {
@@ -134,5 +139,28 @@ export class PaymentListComponent implements OnInit {
      this.router.navigate(['customer','Payment'],
      {queryParams : {jobOrderId : data.jobOrderId, customerId : data.customerId} });
   } 
-   
+
+ // Resend Invoice ==================================
+ resendInvoice(invoiceId, event){
+  event.stopPropagation();
+  const data = {
+    invoiceId: invoiceId,
+  };
+  
+  this.invoiceService.resendInvoice(data).subscribe(res => {
+   if(res) {
+     let msg = "Invoice has been sent to through email.";
+     this.openSnackBar(msg, 'hello');
+   }
+  })
+} 
+
+
+ public openSnackBar(message: string, panelClass: string) {
+  this.snackBar.openFromComponent(MatSnackBarComponent, {
+    data: message,
+    panelClass: panelClass,
+    duration: 2000
+  });
+ }  
 }

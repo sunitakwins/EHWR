@@ -372,7 +372,9 @@ export class NewCustomerComponent  implements OnInit {
     this.isVerifyActions = true;
     this.markFormGroupTouched(this.addJobData.JobForm);
     this.nextStep();
-    this.jobAuditData(this.JobId);
+    if(this.JobId){
+      this.jobAuditData(this.JobId);
+    }
   }
 
 
@@ -393,7 +395,7 @@ export class NewCustomerComponent  implements OnInit {
   }
 
   sendJobIdToPaymentValue(value) {
-
+   debugger
     this.JobIdFromInvoice = value.jobOrderId;
     this.contact = false;
     this.markFormGroupTouched(this.addJobData.InvoiceForm);
@@ -605,7 +607,10 @@ export class NewCustomerComponent  implements OnInit {
 
   // Job Audit method
 jobAuditData(jobId : number){
+  if(jobId){
     this.jobAuditComponent.getJobAuditData(jobId);
+  }
+    
   }
 }
 

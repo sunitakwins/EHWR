@@ -9,6 +9,7 @@ import { UserLoggedRequestModel } from '../../Models/UserLogged/userLoggedReques
 import { UpdateSettableDays } from '../../Models/SettableDays/UpdateDays.model';
 import { UpdateEmployeesModel } from '../../Models/UpdateEmployees/UpdateEmployeesModel';
 import { UpdateEmpStatusModel } from '../../Models/Models/UpdateEmployees/UpdateEmployeesModel';
+import { EmployeeRequestModel } from 'src/app/FeatureModules/Customer/Models/Jobs/EmployeeRequestModel.model';
 
 
 
@@ -33,8 +34,9 @@ export class MaintenanceService {
     return this.http.get(this.Url + '/Item?', {params});
   }
 
-  getUpdateEmployeeList(model: UpdateEmployeesRequestModel): Observable<any> {
+  getEmployeeList(model: EmployeeRequestModel): Observable<any> {
     const params = new HttpParams()
+      .set('IsActive',`${ model.IsActive}`)
       .set('PageNo', `${model.PageNo}`)
       .set('PageSize', `${model.PageSize}`)
       .set('SortColumn',`${model.SortColumn}`)

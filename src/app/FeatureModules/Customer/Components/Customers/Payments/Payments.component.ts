@@ -411,7 +411,6 @@ export class PaymentsComponent implements OnInit, OnChanges {
       }, 500);
     
       dialogRef.afterClosed().subscribe(result => {
-        
         if(result){
           this.getInvoicesOutstandingListData(this.customerId);
           this.getPaymentPaidListData(this.customerId);
@@ -425,10 +424,7 @@ export class PaymentsComponent implements OnInit, OnChanges {
           this.dueDate = undefined
         }else{
           this.paymentForm.patchValue({
-            amount: [''],
             paymentId: [''],
-            methodRef: [''],
-            paymentDate : ['']
           });
         }
        });

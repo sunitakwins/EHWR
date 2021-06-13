@@ -424,17 +424,10 @@ ngAfterViewInit(){
       this.innerTabbingData = true;
     }
 
-    // if (this.id > -1) {
-
-    //   this.onCustomerSelection.emit({ id: this.CusId, cusName: this.sendCustomerName, jobId: this.JobOrderId });
-    // }
-    // else {
-    //   this.indexVal == 2;
-    // }
+    
 
     if (this.id == undefined || this.id == null) {
       this.id = this.CusId;
-      // this.hideSearch = (this.indexVal == 2) ? true: false;
       if (this.id != undefined || this.id != null) {
 
         this.jobIdDetails();
@@ -451,7 +444,6 @@ ngAfterViewInit(){
       map((fruit: string | null) => fruit ? this._filterContact(fruit) : this.allFruitsContact.slice()));
 
     this.invoiceId = localStorage.getItem("invoiceId");
-    // console.log('invoiceID=',this.invoiceId);
     if (this.invoiceId != null) {
       this.jobIdDetails();
     }
@@ -483,7 +475,6 @@ ngAfterViewInit(){
       if (res && res[0]) {
 
         let JobData = res[0];
-        // console.log(JobData);
         if (res[0].invoiceId != undefined) {
           if (res[0].invoiceId > 0) {
             this.invoiceId = res[0].invoiceId;
@@ -527,7 +518,7 @@ ngAfterViewInit(){
         this.jobEmail = [];
         this.contactFruits = [];
         if(contactEmail == null){
-          //  this.
+         
         }else{
           contactEmail.forEach(element => {
             const emailData = {
@@ -541,7 +532,6 @@ ngAfterViewInit(){
         
         this.addJobsForm.get('searchDetail').disable();
         this.addJobsForm.setValue({
-          // 'jobOrderId': JobData.jobOrderId,
           'customerId': JobData.customerId,
           'sameAsCustomer': JobData.sameAsCustomer,
           "customerContactReference": JobData.customerContactReference,
@@ -588,7 +578,6 @@ ngAfterViewInit(){
 
     const input = event.input;
     const value = event.value;
-    // //console.log(value);
 
     // Add our fruit
     if ((value || '').trim()) {
@@ -751,21 +740,6 @@ ngAfterViewInit(){
       });
     }
 
-
-    // this.isChecked = !this.isChecked;
-    // if (this.isChecked == true) {
-    //   this.onFieldChange();
-    // } else {
-    //   this.addJobsForm.patchValue({
-    //     'address1': '',
-    //     'address2': '',
-    //     'address3': '',
-    //     'suburb': [''],
-    //     'state': [''],
-    //     'postCode': [''],
-    //   });
-    // }
-
   }
 
   public onFieldChange() {
@@ -790,7 +764,6 @@ ngAfterViewInit(){
 
     }, error => {
 
-      //console.log(error);
     });
 
 
@@ -838,14 +811,6 @@ ngAfterViewInit(){
     })
   }
 
-  // filterListContact(data) {
-  //   if (data) {
-  //     this.email;
-  //     return data =  data.filter(x => !this.email.map(x => x.email).includes(x.email));
-  //   }
-  //   else
-  //     return [];
-  // }
 
   validateEmail(email) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -943,10 +908,12 @@ ngAfterViewInit(){
   public filterEmployee(val) {
 
     const filterValue = val.toUpperCase();
+    
     this.allEmployees = this.employeeOptions.filter(option => option.employeeName.indexOf(filterValue) === 0);
   }
 
   private getEmployeeBySearch() {
+    this.employeeRequestModel.IsActive = false;
     this.jobService.getEmployees(this.employeeRequestModel).subscribe(res => {
       this.allEmployees = res;
       this.employeeOptions = res;
@@ -967,7 +934,6 @@ ngAfterViewInit(){
 
   //get suburb========================================
   public displaySuburb(result?: any): string | undefined {
-    // //console.log(result);
 
     if (result) {
       this.addJobsForm.patchValue({ state: result.state, postCode: result.postCode });
@@ -1082,7 +1048,7 @@ ngAfterViewInit(){
         "statusId": Number(this.addJobsForm.value.statusId),
         "jobEmail": this.contactFruits,
         "sameAsCustomer": this.addJobsForm.value.sameAsCustomer,
-        "customerContactReference": (this.addJobsForm.value.customerContactReference).toString(),
+        "customerContactReference": this.addJobsForm.value.customerContactReference,
         "employees": this.employeeId,
         "ownerName": this.addJobsForm.value.ownerName,
         "completedDate": this.addJobsForm.value.completedDate,
@@ -1099,9 +1065,9 @@ ngAfterViewInit(){
         "createdBy": "Micheal"
       }
       
-       
+       debugger
       this.disableBtnClick = false;
-      // console.log(requestParams);
+
       this.spinner.show();
       this.jobService.addJobOrder(requestParams).subscribe(res => {
         this.jobID = res['keyId'];
@@ -1170,7 +1136,7 @@ ngAfterViewInit(){
         "statusId": Number(this.addJobsForm.value.statusId),
         "jobEmail": this.contactFruits,
         "sameAsCustomer": this.addJobsForm.value.sameAsCustomer,
-        "customerContactReference": (this.addJobsForm.value.customerContactReference).toString(),
+        "customerContactReference": this.addJobsForm.value.customerContactReference,
         "employees": this.employeeId,
         "ownerName": this.addJobsForm.value.ownerName,
         "completedDate": this.addJobsForm.value.completedDate,
@@ -1186,7 +1152,8 @@ ngAfterViewInit(){
         "tankDateInstalled": this.addJobsForm.value.tankDateInstalled,
         "modifiedBy": "Micheal"
       }
-       
+        
+      
       this.jobService.editJobOrder(requestParams).subscribe(res => {
         const responseMessage = res.responseMessage;
         this.messages(responseMessage);

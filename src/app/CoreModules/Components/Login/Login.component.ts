@@ -50,11 +50,18 @@ export class LoginComponent implements OnInit {
 
       this.loginService.onLogin(requestParams).subscribe(res => {
         //console.log(res);
-        let LoggedInId = res['keyId'];
-        this.localstorage.setUserId(LoggedInId);
-        let msg = res['responseMessage'];
-        this.messages(msg);
-        this.router.navigate(["dashboard"]);
+        if(res['responseCode'] === 200){ 
+          let LoggedInId = res['keyId'];
+          this.localstorage.setUserId(LoggedInId);
+          let msg = res['responseMessage'];
+          this.messages(msg);
+          this.router.navigate(["dashboard"]);
+        }else {
+          let msg = res['responseMessage'];
+          this.messages(msg);
+          this.router.navigate(["login"]);
+        }
+        
       }, error => {
         console.log(error);
       })

@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NotesGridModalComponent } from '../../../Modal/NotesGridModal/NotesGridModal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SendAllUnsentInvoicesModalComponent } from '../../../Modal/SendAllUnsentInvoicesModal/SendAllUnsentInvoicesModal.component';
+import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
 
 @Component({
   selector: 'app-InvoiceList',
@@ -30,7 +31,7 @@ export class InvoiceListComponent implements OnInit {
 
   public scrollModel = new InfiniteScrollModel();
 
-  displayedColumns2: string[] = ['invoiceNo', 'dateSend', 'dateDue', 'amountDue', 'datePaid', 'amountPaid', 'status', 'Action'];
+  displayedColumns2: string[] = ['invoiceNo', 'dateSend', 'dateDue', 'amountDue', 'datePaid', 'amountPaid', 'status', 'action'];
   pageNo: number;
   jobInvoiceNotFound: boolean;
 
@@ -136,13 +137,36 @@ export class InvoiceListComponent implements OnInit {
   }
 
   // Send All Unsent Invoices Functionality
-  sendAllUnsentInvoices(event) {
-   
+  sendAllUnsentInvoices(event) { 
     event.stopPropagation();
-
     this.dialog.open(SendAllUnsentInvoicesModalComponent, {
       width: '350px',
       data: ""
+    });
+  }
+
+   // Resend Invoice ==================================
+  resendInvoice(invoiceId : any, event){
+
+    event.stopPropagation();
+    const data = {
+      invoiceId: invoiceId,
+    };
+    
+    this.invoiceService.resendInvoice(data).subscribe(res => {
+     if(res) {
+       let msg = "Invoice has been sent to through email.";
+       this.openSnackBar(msg, 'hello');
+     }
+    })
+  } 
+
+  
+  public openSnackBar(message: string, panelClass: string) {
+    this.snackBar.openFromComponent(MatSnackBarComponent, {
+      data: message,
+      panelClass: panelClass,
+      duration: 2000
     });
   }
 }

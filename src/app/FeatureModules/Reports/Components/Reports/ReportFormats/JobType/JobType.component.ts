@@ -47,6 +47,9 @@ export class JobTypeComponent implements OnInit {
   public totalItems:any;
   days: any;
   noDataFound: boolean = false;
+  initialDate: string;
+  endDate: string;
+  todayDate: Date;
 
 
   constructor(
@@ -115,7 +118,9 @@ export class JobTypeComponent implements OnInit {
         this.totalItems = res[0].totalItems;
        }
        this.noDataFound = (this.printData.length > 0) ? false : true;
-       
+      this.initialDate = moment(this.JobTypePrintForm.value.from).format('MM-DD-yyyy');
+       this.endDate = moment(this.JobTypePrintForm.value.to).format('MM-DD-yyyy');
+       this.todayDate = new Date();
       },error=>{
         console.log(error);
       });

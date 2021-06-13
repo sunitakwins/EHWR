@@ -46,6 +46,7 @@ public deleteJobs(params:any){
 
 public getEmployees(model:EmployeeRequestModel):Observable<any>{
   const params =new HttpParams()
+  .set('IsActive', `${model.IsActive}`)
   .set('PageNo',model.PageNo )
   .set('PageSize', model.PageSize)
   .set('SearchValue',model.SearchValue)

@@ -8,14 +8,14 @@
               <h2>Jobs</h2>
             </div>
             <div class="col-sm-12 col-md-6 text-right">
-              <!-- <a routerLink="../AddJob" class="btn primary-btn comBtn">Add New Job</a> -->
-              <a (click)="onAddJobClick()" class="btn primary-btn comBtn">Add New Job</a>
+              <div class="form-group">
+                <a (click)="onAddJobClick()" class="btn primary-btn comBtn">Add New Job</a>
+              </div>              
             </div>
           </div>
             <div class="row">
-              <div class="col-sm-12 col-md-6">
-
-                  <input id ="searchId" type="text" placeholder="Search by Customer name ,Job no.,Page no. and address"
+              <div class="col-sm-12 col-md-6 mt-4">
+                  <input id ="searchId" type="text" placeholder="Search by Customer name, Job no., Page no. and Address"
                   (keyup)="searchJobs($event)" class="form-control">
               </div>
             </div>
@@ -93,6 +93,8 @@
               
               </div>
             </div>
+            <div *ngIf="noFoundData" class="text-center noDataFound">No record found</div>
+
           </form>
         </div>
       </div>

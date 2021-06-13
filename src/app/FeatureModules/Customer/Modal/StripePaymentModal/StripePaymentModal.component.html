@@ -53,8 +53,10 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Expiry Date <sup>*</sup></label>
-                    <input id="cc-exp-date" mask="00/0000" class="form-control "formControlName="expirationDate" placeholder="MM/YYYY"
+                    <input id="cc-exp-date"  class="form-control "formControlName="expirationDate" placeholder="MM/YYYY"
                      type="text" autocomplete="cc-exp" ccExp required>
+                     <!-- <input id="cc-exp" type="tel" class="input-lg form-control cc-exp" autocomplete="cc-exp" 
+                     placeholder="•• / ••••" data-payment='cc-exp' required> -->
                      <div class="help-block"
                       *ngIf="stripeForm.get('expirationDate').invalid && stripeForm.get('expirationDate').touched">
                       <p> Expiry Date is required</p>

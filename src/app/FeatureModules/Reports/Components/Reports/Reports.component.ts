@@ -156,7 +156,7 @@ export class ReportsComponent implements OnInit {
       CustomerTypeId:(this.cusTypeId != 5 && this.cusTypeId != undefined) ? this.cusTypeId : -1
     };
      this.reportsService.getinvoiceOverDue(params).subscribe(res=>{
-       console.log('Invoice OverDue :', res);
+      //  console.log('Invoice OverDue :', res);
        this.invoiceOverDueData = res;
      },error=>{
        console.log(error);

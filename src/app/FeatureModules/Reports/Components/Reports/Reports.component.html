@@ -10,7 +10,7 @@
             <div class="col-sm-12 col-md-6 text-right">
               <div class="form-group">
                 <div class="actionBtn">
-                  <a routerLink="../customer/NewJob" class="btn primary-btn comBtn">Add Jobs</a>
+                  <a routerLink="../customer/NewJob" class="btn primary-btn comBtn">Add Job</a>
                 </div>
               </div>
             </div>
@@ -72,33 +72,7 @@
                     </label>  
                   </div>
                 </div>  -->
-                <div class="col-sm-12 col-md-4">
-                  <div class="actionBtn">
-                    <button type="button" *ngIf="defaultBtn" (click)="printDefault()" class="btn primary-btn comBtn">Print Report</button>
-
-                    <button type="button" *ngIf="jobExceptionPrintBtn" id="inputprintbutton1" (click)="jobException.print()" class="btn primary-btn comBtn">Print Report</button>
-                    
-                    <button type="button" *ngIf="jobTypePrintBtn" id="inputprintbutton2" (click)="jobType.print()" class="btn primary-btn comBtn">Print Report</button>
-                    
-                    <button type="button" *ngIf ="jobCompletedPrintBtn" id ="inputprintbutton3" (click) ="jobCompleted.print()" class="btn primary-btn comBtn">Print Report</button>
-                    
-                    <button type="button" *ngIf ="invoicePaidPrintBtn "id ="inputprintbutton4" (click)="invoicePaid.print()" class="btn primary-btn comBtn">Print Report</button>
-                    
-                    <button type="button" *ngIf="tankInstalledDateBtn" id="inputprintbutton15" (click)="tankInstalledDate.print()" class="btn primary-btn comBtn">Print Report</button>
-                    
-                    <button type="button" *ngIf="jobsByEmployeeBtn" id="inputprintbutton12" (click)="jobByEmployee.print()" class="btn primary-btn comBtn">Print Report</button>
-                    
-                    <button type="button" *ngIf ="invoiceNotPaidPrintBtn" id="inputprintbutton6" (click)="invoiceNotPaid.print()" class="btn primary-btn comBtn"> Print Report </button>
-
-                    <button type="button" *ngIf ="invoiceSentPrintBtn" id="inputprintbutton10" (click)="invoiceSent.print()" class="btn primary-btn comBtn"> Print Report </button>
-
-                    <button type="button" *ngIf ="invoiceNotSentPrintBtn" id="inputprintbutton9" (click)="invoiceNotSent.print()" class="btn primary-btn comBtn"> Print Report </button>
-
-                    <button type="button" *ngIf ="invoiceOverDuePrintBtn" id="inputprintbutton5" (click)="invoiceOverDue.print()" class="btn primary-btn comBtn"> Print Report </button>
-
-                    <button type="button" *ngIf ="invoiceStatementPrintBtn" id ="inputprintbutton7" (click)="invoiceStatement.print()" class="btn primary-btn comBtn"> Print Report </button>
-                  </div>
-                </div>
+              
 
                 <div class="col-sm-12 col-md-4">
                   <div class="mb-4 printCheck">
@@ -128,6 +102,34 @@
 
                   </div>
                 </div> 
+
+                <div class="col-sm-12 col-md-8 text-right">
+                  <div class="actionBtn">
+                    <button type="button" *ngIf="defaultBtn" (click)="printDefault()" class="btn primary-btn comBtn">Print Report</button>
+
+                    <button type="button" *ngIf="jobExceptionPrintBtn" id="inputprintbutton1" (click)="jobException.print()" class="btn primary-btn comBtn">Print Report</button>
+                    
+                    <!-- <button type="button" *ngIf="jobTypePrintBtn" id="inputprintbutton2" (click)="jobType.print()" class="btn primary-btn comBtn">Print Report</button> -->
+                    
+                    <button type="button" *ngIf ="jobCompletedPrintBtn" id ="inputprintbutton3" (click) ="jobCompleted.print()" class="btn primary-btn comBtn">Print Report</button>
+                    
+                    <button type="button" *ngIf ="invoicePaidPrintBtn "id ="inputprintbutton4" (click)="invoicePaid.print()" class="btn primary-btn comBtn">Print Report</button>
+                    
+                    <button type="button" *ngIf="tankInstalledDateBtn" id="inputprintbutton15" (click)="tankInstalledDate.print()" class="btn primary-btn comBtn">Print Report</button>
+                    
+                    <button type="button" *ngIf="jobsByEmployeeBtn" id="inputprintbutton12" (click)="jobByEmployee.print()" class="btn primary-btn comBtn">Print Report</button>
+                    
+                    <button type="button" *ngIf ="invoiceNotPaidPrintBtn" id="inputprintbutton6" (click)="invoiceNotPaid.print()" class="btn primary-btn comBtn"> Print Report </button>
+
+                    <button type="button" *ngIf ="invoiceSentPrintBtn" id="inputprintbutton10" (click)="invoiceSent.print()" class="btn primary-btn comBtn"> Print Report </button>
+
+                    <button type="button" *ngIf ="invoiceNotSentPrintBtn" id="inputprintbutton9" (click)="invoiceNotSent.print()" class="btn primary-btn comBtn"> Print Report </button>
+
+                    <button type="button" *ngIf ="invoiceOverDuePrintBtn" id="inputprintbutton5" (click)="invoiceOverDue.print()" class="btn primary-btn comBtn"> Print Report </button>
+
+                    <button type="button" *ngIf ="invoiceStatementPrintBtn" id ="inputprintbutton7" (click)="invoiceStatement.print()" class="btn primary-btn comBtn"> Print Report </button>
+                  </div>
+                </div>
 
 
                 <div class="col-sm-12 col-md-12">

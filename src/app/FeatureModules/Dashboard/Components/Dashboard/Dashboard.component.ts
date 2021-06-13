@@ -184,6 +184,9 @@ export class DashboardComponent implements OnInit {
       xaxis: {
         categories: this.jobMonthYear.reverse()  
       }
+      // yaxis : {
+
+      // }
     };
 
   }
@@ -202,8 +205,6 @@ export class DashboardComponent implements OnInit {
         this.jobMonthYear.push(item.MonthName + item.YearValue) 
       })
 
-      // console.log(this.jobcount);
-      // console.log(this.jobMonthYear);
       
       setTimeout(() => {
         /* spinner ends after 5 seconds */

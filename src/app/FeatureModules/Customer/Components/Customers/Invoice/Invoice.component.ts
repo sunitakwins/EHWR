@@ -78,7 +78,7 @@ export class InvoiceComponent implements OnInit {
 
   public hideSearch: boolean = true;
 
-  displayedColumns: string[] = ['jobOrderId', 'Completion_Date', 'pageNo', 'amount', 'jobAddress'];
+  displayedColumns: string[] = ['jobOrderId', 'Completion_Date', 'pageNo', 'amount', 'jobAddress','action'];
   displayedColumns2: string[] = ['invoiceNo', 'dateSend', 'dateDue', 'amountDue', 'amountPaid', 'status', 'Action'];
   displayedNotesColumns: string[] = ['date', 'note', 'action'];
 
@@ -133,7 +133,7 @@ export class InvoiceComponent implements OnInit {
   show: boolean = false;
   hide: boolean = false;
   backBtn: boolean = true;
-  public invoiceStatus : any;
+  public invoiceStatus: any;
 
   ownerName: any;
   jobamount: any;
@@ -146,7 +146,7 @@ export class InvoiceComponent implements OnInit {
   dueDate: any;
   paymentMethod: any;
   customerAddress: any;
-  employeeNames =  [{EmployeeName : ''}];
+  employeeNames = [{ EmployeeName: '' }];
   balanceDue: any;
   paidAmount: any;
   subTotal: any;
@@ -168,19 +168,19 @@ export class InvoiceComponent implements OnInit {
     private spinner: NgxSpinnerService,
     public localStorage: LocalStorageService,
     private customerService: CustomerService,
-    public dataService : DataService
+    public dataService: DataService
   ) {
     this.detailsForm = this.fb.group({
       invoiceTo: [this.postRequestModel.invoiceTo],
       dueDate: [this.postRequestModel.dueDate],
       tickIfInvoiceNotRequired: [Boolean(this.postRequestModel.tickIfInvoiceNotRequired)],
       amountInvoice: [this.postRequestModel.amountInvoice, Validators.required],
-      createdBy: 'Micheal',
+      createdBy: ['Michael'],
       // seq: [1],
       joborderId: [this.jobId],
       customerId: [this.customerId]
     });
-    this.dataService.setOption('InvoiceForm',this.detailsForm); 
+    this.dataService.setOption('InvoiceForm', this.detailsForm);
   }
 
   ngOnInit() {
@@ -198,17 +198,17 @@ export class InvoiceComponent implements OnInit {
     if (this.jobId > 0) {
       // this.onSelectingJobId.emit({ jobId: this.jobId});
     }
-    
-    
+
+
     if (this.jobId > 0) {
       this.onGetJobDetail();
     }
-   
-    
+
+
     if (this.customerId != 0 || this.jobId != NaN) {
       if (this.customerId && this.jobId > 0) {
-       this.getInvoiceData(this.customerId);
-       this.getJobInvoiceData(this.customerId);
+        this.getInvoiceData(this.customerId);
+        this.getJobInvoiceData(this.customerId);
       }
     } else {
       if (this.customerId && this.jobId > 0) {
@@ -251,6 +251,7 @@ export class InvoiceComponent implements OnInit {
       this.onGetJobDetail();
     }
 
+
     if (this.customerId != 0 && this.jobId != NaN) {
       this.getInvoiceData(this.customerId);
     }
@@ -275,7 +276,7 @@ export class InvoiceComponent implements OnInit {
 
 
   saveAndPayment(val) {
-    
+    debugger
     this.invoiceId;
     if (this.jobId > 0 || this.dataSource2.filteredData.length > 0) {
       if (this.invoiceId > 0 && this.invoiceId != undefined) {
@@ -291,8 +292,8 @@ export class InvoiceComponent implements OnInit {
   }
 
   // warning pop up for invoice no.required.
-  invoiceRequiredMeg(){
-     this.dialog.open(WarningDialogComponent, {
+  invoiceRequiredMeg() {
+    this.dialog.open(WarningDialogComponent, {
       width: '350px',
       data: "Invoice no. is required."
     });
@@ -307,6 +308,8 @@ export class InvoiceComponent implements OnInit {
   }
 
   public onGetJobDetail() {
+    
+    if(this.jobId != NaN && this.jobId >0){
     this.jobRequestModel.JobOrderId = this.jobId ? this.jobId : 0;
     this.jobService.getJobList(this.jobRequestModel).subscribe(res => {
       // console.log(res);
@@ -314,7 +317,7 @@ export class InvoiceComponent implements OnInit {
         this.customerName = res[0].customerName;
         this.customerId = res[0].customerId;
         this.ownerName = res[0].ownerName;
-      
+
         if (this.customerId != 0 || this.jobId != NaN && this.jobId != undefined) {
 
           this.getJobInvoiceData(this.customerId);
@@ -325,6 +328,7 @@ export class InvoiceComponent implements OnInit {
     }, error => {
       // console.log(error);
     })
+   } 
   }
 
   public getInputVal(value: number) {
@@ -334,6 +338,7 @@ export class InvoiceComponent implements OnInit {
 
   // Work completed grid
   private getInvoiceData(cusId) {
+    if(this.jobId != NaN && this.jobId >0){
     this.requestModel.CustomerId = cusId ? cusId : 0;
     this.requestModel.JobOrderId = this.jobId == null ? this.JobId : this.jobId;
     this.invoiceService.getInvoiceList(this.requestModel).subscribe((res: any) => {
@@ -350,7 +355,7 @@ export class InvoiceComponent implements OnInit {
         this.detailsForm.patchValue({
           dueDate: date,
           amountInvoice: this.invoiceAmt,
-          invoiceTo: this.ownerName? this.ownerName : this.customerName,
+          invoiceTo: this.ownerName ? this.ownerName : this.customerName,
           tickIfInvoiceNotRequired: this.tickIfInvoiceNotRequired,
           seq: 1
         });
@@ -370,10 +375,12 @@ export class InvoiceComponent implements OnInit {
 
       // console.log(error);
     })
+   }
   }
 
   // Get Invoice list
   private getJobInvoiceData(cusId) {
+    if(this.jobId != NaN && this.jobId >0){
     this.getJobInvoiceRequestModel.CustomerId = cusId ? cusId : 0;
     this.getJobInvoiceRequestModel.JobOrderId = this.JobId;
     if (cusId > 0) {
@@ -384,10 +391,10 @@ export class InvoiceComponent implements OnInit {
           this.invoiceId = res[0].invoiceId
           this.jobInvoiceNotFound = (res.length > 0) ? false : true;
           this.accountBalance(this.customerId);
-          
+
           if (this.invoiceId > 0) {
             this.getNotesList(this.invoiceId);
-          } 
+          }
           // else {
           //   this.invoiceId = -1;
           //   // this.getNotesList(this.invoiceId);
@@ -404,6 +411,7 @@ export class InvoiceComponent implements OnInit {
         // console.log(error);
 
       })
+    }  
     }
   }
 
@@ -420,7 +428,7 @@ export class InvoiceComponent implements OnInit {
     this.detailsForm.patchValue({
       amountInvoice: object.amount,
       invoiceTo: object.customerName ? object.customerName : object.ownerName,
-     
+
       dueDate: date,
       seq: 1
     });
@@ -428,12 +436,12 @@ export class InvoiceComponent implements OnInit {
 
   // Get Invoice Notes
   updateInvoice(object) {
-      if(object.amountPaid > 0){
-     this.dialog.open(WarningDialogComponent, {
+    if (object.amountPaid > 0) {
+      this.dialog.open(WarningDialogComponent, {
         width: '350px',
         data: "Invoice cannot be updated. Payment has already done."
       });
-     
+
     } else {
       this.spinner.show();
 
@@ -446,7 +454,7 @@ export class InvoiceComponent implements OnInit {
       this.putRequestModel.dueDate = object.dueDate;
       this.putRequestModel.amountInvoice = object.amountInvoice;
       this.putRequestModel.amountPaid = object.amountPaid;
-      this.putRequestModel.modifiedBy = "Michael";
+      this.putRequestModel.modifiedBy = 'Michael';
       // this.putRequestModel.seq = 1;
       this.saveInvoice = true;
       this.jobId = object.jobOrderId;
@@ -476,86 +484,86 @@ export class InvoiceComponent implements OnInit {
 
   // Add Invoice submit
   onSubmit() {
-    
+
     if (this.putRequestModel.invoiceId > 0) {
       // console.log('Update');
 
       this.updateInvoiceSubmit();
     } else {
-      if(this.isStatusPaid > 0){
-      if (this.detailsForm.valid) {
-        
-        if ((this.jobId > 0 && this.detailsForm.value.dueDate != null) || this.JobId) {
+      if (this.isStatusPaid > 0) {
+        if (this.detailsForm.valid) {
 
-          this.detailsForm.value.customerId = this.customerId;
-          this.detailsForm.value.amountInvoice = Number(this.detailsForm.value.amountInvoice);
-          this.detailsForm.value.joborderId = Number(this.jobId == null ? this.JobId : this.jobId);
+          if ((this.jobId > 0 && this.detailsForm.value.dueDate != null) || this.JobId) {
 
-          this.detailsForm.value.tickIfInvoiceNotRequired = Boolean(this.detailsForm.value.tickIfInvoiceNotRequired);
+            this.detailsForm.value.customerId = this.customerId;
+            this.detailsForm.value.amountInvoice = Number(this.detailsForm.value.amountInvoice);
+            this.detailsForm.value.joborderId = Number(this.jobId == null ? this.JobId : this.jobId);
 
-          if (this.detailsForm.value.amountInvoice > 0) {
-            this.disableBtnClick = true;
-            
-            this.invoiceService.saveCustomerInvoice(this.detailsForm.value).subscribe(res => {
-              this.spinner.show();
-              this.invoiceNo = res.keyId;
-              this.emailIdForInvoice = res.email;
-              if (this.invoiceNo) {
-                this.getNotesList(this.invoiceNo);
-              }
+            this.detailsForm.value.tickIfInvoiceNotRequired = Boolean(this.detailsForm.value.tickIfInvoiceNotRequired);
 
-              // console.log(res);
-              localStorage.setItem("invoiceId", res.keyId);
-              this.invoiceAmt = 0;
-              // this.jobId = 0;
-              this.invoiceId = null;
-              this.detailsForm.reset();
-              this.detailsForm.patchValue({
-                amountInvoice: null,
-                invoiceTo: null,
-                seq: 1,
+            if (this.detailsForm.value.amountInvoice > 0) {
+              this.disableBtnClick = true;
+
+              this.invoiceService.saveCustomerInvoice(this.detailsForm.value).subscribe(res => {
+                this.spinner.show();
+                this.invoiceNo = res.keyId;
+                this.emailIdForInvoice = res.email;
+                if (this.invoiceNo) {
+                  this.getNotesList(this.invoiceNo);
+                }
+
+                // console.log(res);
+                localStorage.setItem("invoiceId", res.keyId);
+                this.invoiceAmt = 0;
+                // this.jobId = 0;
+                this.invoiceId = null;
+                this.detailsForm.reset();
+                this.detailsForm.patchValue({
+                  amountInvoice: null,
+                  invoiceTo: null,
+                  seq: 1,
+                })
+                this.detailsForm.markAsPristine();
+                this.detailsForm.markAsUntouched();
+                if (this.customerId) {
+                  this.getJobInvoiceData(this.customerId);
+                  this.getInvoiceData(this.customerId);
+                }
+                this.disableBtnClick = false;
+
+                this.savedInvoiceMessage("save");
+                setTimeout(() => {
+                  this.spinner.hide();
+                }, 1000);
+              }, error => {
+                // console.log(error);
+                setTimeout(() => {
+                  this.spinner.hide();
+                }, 500);
               })
-              this.detailsForm.markAsPristine();
-              this.detailsForm.markAsUntouched();
-              if (this.customerId) {
-                this.getJobInvoiceData(this.customerId);
-                this.getInvoiceData(this.customerId);
-              }
-              this.disableBtnClick = false;
-
-              this.savedInvoiceMessage("save");
-              setTimeout(() => {
-                this.spinner.hide();
-              }, 1000);
-            }, error => {
-              // console.log(error);
-              setTimeout(() => {
-                this.spinner.hide();
-              }, 500);
-            })
+            } else {
+              //  alert('Job Id is required');
+              this.dialog.open(WarningDialogComponent, {
+                width: '350px',
+                data: "Job no. is required."
+              });
+            }
+          } else if (this.jobId > 0 && this.detailsForm.value.dueDate == null) {
+            this.savedInvoiceMessage("false");
           } else {
-            //  alert('Job Id is required');
-             this.dialog.open(WarningDialogComponent, {
-              width: '350px',
-              data: "Job no. is required."
-            }); 
+            // this.savedInvoiceMessage("false");
           }
-        } else if (this.jobId > 0 && this.detailsForm.value.dueDate == null) {
-          this.savedInvoiceMessage("false");
-        } else {
-          // this.savedInvoiceMessage("false");
-        }
 
+        } else {
+          const controls = this.detailsForm.controls;
+          Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
+          return false;
+        }
       } else {
-        const controls = this.detailsForm.controls;
-        Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
-        return false;
-      }
-      }else{
         this.dialog.open(WarningDialogComponent, {
           width: '350px',
           data: "Invoice already created."
-        }); 
+        });
       }
     }
 
@@ -649,7 +657,6 @@ export class InvoiceComponent implements OnInit {
 
   // back button Click
   onBack() {
-    // this.router.navigate(['customer','Invoices' { queryParams: { val: 2 } });
     this.router.navigate(['customer', 'Invoiceslist']);
   }
 
@@ -657,7 +664,6 @@ export class InvoiceComponent implements OnInit {
   public commonDeleteDialog(input: number, setIdentifier: number) {
 
     const InvoiceId = input['invoiceId'];
-    // const AmountPaid = input['amountPaid'];
     if (setIdentifier == 1) {
       this.message = "Job deleted successfully";
       this.deletedData = {
@@ -675,7 +681,7 @@ export class InvoiceComponent implements OnInit {
 
 
     // if (input['status'] === "Paid") {
-      if(input['amountPaid'] > 0){
+    if (input['amountPaid'] > 0) {
       const dialogRef = this.dialog.open(WarningDialogComponent, {
         width: '350px',
         data: "Invoice cannot be deleted. Payment has already done."
@@ -698,27 +704,17 @@ export class InvoiceComponent implements OnInit {
             })
           } else {
             this.invoiceService.deleteCustomerInvoice(this.deletedData).subscribe(res => {
-              
-              // if (res['responseCode'] == -1) {
-              //   const dialogRef = this.dialog.open(WarningDialogComponent, {
-              //     width: '350px',
-              //     // data: "Invoice cannot be deleted. Payment has already done." 
-              //     data: res['responseMessage']
-              //   });
-              // } else {
-                // const val = res['responseMessage'];
-                // this.responseMessage(val);
-                this.deleteInvoiceMessage();
-                this.getJobInvoiceData(this.customerId);
-                this.getInvoiceData(this.customerId);
-                this.accountBalance(this.customerId);
-                this.getNotesList(res['keyId']);
-                this.invoiceNo = null;
-                this.invoiceId = -3;
-                
-                this.putRequestModel.invoiceId = 0;
-                const x = localStorage.removeItem("invoiceId");
-                this.saveInvoice = false;
+              this.deleteInvoiceMessage();
+              this.getJobInvoiceData(this.customerId);
+              this.getInvoiceData(this.customerId);
+              this.accountBalance(this.customerId);
+              this.getNotesList(res['keyId']);
+              this.invoiceNo = null;
+              this.invoiceId = -3;
+
+              this.putRequestModel.invoiceId = 0;
+              const x = localStorage.removeItem("invoiceId");
+              this.saveInvoice = false;
             }, error => {
               // console.log(error);
             });
@@ -731,52 +727,39 @@ export class InvoiceComponent implements OnInit {
 
 
   public openDeleteDialog(input) {
-    
-   
-    // const AmountPaid =  input['amountPaid'];
+
     const data = {
       Id: input['noteId'],
       DeletedBy: 'Michael'
     }
 
-    if(input['amountPaid'] > 0){
+    if (input['amountPaid'] > 0) {
       const dialogRef = this.dialog.open(WarningDialogComponent, {
         width: '350px',
         data: "Notes cannot be deleted. Payment has already done."
       });
-    }else{ 
-    const dialogRef = this.dialog.open(DeleteDialogComponent, {
-      width: '350px',
-      data: "Are you sure you want to delete this note?"
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        
-        this.invoiceService.deleteNote(data).subscribe(res => {
-          // // const id = { 'invoiceId': this.invoiceNo };
-          // const id = Id;
-          const Id = input['invoiceId'];
-          this.updateInvoice(Id);
-          const msg = res['responseMessage'];
-          // const resCode = res['responseCode'];
-          // if (resCode == -1) {
-          //   const dialogRef = this.dialog.open(WarningDialogComponent, {
-          //     width: '350px',
-          //     data: msg
-          //   });
-          //   this.getNotesList(id);
-          // } else {
+    } else {
+      const dialogRef = this.dialog.open(DeleteDialogComponent, {
+        width: '350px',
+        data: "Are you sure you want to delete this note?"
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+
+          this.invoiceService.deleteNote(data).subscribe(res => {
+
+            const Id = input['invoiceId'];
+            this.updateInvoice(Id);
+            const msg = res['responseMessage'];
             this.getNotesList(Id);
             this.openSnackBar(msg, 'hello');
-          // }
 
-        }, error => {
-
-          // console.log(error);
-        })
-      }
-    });
-  }
+          }, error => {
+            // console.log(error);
+          })
+        }
+      });
+    }
   }
 
   // static messages 
@@ -816,9 +799,6 @@ export class InvoiceComponent implements OnInit {
     this.openSnackBar(this.message, 'hello');
   }
 
-  // private responseMessage(val) {
-  //   this.openSnackBar(val, 'hello');
-  // }
   deleteInvoiceMessage() {
     const invoiceMessage = "Invoice deleted successfully";
     this.openSnackBar(invoiceMessage, 'hello');
@@ -843,19 +823,17 @@ export class InvoiceComponent implements OnInit {
   }
 
   // Print All invoices api call function
-  printAllInvoices(input){
-   
-   this.printRequestModel.Printtype = "SingleInvoice";
-   this.printRequestModel.InvoiceId = input.invoiceId;
-   this.printRequestModel.CustomerId = input.customerId;
-   this.printRequestModel.Dayoverdue = "";
-   this.printRequestModel.Dateprinted = "";
+  printAllInvoices(input) {
+
+    this.printRequestModel.Printtype = "SingleInvoice";
+    this.printRequestModel.InvoiceId = input.invoiceId;
+    this.printRequestModel.CustomerId = input.customerId;
+    this.printRequestModel.Dayoverdue = "";
+    this.printRequestModel.Dateprinted = "";
 
     this.invoiceService.getPrintAllInvoices(this.printRequestModel).subscribe(res => {
       this.printData = res;
       if (res) {
-        // console.log(res)
-        // this.invoiceTo = res[0].invoiceTo;
         this.pageNo = res[0].pageNo;
         this.invoiceId = res[0].invoiceId;
         this.customerContactReference = res[0].customerContactReference;
@@ -866,15 +844,15 @@ export class InvoiceComponent implements OnInit {
         this.customerAddress = res[0].customerAddress;
         this.paymentMethod = res[0].paymentType == null ? null : res[0].paymentType;
 
-      this.employeeNames  = [];
-      const allemployeeName =  JSON.parse(res[0].employeeName);
-      allemployeeName.forEach(emp => {
-        
-         let empName = {
-          EmployeeName : emp.EmployeeName + ','
-         }
-         this.employeeNames.push(empName);
-      });
+        this.employeeNames = [];
+        const allemployeeName = JSON.parse(res[0].employeeName);
+        allemployeeName.forEach(emp => {
+
+          let empName = {
+            EmployeeName: emp.EmployeeName + ','
+          }
+          this.employeeNames.push(empName);
+        });
 
 
         this.itemRecordData = [];
@@ -889,17 +867,13 @@ export class InvoiceComponent implements OnInit {
           }
           this.itemRecordData.push(valueObj);
         });
-        
-        // const TotalAmountData = JSON.parse(res[0].totalAmount);
-        // this.totalGst = TotalAmountData[0]?.TotalGST;
-        // this.totalAmt = TotalAmountData[0]?.TotalAmount;
 
-        let BillingDetail =  JSON.parse(res[0].billingDetail);
+        let BillingDetail = JSON.parse(res[0].billingDetail);
         this.balanceDue = BillingDetail[0].BalanceDue;
         this.paidAmount = BillingDetail[0].Paid
         this.subTotal = BillingDetail[0].SubTotal;
         this.GST = BillingDetail[0].GST;
-        this.total =BillingDetail[0].Total;
+        this.total = BillingDetail[0].Total;
 
         this.newArr = pairArray(res);
         function pairArray(a) {
@@ -915,18 +889,27 @@ export class InvoiceComponent implements OnInit {
     });
   }
 
-
-  //  View mode Invoice ==========================================
-  public openInvoicePreview(input: any) {
+  // Resend Invoice ==================================
+  resendInvoice(invoiceId : any){
+    const data = {
+      invoiceId: invoiceId,
+    };
     
-    // this.printRequestModel.Printtype = "SingleInvoice";
-    // this.printRequestModel.InvoiceId = input.invoiceId;
-    // this.printRequestModel.CustomerId = input.customerId;
-    // this.printRequestModel.Dayoverdue = "";
-    // this.printRequestModel.Dateprinted = "";
+    this.invoiceService.resendInvoice(data).subscribe(res => {
+     if(res) {
+       let msg = "Invoice has been sent to through email.";
+       this.openSnackBar(msg, 'hello');
+     }
+    })
+  }
 
-    this.printAllInvoices(input);
- 
+  // PreviewInvoice  ============================================  
+  previewInvoice(jobId : any){
+    // this.getCssForPreviewAndViewInvoice(); 
+  }
+
+  // get Preview Css ========================================
+  getCssForPreviewAndViewInvoice(){
     setTimeout(function () {
       let printContents, popupWin;
       printContents = document.getElementById('printDivView').innerHTML;
@@ -1194,20 +1177,21 @@ export class InvoiceComponent implements OnInit {
   }
 
 
+  //  View mode Invoice ==========================================
+  public openInvoicePreview(input: any) {
+
+    this.printAllInvoices(input);
+    this.getCssForPreviewAndViewInvoice();
+
+  }
+
+
   //============== Print function =====================================
 
   print(input: any) {
-    
-    // const invoiceId = element;
-    // const tickInvoice = element[0].tickIfInvoiceNotRequired;
-    this.printRequestModel.Printtype = "SingleInvoice";
-    this.printRequestModel.InvoiceId = input.invoiceId;
-    this.printRequestModel.CustomerId = input.customerId;
-    this.printRequestModel.Dayoverdue = "";
-    this.printRequestModel.Dateprinted = "";
 
     this.printAllInvoices(input);
-    
+
     setTimeout(function () {
       let printContents, popupWin, printbutton;
       printbutton = document.getElementById('inputprintbutton1').style.display = "none";

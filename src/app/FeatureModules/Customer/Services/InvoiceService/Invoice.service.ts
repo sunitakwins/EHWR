@@ -88,5 +88,10 @@ export class InvoiceService {
     return this.http.delete(this.url+'/Notes?',{params:params})
   }
 
+  //resend invoice
+  resendInvoice(data): Observable<any>{
+    return this.http.post(this.url+ '/CustomerInvoice/InvoiceResend',data);
+  }
+
 
 }

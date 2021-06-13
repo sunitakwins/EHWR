@@ -13,7 +13,7 @@ import { InfiniteScrollModel } from 'src/app/SharedModules/Models/InfiniteScroll
 import { JobService } from '../../../Services/JobService/Job.service';
 
 /*** Lodash ***/
-// import { union } from 'lodash';
+import { union } from 'lodash';
 import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MoveJobComponent } from '../../../Modal/MoveJob/MoveJob.component';
@@ -60,14 +60,12 @@ public message = "Job deleted successfully"
       });
 
     this.getJobListData();
-    //this.result = this.getJobListData();
-   // console.log(this.result);
-   // console.log(this.dataSource);
   }
 
   
 
-  public loadMore(){     
+  public loadMore(){
+         
     this.spinner.show();        
     this.requestModel.PageNo =  ++this.pageNo;
     // console.log(this.requestModel);
@@ -81,6 +79,8 @@ public message = "Job deleted successfully"
 //       this.setRequesetParams();
 //    }
 //  }
+
+
   public searchJobs(event){  
   const val = event.target.value;
   if(val.length == 0)
@@ -105,6 +105,7 @@ public sortData(sort: Sort) {
 
 
   private setRequesetParams(){
+    
     this.result = [];
     this.pageNo = 1;
     this.requestModel.PageNo = this.pageNo;
@@ -115,25 +116,19 @@ public sortData(sort: Sort) {
   private getJobListData(){
     this.spinner.show();
     this.jobService.getJobList(this.requestModel).subscribe((res)=>{
-      //  console.log(res);
-       // this.dataSource = new MatTableDataSource(res);
-      
+     
        this.noFoundData = (res.length > 0) ? false : true;
         if(res.length > 0){
-         // this.noFoundData = false;
-          // const finalArray = union(this.result, res);   
-          const finalArray = res;
-          // console.log(finalArray);     
-          //this.dataSource = new MatTableDataSource(finalArray);
+          const finalArray = union(this.result, res);   
+    
           if(this.searchVal == true){
             this.dataSource = new MatTableDataSource(res);
             }else{
             this.dataSource = new MatTableDataSource(finalArray);
             }
           this.result = finalArray;
-          // console.log("aa", this.dataSource.filteredData);
         }else{
-         // this.noFoundData = true;
+         
         }
         setTimeout(() => {
           /* spinner ends after 5 seconds */
@@ -151,7 +146,6 @@ public sortData(sort: Sort) {
 
 // delete functionality
 public  openDialog(input, event): void {
-  //console.log(input);
   event.stopPropagation(); 
   if(input.jobInvoiceStatus === true)
   {
@@ -193,7 +187,6 @@ public  openDialog(input, event): void {
 }
 
 openMoveJobDialog(data:any, event): void {
- 
   //console.log(data.jobInvoiceStatus);
   event.stopPropagation(); 
   if(data.jobInvoiceStatus === true)
@@ -209,8 +202,6 @@ openMoveJobDialog(data:any, event): void {
 }
 
 public notDeleteMesage(){
-  // const notDeleteMessage = "Invoice has been created. Therefore job cannot be deleted";
-  // this.openSnackBar(notDeleteMessage, 'hello');
   const dialogRef = this.dialog.open(WarningDialogComponent, {
     width: '350px',
     data: "Invoice has been created. Therefore job cannot be deleted" 
@@ -218,8 +209,6 @@ public notDeleteMesage(){
 }
 
 public moveJobMessage(){
-  // const moveJobMessage = "Invoice has been created. Therefore job cannot be moved";
-  // this.openSnackBar(moveJobMessage, 'hello');
   const dialogRef = this.dialog.open(WarningDialogComponent, {
     width: '350px',
     data: "Invoice has been created. Therefore job cannot be moved" 
@@ -227,28 +216,21 @@ public moveJobMessage(){
 }
 
 public EditMessage() {
-  // const editMessage = "Not editable!! Already have invoice";
-  // this.openSnackBar(editMessage, 'hello')
+ 
   const dialogRef = this.dialog.open(WarningDialogComponent, {
     width: '350px',
     data: "Not editable!! Already have invoice"
   });
 }
 
-// public onEditJob(element: any) {
-//    this.editjobId = element.jobOrderId;
-//     this.router.navigate(['customer', 'NewJob', element]);
-// }
 
 public onEditJob(element: any) {
-  //console.log(element);
-  
+ 
    this.editjobId = element.jobOrderId;
     this.router.navigate(['customer/NewJob'],{queryParams:{jobOrderId:element.jobOrderId,customerId:element.customerId}});
 }
 
 onAddJobClick(){
-  // navigate to add job
   this.router.navigate(['customer', 'NewJob']);
 }
 

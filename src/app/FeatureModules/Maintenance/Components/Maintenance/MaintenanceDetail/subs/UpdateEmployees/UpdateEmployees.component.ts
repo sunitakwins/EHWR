@@ -13,6 +13,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { UpdateEmployeesModel } from 'src/app/FeatureModules/Maintenance/Models/UpdateEmployees/UpdateEmployeesModel';
 import { UpdateEmpStatusComponent } from 'src/app/FeatureModules/Maintenance/Modals/UpdateEmpStatus/UpdateEmpStatus.component';
 import { UpdateEmpStatusModel } from 'src/app/FeatureModules/Maintenance/Models/Models/UpdateEmployees/UpdateEmployeesModel';
+import { EmployeeRequestModel } from 'src/app/FeatureModules/Customer/Models/Jobs/EmployeeRequestModel.model';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -22,7 +23,9 @@ import { UpdateEmpStatusModel } from 'src/app/FeatureModules/Maintenance/Models/
 })
 export class UpdateEmployeesComponent implements OnInit {
   displayedColumns: string[] = ['EmployeeId', 'employeeName','employeeStatus', 'action'];
-  public requestModel = new ItemsRequestModel();
+  // public requestModel = new ItemsRequestModel();
+  public requestModel = new EmployeeRequestModel();
+
   public updateEmpRequestModel = new UpdateEmployeesModel();
   public dataSource: any;
   public result: any;
@@ -32,7 +35,7 @@ export class UpdateEmployeesComponent implements OnInit {
   public Name: any;
   addEmployeeForm: FormGroup;
   // tslint:disable-next-line:max-line-length
-  private pageNo: number;
+  private pageNo: any;
   public updateEmployeeDetails: any;
   public isUpdate = false;
 
@@ -53,7 +56,8 @@ export class UpdateEmployeesComponent implements OnInit {
   }
 
   public getEmployeeList(){
-    this.maintenanceService.getUpdateEmployeeList(this.requestModel).subscribe(res => {
+    // this.requestModel.IsActive = true;
+    this.maintenanceService.getEmployeeList(this.requestModel).subscribe(res => {
       if (res.length > 0) {
         // const finalArray = union(this.result, res);
         const finalArray = res; 
