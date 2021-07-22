@@ -395,7 +395,7 @@ export class NewCustomerComponent  implements OnInit {
   }
 
   sendJobIdToPaymentValue(value) {
-   debugger
+   
     this.JobIdFromInvoice = value.jobOrderId;
     this.contact = false;
     this.markFormGroupTouched(this.addJobData.InvoiceForm);

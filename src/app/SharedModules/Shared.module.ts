@@ -16,8 +16,7 @@ import { CanDeactivateGuard } from './Guards/can-deactivate.guard';
 import { DataService } from './Services/Services/Data.service';
 import { WarningDialogComponent } from './Components/WarningDialog/WarningDialog.component';
 import { ConfirmationBoxComponent } from './Components/ConfirmationBox/ConfirmationBox.component';
-
-
+import { SafePipePipe } from './Pipes/safePipe.pipe';
 
 
 @NgModule({
@@ -27,7 +26,10 @@ import { ConfirmationBoxComponent } from './Components/ConfirmationBox/Confirmat
         LogoutComponent,
         WarningDialogComponent,
         ConfirmationBoxComponent,
-        JsonParsePipe 
+      
+        JsonParsePipe,
+        SafePipePipe
+         
     ],
     imports:[
         MaterialModule,
@@ -41,7 +43,8 @@ import { ConfirmationBoxComponent } from './Components/ConfirmationBox/Confirmat
     exports:[
         HeaderComponent,
         NgxSpinnerModule,
-        JsonParsePipe
+        JsonParsePipe,
+        SafePipePipe
     ],
     providers:[LocalStorageService, DataService, CanDeactivateGuard],
     bootstrap:[]

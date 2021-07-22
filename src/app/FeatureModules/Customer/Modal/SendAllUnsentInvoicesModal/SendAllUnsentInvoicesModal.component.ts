@@ -116,7 +116,7 @@ export class SendAllUnsentInvoicesModalComponent implements OnInit {
   
     // Checkbox click
     listCheckbox(index: number, value: any, invoiceId: number) {
-      
+      debugger
       if (value.checked == true) {
         //ss
         this.checkBox = value.checked;
@@ -154,14 +154,43 @@ export class SendAllUnsentInvoicesModalComponent implements OnInit {
       
       // console.log(this.storeInvoiceData);
       if(this.invoiceDataList.length > 0 && this.checkBox ){
-  
         this.invoiceDataListNew = this.removeDuplicates(this.invoiceDataList, "customerId");
-        // this.invoiceDataList = [];
         this.invoiceDataList =  this.invoiceDataListNew;
-
-        // let msg = "All unsent invoices has been sent.";
-        // this.messages(msg);
-
+         let newArray = []; let data;
+         debugger
+         this.invoiceDataList.forEach(ele => {
+           if(ele.length == 1){
+             data = {
+              invoiceId: ele[0].invoiceId
+            } 
+           }else{
+            data = {
+              invoiceId: ele.invoiceId
+            }
+           }
+         
+          newArray.push(data);
+        });
+         
+        const InvoiceData = {
+          "invoiceIds" : newArray
+        };
+        
+        console.log(InvoiceData);
+        this.spinner.show();
+        this.invoiceService.resendInvoice(InvoiceData).subscribe(res => {
+         if(res) {
+           let msg = "Invoice has been sent to through email.";
+           this.openSnackBar(msg, 'hello');
+           setTimeout(() => {
+             this.spinner.hide();
+           }, 500);
+         }
+        },error => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        })
       }else{
           const message = "Please select record to be sent.";
           this.messages(message);

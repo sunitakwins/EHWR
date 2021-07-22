@@ -8,6 +8,7 @@ import { ExcelService } from 'src/app/FeatureModules/Reports/Services/Excel.serv
 })
 export class InvoiceNotSentComponent implements OnInit {
   @Input('invoiceNotSentList') invoiceNotSentList: any;
+  noDataFound: boolean;
   constructor(private excelService : ExcelService) { }
 
   ngOnInit() {
@@ -26,6 +27,7 @@ export class InvoiceNotSentComponent implements OnInit {
   }
 
   print() {
+    this.noDataFound = (this.invoiceNotSentList.length > 0) ? false : true;
     let printContents, popupWin, printbutton;
     printbutton = document.getElementById('inputprintbutton9').style.display = "none";
     printContents = document.getElementById('printDivInvoiceNotSent').innerHTML;

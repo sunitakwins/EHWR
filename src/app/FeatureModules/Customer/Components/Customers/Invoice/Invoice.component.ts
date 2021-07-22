@@ -153,6 +153,7 @@ export class InvoiceComponent implements OnInit {
   GST: any;
   total: any;
   customerContactReference: any;
+  workCompleted: any;
 
 
   //itemRecordData = [];
@@ -185,6 +186,17 @@ export class InvoiceComponent implements OnInit {
 
   ngOnInit() {
 
+    this.detailsForm = this.fb.group({
+      invoiceTo: [this.postRequestModel.invoiceTo],
+      dueDate: [this.postRequestModel.dueDate],
+      tickIfInvoiceNotRequired: [Boolean(this.postRequestModel.tickIfInvoiceNotRequired)],
+      amountInvoice: [this.postRequestModel.amountInvoice, Validators.required],
+      createdBy: ['Michael'],
+      // seq: [1],
+      joborderId: [this.jobId],
+      customerId: [this.customerId]
+    });
+    
     this.route.queryParams.subscribe((params: Params) => {
       this.jobId = Number(params['jobOrderId']);
     });
@@ -276,7 +288,7 @@ export class InvoiceComponent implements OnInit {
 
 
   saveAndPayment(val) {
-    debugger
+    
     this.invoiceId;
     if (this.jobId > 0 || this.dataSource2.filteredData.length > 0) {
       if (this.invoiceId > 0 && this.invoiceId != undefined) {
@@ -833,6 +845,7 @@ export class InvoiceComponent implements OnInit {
 
     this.invoiceService.getPrintAllInvoices(this.printRequestModel).subscribe(res => {
       this.printData = res;
+  
       if (res) {
         this.pageNo = res[0].pageNo;
         this.invoiceId = res[0].invoiceId;
@@ -840,6 +853,7 @@ export class InvoiceComponent implements OnInit {
         this.completedDate = res[0].completedDate;
         this.invoiceTo = res[0].invoiceTo ? res[0].invoiceTo : res[0].customerName;
         this.jobAddress = res[0].jobAddress;
+        this.workCompleted = res[0].workCompleted;
         this.dueDate = res[0].dueDate;
         this.customerAddress = res[0].customerAddress;
         this.paymentMethod = res[0].paymentType == null ? null : res[0].paymentType;
@@ -890,14 +904,19 @@ export class InvoiceComponent implements OnInit {
   }
 
   // Resend Invoice ==================================
-  resendInvoice(invoiceId : any){
+  resendInvoice(invoiceId:number){
+    let invoiceIdArr =[];
+   invoiceIdArr.push({invoiceId: invoiceId});
     const data = {
-      invoiceId: invoiceId,
+      invoiceIds: invoiceIdArr,
     };
-    
+
     this.invoiceService.resendInvoice(data).subscribe(res => {
      if(res) {
        let msg = "Invoice has been sent to through email.";
+       this.openSnackBar(msg, 'hello');
+     }else {
+       let msg = "Please try again later."
        this.openSnackBar(msg, 'hello');
      }
     })
@@ -905,11 +924,347 @@ export class InvoiceComponent implements OnInit {
 
   // PreviewInvoice  ============================================  
   previewInvoice(jobId : any){
+    const data = {
+      JobOrderId: jobId,
+    };
+    this.invoiceService.previewInvoice(data).subscribe(res => {
+      this.printData = res;
+  
+      if (res) {
+       
+        this.pageNo = res[0].pageNo;
+        // this.invoiceId = res[0].invoiceId;
+        this.customerContactReference = res[0].customerContactReference;
+        this.completedDate = res[0].completedDate;
+        this.invoiceTo = res[0].invoiceTo ? res[0].invoiceTo : res[0].customerName;
+        this.jobAddress = res[0].jobAddress;
+        this.workCompleted = res[0].workCompleted;
+        this.dueDate = res[0].dueDate;
+        this.customerAddress = res[0].customerAddress;
+        this.paymentMethod = res[0].paymentType == null ? null : res[0].paymentType;
+
+        this.employeeNames = [];
+        const allemployeeName = JSON.parse(res[0].employeeName);
+        allemployeeName.forEach(emp => {
+
+          let empName = {
+            EmployeeName: emp.EmployeeName + ','
+          }
+          this.employeeNames.push(empName);
+        });
+
+
+        this.itemRecordData = [];
+        const itemRecord = JSON.parse(res[0].itemRecord);
+        itemRecord.forEach(result => {
+          let valueObj = {
+            GST: result.GST,
+            JobItemDescription: result.JobItemDescription,
+            Quantity: result.Quantity,
+            TotalPrice: result.TotalPrice,
+            UnitPrice: result.UnitPrice
+          }
+          this.itemRecordData.push(valueObj);
+        });
+
+        // let BillingDetail = JSON.parse(res[0].billingDetail);
+        this.balanceDue = res[0].balance;
+        this.paidAmount = res[0].paid
+        this.subTotal = res[0].subTotal;
+        this.GST = res[0].gst;
+        this.total = res[0].total;
+
+        this.newArr = pairArray(res);
+        function pairArray(a) {
+          var temp = a.slice();
+          var arr = [];
+          while (temp.length) {
+            arr.push(temp.splice(0, 3));
+          }
+          return arr;
+        };
+      }
+
+    });
+
+    setTimeout(function () {
+      let printContents, popupWin;
+      printContents = document.getElementById('previewDiv').innerHTML;
+      popupWin = window.open('', 'top=0,left=0,height=100%,width=auto');
+      popupWin.document.write(`
+      <html>
+        <head>
+      
+          <title>Print tab</title>
+          <style media="screen">
+
+          *{
+            font-family: Roboto, sans-serif ;
+            box-sizing: border-box;
+          }
+          
+          .page-break { display: block; page-break-before: always; }
+          .taxInvoice {    
+              max-width: 920px;
+              margin: 0 auto;
+              display: flex;
+              padding: 10px ;
+              background-color: #fff;
+              box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+              font-size: 11px;
+              flex-direction: column;
+              min-width: 920px;
+              justify-content: flex-start;          
+          }
+          .taxInvoice th,.taxInvoice td {
+              vertical-align: top;
+          }
+          .taxInvoice table {
+              width: 100%;
+          }
+          .tiLeftCol {
+              width: 100%;
+            padding-right: 6px;
+          }
+          .tiLeftCol h5 {
+              font-size: 18px;
+              margin: 0;
+            text-align: right;
+            padding-right: 20px;
+          }
+          .tiLeftCol h6 {
+              margin: 0;
+              font-size: 14px;
+              text-align: right;
+              font-weight: 500;
+              text-shadow: 3px 3px 4px rgb(0 0 0 / 80%);
+            padding-right: 10px;
+            color:#014711;
+          }
+          
+          
+          .tiWrapper {
+              max-width: 580px;
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+             width: 100%;
+            //  padding-left: 25px;
+          }
+          .tiRighttCol {
+            width: 190px;
+            float:right;            
+            // margin-top: -20px;
+          }
+          .alignRightText{
+            text-align: right;
+          }
+          .tiLeftInnerWrap {
+              display: flex;
+          }
+          .printTableWrapper{
+            width: 700px;
+            margin : 0 auto;
+          }
+          .tiContent p {
+              margin: 0;
+              font-size: 13px;
+            text-align: left;
+            white-space: nowrap;
+          }
+          .tiContent {
+              padding-left: 5px;
+          }
+          .tiContentWrap .tiPriceMatch {
+              margin-left: 10px;
+          }
+          .redColor{
+            color:#f00;
+          }
+          .tiRighttCol p {
+              font-size: 12px;
+              font-weight: 500;
+            margin: 2px 0;
+          }
+          .tiLeftInnerWrap .tiContentWrap {
+              display: flex;
+              flex-direction: row;
+            align-items: center;
+          }
+          .taxInvoice .mdText {
+            margin: 10px 0 0;
+            font-size: 18px;
+            height: 40px;
+            display: block;
+            text-align: left;
+            width:100%;
+            float:left;
+          }
+          .mdText span{
+            position: relative;
+            top: -10px !important;
+            display:inline-block;
+            margin-top: -10px !important;
+            left:20px !important;
+          }
+          .mdText img{
+            position: relative;
+            top: 10px !important;
+            display:inline-block;
+            margin-top: 10px !important;
+            margin-left: 23px;
+            
+          }
+          
+          .tableBodyContent {
+              display: flex;
+            justify-content: space-between;
+          }
+          .tableBodyContent .tbRightCol,.tableBodyContent .tbLeftCol{
+              display: flex;
+            width:100%;
+            flex-direction: column;
+          }
+          
+          .dateWrapper {
+              margin-top: 60px;
+          }
+          .invoiveIdWrapper {
+              display: flex;
+              flex-direction: column;
+              justify-content: flex-end;
+              width: 100%;
+              align-items: flex-end;
+          }
+          .invoiveIdWrapper h1 {
+              margin: 0;
+              font-size: 26px;
+              text-transform: uppercase;
+          }
+          .invoiveIdWrapper p{
+             margin: 0px;
+          }
+          .jobAddressWrapper {
+              margin-top: 12px;
+          }
+          .addressWrapper {
+              margin-top: 15px;
+          }
+          .addressWrapper p {
+              margin: 0;
+              line-height: 18px;
+              font-weight: 400;
+              font-size: 15px;
+          }
+          .jobAddressWrapper p.textJustify {
+              font-size: 15px;
+          }
+          .smSpace {
+              margin: 0 15px;
+          }
+          .workComplete {
+              margin-top: 30px;
+          }
+          .workComplete .smCaption {
+              margin-bottom: 0;
+          }
+          .workComplete p {
+              margin: 0;
+          }
+          
+          
+
+          
+          .taxInvoiceTable th {
+              text-align: left;
+              font-size: 15px;
+            vertical-align: middle;
+            text-transform: uppercase;
+          }
+          
+          .taxInvoiceTable th,.taxInvoiceTable td{
+            padding: 10px;
+            text-align: right;
+          }
+          .taxInvoiceTable th:first-child {
+            text-align: left;
+          }
+          
+          .taxInvoiceTable td:first-child {
+            text-align: left;
+          }
+          ul.amountTotal {
+              padding: 10px 0 0;
+              margin: 0;
+              list-style: none;
+              border-top: 1px solid #eee;
+              width: 300px;
+              float: right;
+          }   
+          ul.amountTotal li{
+             display: flex;
+              justify-content: space-between;
+            padding: 5px 10px;
+          }
+              
+          ul.amountTotal li strong,ul.amountTotal li span {
+              width: 100%;
+              text-align: right;
+          }
+          ul.amountTotal li strong{
+              text-transform: uppercase;
+          }
+          .dueBalance {
+            background: #f5f5f5 !important;
+            padding: 10px;
+            box-shadow: inset 0px 0px 70px rgb(0 0 0 / 10%) !important;
+          }
+          .banlDetails {
+            border-top: 1px solid #eee;
+              margin: 10px 0 0;
+              padding-top: 10px;
+          }
+          .banlDetails p {
+              margin: 0 0 4px;
+          }
+          .table-responsive table thead tr { 
+            background-color: #f5f5f5 ;
+            background: #f5f5f5 ;
+            box-shadow: inset 0px 0px 70px rgb(0 0 0 / 10%) !important;
+          }
+          .ViewInvoice{
+            padding: 298px;
+            padding-top: 50px;
+            padding-bottom: 50px;
+            padding-right: 298px;
+          }
+
+</style>
+        </head>
+    <body onload="window.print();window.close()" style ="padding :48px;"> 
+
+    ${printContents}
+    
+    </body>
+      </html>`
+      );
+      popupWin.focus();
+    }, 2000);
+
     // this.getCssForPreviewAndViewInvoice(); 
   }
 
-  // get Preview Css ========================================
-  getCssForPreviewAndViewInvoice(){
+  // // get Preview Css ========================================
+  // getCssForPreviewAndViewInvoice(){
+   
+  // }
+
+
+  //  View mode Invoice ==========================================
+  public openInvoiceView(input: any) {
+
+    this.printAllInvoices(input); 
+
     setTimeout(function () {
       let printContents, popupWin;
       printContents = document.getElementById('printDivView').innerHTML;
@@ -1174,14 +1529,7 @@ export class InvoiceComponent implements OnInit {
       );
       popupWin.focus();
     }, 2000);
-  }
-
-
-  //  View mode Invoice ==========================================
-  public openInvoicePreview(input: any) {
-
-    this.printAllInvoices(input);
-    this.getCssForPreviewAndViewInvoice();
+    // this.getCssForPreviewAndViewInvoice();
 
   }
 

@@ -56,7 +56,7 @@ export class AddItemsComponent implements OnInit {
   public allItems: any;
   public customerName: any;
   public status: any;
-  public itemPrice : any;
+  public itemPrice: any;
 
   public tableChecked: boolean;
   public notFoundData: boolean = true;
@@ -75,30 +75,31 @@ export class AddItemsComponent implements OnInit {
   public innerTabbingData: boolean = false;
 
   addItemsForm: FormGroup;
+  itemName: any;
   constructor(private route: ActivatedRoute,
     private itemService: ItemService, private jobService: JobService,
-    private fb: FormBuilder, public dialog: MatDialog, 
-    public snackBar: MatSnackBar, private router: Router, 
+    private fb: FormBuilder, public dialog: MatDialog,
+    public snackBar: MatSnackBar, private router: Router,
     private customerService: CustomerService, private spinner: NgxSpinnerService,
-    public localStorage: LocalStorageService, public dataService : DataService) {
+    public localStorage: LocalStorageService, public dataService: DataService) {
 
-      this.addItemsForm = this.fb.group({
-        itemType: ['14'],
-        itemId: Validators.required,
-        jobItemDescription: [''],
-        unitPrice: [''],
-        quantity: ['', Validators.required],
-      });
-      this.dataService.setOption('ItemForm',this.addItemsForm);  
-     }
+    this.addItemsForm = this.fb.group({
+      itemType: ['14'],
+      itemId: Validators.required,
+      jobItemDescription: [''],
+      unitPrice: [''],
+      quantity: ['', Validators.required],
+    });
+    this.dataService.setOption('ItemForm', this.addItemsForm);
+  }
 
   ngOnInit() {
-    
-   
+
+
     this.route.queryParams.subscribe((params: Params) => {
       this.id = params['jobOrderId'];
     })
-   
+
     this.getItemsFromGlobalCode()
     this.onChangeItemSource(this.addItemsForm.value.itemType);
     this.getJobOrderItems();
@@ -108,15 +109,15 @@ export class AddItemsComponent implements OnInit {
   }
 
   ngOnChanges() {
-    
+
     this.route.data.subscribe((res) => {
       if (res.slug == 'newJob') {
         this.indexVal = 2;
         if (this.JobId == undefined) {
           this.indexVal = 2;
-         
+
           this.tableChecked = false;
-         
+
         }
       }
     });
@@ -141,7 +142,7 @@ export class AddItemsComponent implements OnInit {
     if (this.id !== undefined) {
       this.jobRequestModel.JobOrderId = this.id;
       this.jobService.getJobList(this.jobRequestModel).subscribe(res => {
-       
+
         this.invoiceStatus = res[0].jobInvoiceStatus;
       })
     }
@@ -154,9 +155,9 @@ export class AddItemsComponent implements OnInit {
 
 
   public onGetJobDetail(val) {
-    
+
     this.jobRequestModel.JobOrderId = this.id;
-    
+
     if (this.id === undefined) {
       this.createInvoiceMessage();
     } else {
@@ -165,17 +166,15 @@ export class AddItemsComponent implements OnInit {
 
         if (this.allItems.length > 0) {
           if (val === 1) {
-            if(res[0].statusId === 13)
-            {
-            this.sendJobIdToInvoiceValue.emit(this.id);
-            }else{
+            if (res[0].statusId === 13) {
+              this.sendJobIdToInvoiceValue.emit(this.id);
+            } else {
               this.statusMessage();
             }
-          }else{
-            if(res[0].statusId === 13)
-            {
-            this.sendJobIdToInvoiceValue.emit(this.id);
-            }else{
+          } else {
+            if (res[0].statusId === 13) {
+              this.sendJobIdToInvoiceValue.emit(this.id);
+            } else {
               this.statusMessage();
             }
           }
@@ -183,7 +182,7 @@ export class AddItemsComponent implements OnInit {
           this.addItemMessage();
         }
       }, error => {
-       
+
       });
 
     }
@@ -197,26 +196,26 @@ export class AddItemsComponent implements OnInit {
         this.cusId = res[0].customerId;
         this.getCustomer();
       }, error => {
-        
+
       })
     }
   }
 
   public getCustomer() {
-    
+
     this.customerRequestModel.CustomerId = this.cusId;
     this.customerService.getCustomerList(this.customerRequestModel).subscribe(res => {
       this.customerType = res[0].customerTypeId;
       this.getAllItemSource(14);
     }, error => {
-     
+
     })
   }
 
   public onChangeItemSource(id) {
-   
+
     this.stockType = Number(id);
-    
+
     if (this.stockType == 15) {
       this.getAllItemSource(15);
       this.addItemsForm.patchValue({
@@ -243,7 +242,7 @@ export class AddItemsComponent implements OnInit {
     })
   }
 
-  private getAllItemSource(stockType : number) {
+  private getAllItemSource(stockType: number) {
     // this.spinner.show();
     this.itemSourceRequestModel.CustomerType = this.customerType ? this.customerType : 0;
     this.itemSourceRequestModel.ItemType = Number(stockType);
@@ -252,17 +251,17 @@ export class AddItemsComponent implements OnInit {
       if (res.length > 0) {
         this.allItemSource = res;
         this.itemsOptions = res;
-        setTimeout(()=>{
+        setTimeout(() => {
           // this.spinner.hide();
-        },200);
+        }, 200);
       }
 
     }, error => {
-      
+
     })
   }
 
-  
+
   //calculate total amount=======================
   onBlurCalculateTotalAmount() {
     this.totalPrice = this.addItemsForm.value.unitPrice * this.addItemsForm.value.quantity * 1.1;
@@ -271,26 +270,27 @@ export class AddItemsComponent implements OnInit {
   //get data from grid list
   public onGetData(object) {
     if (this.invoiceStatus == true) {
-      
+
       this.dialog.open(WarningDialogComponent, {
         width: '350px',
-        data: "This job has already been Invoiced. Item cannot be updated." 
+        data: "This job has already been Invoiced. Item cannot be updated."
       });
     } else {
-      
       this.putJobItemsRequestModel.itemId = object.itemId;
       this.putJobItemsRequestModel.itemType = object.itemType;
+      this.putJobItemsRequestModel.itemName = object.itemName;
       this.putJobItemsRequestModel.jobItemDescription = object.jobItemDescription;
       this.putJobItemsRequestModel.jobOrderId = object.jobOrderId;
       this.putJobItemsRequestModel.jobOrderItemId = object.jobOrderItemId;
       this.putJobItemsRequestModel.quantity = object.quantity;
       this.putJobItemsRequestModel.unitPrice = object.unitPrice;
       this.putJobItemsRequestModel.modifiedBy = "Micheal";
-    
+
+      this.itemName = object.itemName;
       this.addItemsForm.patchValue({
         itemType: object.itemType.toString(),
       })
-      
+
       this.addItemsForm.patchValue({
         itemId: {
           jobItemDescription: object.jobItemDescription,
@@ -298,7 +298,7 @@ export class AddItemsComponent implements OnInit {
           quantity: object.quantity,
           itemId: object.itemId,
           itemName: object.itemName.toString(),
-         
+
           itemType: object.itemType.toString(),
           jobOrderId: object.jobOrderId,
           jobOrderItemId: object.jobOrderItemId,
@@ -309,35 +309,35 @@ export class AddItemsComponent implements OnInit {
     }
 
   }
-   
- 
+
+
   // get all Itemsource------------------------ 
   public displayItemSource(result?: any): string | undefined {
-    
-      if (result || result > 0) {
-        if(result.itemPrice){
-          let priceItem= JSON.parse(result.itemPrice);
-          this.itemPrice = priceItem[0].UnitPrice
-          this.totalPrice = priceItem[0].Price_incTax
-        }
-        this.addItemsForm.patchValue({ 
-          itemType: result.itemType.toString(),
-          itemId: result.itemId.toString(),
-          jobItemDescription: result.jobItemDescription == undefined ? result.itemDescription : result.jobItemDescription,
-          unitPrice: result.unitPrice == undefined ? this.itemPrice : result.unitPrice,
-          quantity: result.quantity > 0 ? result.quantity : 1, 
-         });
-         this.totalPrice = result.totalPrice == undefined ? this.totalPrice : result.totalPrice
-        return result.itemName;
-      } else return undefined;
+
+    if (result || result > 0) {
+      if (result.itemPrice) {
+        let priceItem = JSON.parse(result.itemPrice);
+        this.itemPrice = priceItem[0].UnitPrice
+        this.totalPrice = priceItem[0].Price_incTax
+      }
+      this.addItemsForm.patchValue({
+        itemType: result.itemType.toString(),
+        itemId: result.itemId.toString(),
+        jobItemDescription: result.jobItemDescription == undefined ? result.itemDescription : result.jobItemDescription,
+        unitPrice: result.unitPrice == undefined ? this.itemPrice : result.unitPrice,
+        quantity: result.quantity > 0 ? result.quantity : 1,
+      });
+      this.totalPrice = result.totalPrice == undefined ? this.totalPrice : result.totalPrice
+      return result.itemName;
+    } else return undefined;
   }
 
-  
+
   public searchFilter(value) {
-   
+
     const filterValue = value.toLowerCase();
     this.allItemSource = this.itemsOptions.filter(option => {
-     
+
       let check;
       check = option.itemName.toString().indexOf(filterValue);
       check = check === 0 ? check : option.itemName.toLowerCase().indexOf(filterValue);
@@ -353,17 +353,17 @@ export class AddItemsComponent implements OnInit {
       CategoryName: 'ItemSource',
     }
     this.itemService.getItemSource(param).subscribe(res => {
-      
+
       this.itemSourceData = res;
     }, error => {
-      
+
     })
   }
 
 
   // delete Item ===================================
   public onDeleteItem(id: any) {
-    
+
     const param = {
       id: id['jobOrderItemId'],
       DeletedBy: 'Micheal'
@@ -376,18 +376,18 @@ export class AddItemsComponent implements OnInit {
         data: "This job has already been Invoiced. Item cannot be deleted"
       });
 
-     
+
     } else {
       const dialogRef = this.dialog.open(DeleteDialogComponent, {
         width: '350px',
         data: "Are you sure you want to delete this item?"
       });
-      
+
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
 
           this.itemService.deletedItem(param).subscribe(res => {
-          
+
             if (res['keyId'] == 0) {
               this.responseMessage(res['responseMessage']);
               this.addItemsForm.patchValue({
@@ -401,7 +401,7 @@ export class AddItemsComponent implements OnInit {
             } else {
               this.getJobOrderItems();
               this.messages(res['responseMessage']);
-               this.getAllItemSource(14);
+              this.getAllItemSource(14);
               this.addItemsForm.patchValue({
                 itemType: '14',
                 itemId: null,
@@ -409,11 +409,11 @@ export class AddItemsComponent implements OnInit {
                 unitPrice: [''],
                 quantity: [1],
               });
-             
+
               this.totalPrice = null;
               this.updateForm = false;
             }
-       
+
           }, error => {
           })
         }
@@ -424,13 +424,13 @@ export class AddItemsComponent implements OnInit {
 
   // add multiple items==========================================
   public getJobOrderItems() {
-    
+
     if (this.id !== undefined) {
       this.tableChecked = true
       this.itemsRequestModel.JobOrderId = this.id;
-      
+
       this.itemService.getItemsList(this.itemsRequestModel).subscribe(res => {
-       
+
         this.allItems = res;
         this.dataSource = new MatTableDataSource(res);
         if (res.length > 0) {
@@ -441,20 +441,19 @@ export class AddItemsComponent implements OnInit {
         }
 
       }, error => {
-        
+
       })
     } else {
       this.tableChecked = false;
     }
   }
 
-
-  // add items ===================
+  // sssss
   public onSubmit() {
     if (this.invoiceStatus == true) {
       this.dialog.open(WarningDialogComponent, {
         width: '350px',
-        data: "This job has already been Invoiced. Item cannot be added." 
+        data: "This job has already been Invoiced. Item cannot be added."
       });
     } else {
 
@@ -462,44 +461,55 @@ export class AddItemsComponent implements OnInit {
         this.updateAddItems();
       }
       else {
-        const itemId = this.addItemsForm.value.itemId.itemId;
-        if(itemId == undefined){
-          this.dialog.open(WarningDialogComponent, {
-            width: '350px',
-            data: "This item is not availble. Please choose the item from the list." 
-          }); 
-        }else{
-          const requestParams: ItemsModel = {
-            "jobOrderId": Number(this.id),
-            "itemType": Number(this.addItemsForm.value.itemType),
-            "itemId": itemId ? itemId : 1,
-            "jobItemDescription": this.addItemsForm.value.jobItemDescription,
-            "unitPrice": this.addItemsForm.value.unitPrice,
-            "quantity": this.addItemsForm.value.quantity,
-            "createdBy": 'Michael'
-          }
+        if (this.addItemsForm.value.itemType === '15') {
+          // Non Stock Item case =========================
           if (this.addItemsForm.valid) {
-            
-            this.spinner.show();
-            this.itemService.addItems(requestParams).subscribe(res => {
-             
-              this.messages(res.responseMessage);
-              this.getJobOrderItems();
-              this.addItemsForm.reset();
-              this.addItemsForm.patchValue({
-                itemType: '14'
-              });
-              this.onChangeItemSource('14');
-              this.totalPrice = null;
-              setTimeout(() => {
-                this.spinner.hide();
-              }, 500);
-            }, error => {
+            const itemId = this.addItemsForm.controls.itemId.value.itemId;
+            const itemName =
+              this.addItemsForm.controls.itemId.value.itemName ? this.addItemsForm.controls.itemId.value.itemName : this.addItemsForm.controls.itemId.value;
+            if (itemId || itemName) {
+              const requestParams: ItemsModel = {
+                "jobOrderId": Number(this.id),
+                "itemType": Number(this.addItemsForm.value.itemType),
+                "itemId": itemId ? itemId : null,
+                "itemName": itemName ? itemName : this.addItemsForm.controls.itemId.value,
+                "jobItemDescription": this.addItemsForm.value.jobItemDescription,
+                "unitPrice": this.addItemsForm.value.unitPrice,
+                "quantity": this.addItemsForm.value.quantity,
+                "createdBy": 'Michael'
+              }
+              this.addJobOrderItem(requestParams);
+            } else {
+              return false;
+            }
 
-              setTimeout(() => {
-                this.spinner.hide();
-              }, 200);
-            })
+          } else {
+            const controls = this.addItemsForm.controls
+            Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
+            return false;
+          }
+        } else {
+          // Stock Item Case  ===============
+          if (this.addItemsForm.valid) {
+            const itemId = this.addItemsForm.controls.itemId.value.itemId;
+            if (itemId == undefined) {
+              this.dialog.open(WarningDialogComponent, {
+                width: '350px',
+                data: "This item is not availble. Please choose the item from the list."
+              });
+            } else {
+              const requestParams: ItemsModel = {
+                "jobOrderId": Number(this.id),
+                "itemType": Number(this.addItemsForm.value.itemType),
+                "itemId": itemId,
+                "itemName": this.addItemsForm.value.itemId.itemName,
+                "jobItemDescription": this.addItemsForm.value.jobItemDescription,
+                "unitPrice": this.addItemsForm.value.unitPrice,
+                "quantity": this.addItemsForm.value.quantity,
+                "createdBy": 'Michael'
+              }
+              this.addJobOrderItem(requestParams);
+            }
           } else {
             const controls = this.addItemsForm.controls
             Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
@@ -508,16 +518,142 @@ export class AddItemsComponent implements OnInit {
         }
       }
     }
-
   }
+
+  // JobOrderItem Post api call ======================
+  addJobOrderItem(params) {
+    if (this.addItemsForm.valid) {
+      this.spinner.show();
+      this.itemService.addItems(params).subscribe(res => {
+
+        this.messages(res.responseMessage);
+        this.getJobOrderItems();
+        this.addItemsForm.reset();
+        this.addItemsForm.patchValue({
+          itemType: '14'
+        });
+        this.onChangeItemSource('14');
+        this.totalPrice = null;
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      }, error => {
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 200);
+      })
+    } else {
+      const controls = this.addItemsForm.controls
+      Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
+      return false;
+    }
+  }
+
+  // add items ===================
+  // public onSubmit() {
+  //   if (this.invoiceStatus == true) {
+  //     this.dialog.open(WarningDialogComponent, {
+  //       width: '350px',
+  //       data: "This job has already been Invoiced. Item cannot be added." 
+  //     });
+  //   } else {
+  //     if (this.putJobItemsRequestModel.jobOrderItemId > 0) {
+  //       this.updateAddItems();
+  //     }
+  //     else {
+  //       const itemId = this.addItemsForm.value.itemId.itemId ? this.addItemsForm.value.itemId.itemid : 1;
+  //       if(itemId == undefined){
+  //         
+  //         this.dialog.open(WarningDialogComponent, {
+  //           width: '350px',
+  //           data: "This item is not availble. Please choose the item from the list." 
+  //         }); 
+  //       }else{
+  //         const requestParams: ItemsModel = {
+  //           "jobOrderId": Number(this.id),
+  //           "itemType": Number(this.addItemsForm.value.itemType),
+  //           "itemId": itemId ? itemId : 1,
+  //           "itemName" : this.addItemsForm.value.itemId.itemName ? this.addItemsForm.value.itemId.itemName :this.addItemsForm.value.itemId ,
+  //           "jobItemDescription": this.addItemsForm.value.jobItemDescription,
+  //           "unitPrice": this.addItemsForm.value.unitPrice,
+  //           "quantity": this.addItemsForm.value.quantity,
+  //           "createdBy": 'Michael'
+  //         }
+  //         if (this.addItemsForm.valid) {
+
+  //           this.spinner.show();
+  //           this.itemService.addItems(requestParams).subscribe(res => {
+
+  //             this.messages(res.responseMessage);
+  //             this.getJobOrderItems();
+  //             this.addItemsForm.reset();
+  //             this.addItemsForm.patchValue({
+  //               itemType: '14'
+  //             });
+  //             this.onChangeItemSource('14');
+  //             this.totalPrice = null;
+  //             setTimeout(() => {
+  //               this.spinner.hide();
+  //             }, 500);
+  //           }, error => {
+
+  //             setTimeout(() => {
+  //               this.spinner.hide();
+  //             }, 200);
+  //           })
+  //         } else {
+  //           const controls = this.addItemsForm.controls
+  //           Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
+  //           return false;
+  //         }
+  //       }
+  //     }
+  //   }
+
+  // }
   // Update items =====================
+
+
   updateAddItems() {
-   
-    this.putJobItemsRequestModel.itemId = Number(this.addItemsForm.value.itemId);
-    this.putJobItemsRequestModel.itemType = Number(this.addItemsForm.value.itemType);
-    this.putJobItemsRequestModel.jobItemDescription = this.addItemsForm.value.jobItemDescription;
-    this.putJobItemsRequestModel.unitPrice = this.addItemsForm.value.unitPrice;
-    this.putJobItemsRequestModel.quantity = Number(this.addItemsForm.value.quantity);
+    if (this.addItemsForm.valid) {
+      if (this.addItemsForm.value.itemType === '15') {
+        const itemId = this.addItemsForm.controls.itemId.value.itemId;
+        const itemName =
+          this.addItemsForm.controls.itemId.value.itemName ? this.addItemsForm.controls.itemId.value.itemName : this.addItemsForm.controls.itemId.value;
+        if (itemId || itemName) {
+          this.putJobItemsRequestModel.itemId = itemId ? itemId : null;
+          this.putJobItemsRequestModel.itemType = Number(this.addItemsForm.value.itemType);
+          this.putJobItemsRequestModel.itemName = itemName ==="0" ? this.itemName : itemName;
+          this.putJobItemsRequestModel.jobItemDescription = this.addItemsForm.value.jobItemDescription;
+          this.putJobItemsRequestModel.unitPrice = this.addItemsForm.value.unitPrice;
+          this.putJobItemsRequestModel.quantity = Number(this.addItemsForm.value.quantity);
+        } else {
+          return false;
+        }
+      } else {
+        
+        const itemId = this.addItemsForm.controls.itemId.value;
+        if (itemId == undefined) {
+          this.dialog.open(WarningDialogComponent, {
+            width: '350px',
+            data: "This item is not availble. Please choose the item from the list."
+          });
+        } else {
+          this.putJobItemsRequestModel.itemId = Number(this.addItemsForm.value.itemId);
+          this.putJobItemsRequestModel.itemType = Number(this.addItemsForm.value.itemType);
+          this.putJobItemsRequestModel.jobItemDescription = this.addItemsForm.value.jobItemDescription;
+          this.putJobItemsRequestModel.unitPrice = this.addItemsForm.value.unitPrice;
+          this.putJobItemsRequestModel.quantity = Number(this.addItemsForm.value.quantity);
+        }
+      }
+    } else {
+      const controls = this.addItemsForm.controls
+      Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
+      return false;
+    }
+
+
     this.itemService.updateAddItems(this.putJobItemsRequestModel).subscribe(res => {
       this.spinner.show();
       this.addItemsForm.reset();
@@ -538,7 +674,7 @@ export class AddItemsComponent implements OnInit {
       setTimeout(() => {
         this.spinner.hide();
       }, 500);
-     
+
     })
   }
 
@@ -546,7 +682,7 @@ export class AddItemsComponent implements OnInit {
   public statusMessage() {
     this.dialog.open(WarningDialogComponent, {
       width: '350px',
-      data: "Please change job status." 
+      data: "Please change job status."
     });
   }
 
@@ -561,7 +697,7 @@ export class AddItemsComponent implements OnInit {
   createInvoiceMessage() {
     this.dialog.open(WarningDialogComponent, {
       width: '350px',
-      data: "Kindly create the job." 
+      data: "Kindly create the job."
     });
   }
 
@@ -569,7 +705,7 @@ export class AddItemsComponent implements OnInit {
   addItemMessage() {
     this.dialog.open(WarningDialogComponent, {
       width: '350px',
-      data: "Please add the item." 
+      data: "Please add the item."
     });
   }
 

@@ -118,8 +118,8 @@ export class JobTypeComponent implements OnInit {
         this.totalItems = res[0].totalItems;
        }
        this.noDataFound = (this.printData.length > 0) ? false : true;
-      this.initialDate = moment(this.JobTypePrintForm.value.from).format('MM-DD-yyyy');
-       this.endDate = moment(this.JobTypePrintForm.value.to).format('MM-DD-yyyy');
+      this.initialDate = this.JobTypePrintForm.value.from;
+       this.endDate = this.JobTypePrintForm.value.to;
        this.todayDate = new Date();
       },error=>{
         console.log(error);

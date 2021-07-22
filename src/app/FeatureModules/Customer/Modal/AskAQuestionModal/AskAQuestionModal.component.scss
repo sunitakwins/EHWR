@@ -1,0 +1,50 @@
+.csRadioBtn{
+    .radioBtn {
+        margin-right: 0px;
+        min-width: 50px;
+        margin-bottom: 15px;
+        display: inline-block;
+        input {
+            left: 0;
+        }
+    }
+    span {
+        right: 40px;
+    }
+} 
+
+#moveJob{
+    .modal-dialog {
+        .modal-header {
+            background-color : transparent ;
+            color: rgb(48, 47, 47);
+            // text-align: center;
+            font-size: 1.28rem !important;
+        }
+        .modal-body {
+            height: 185px;
+        }
+    }
+   .modal-footer{
+
+   } 
+}
+
+::ng-deep.mat-dialog-container {
+    background-color: transparent !important;
+    box-shadow: none !important;    
+}
+
+
+.greenBtn{
+    background-color: #7dc836;
+    color: #fff;
+    margin-right: 10px;
+}
+.greenBtn:hover{
+    background-color: #6fbf23;
+}
+
+#span{
+    color :black;
+}

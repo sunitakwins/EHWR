@@ -1,0 +1,23 @@
+<div class="statementPdfWrap">
+	<div class="templateHeader">
+		<div class="container">
+			<h2>${{amount}}</h2>
+			<div class="headerActionBtn">
+				<button type="button" class="greenBtn btn" (click)="openPaymentModel()">Pay Now</button>
+				<button type="button" class="grayBtn btn" (click) ="openQuestionModal()">Ask a Question</button>
+			</div>
+		</div>
+	</div>
+	<div class="templateContentPart">
+      <iframe [src]="url | safe" style="width:1283px;height:700px;" id ="pdfUrlLink" title="description"></iframe>
+	</div>
+	<div class="templateFotter">
+		<div class="container">
+			<img src="#" alt="" class="footerLogo">
+			<div class="headerActionBtn">
+				<button type="submit" class="outlineBtn emailBtn" (click) ="emailInvoice()">E-mail</button> 
+				<button type="submit" class="outlineBtn" (click)="saveInvoiceAsPdf()">Save</button>
+			</div>
+		</div>
+	</div>
+</div>

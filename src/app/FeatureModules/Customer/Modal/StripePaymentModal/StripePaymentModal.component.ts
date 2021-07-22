@@ -8,12 +8,15 @@ import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-Snack
 import { InvoicesOutstandingModel } from '../../Models/Payments/Payments.model';
 import { PaymentService } from '../../Services/PaymentServices/Payment.service';
 
+let paymentArr,payment, paymentId, paymentMethodName, expiryDate, expiryDateArr, expiryMonth,expiryYear;
+
 @Component({
   selector: 'app-StripePaymentModal',
   templateUrl: './StripePaymentModal.component.html',
   styleUrls: ['./StripePaymentModal.component.scss']
   // providers: [DecimalPipe]
 })
+
 export class StripePaymentModalComponent implements OnInit {
   invoiceId: number;
   AmountInvoice: number;
@@ -29,24 +32,42 @@ export class StripePaymentModalComponent implements OnInit {
 
     @Inject(MAT_DIALOG_DATA) public data: any) 
      {
-      
+     
      }
 
 
   ngOnInit() {
    
       this.stripeForm = this.fb.group({
-        // email : ['',[Validators.required,Validators.email]],
-        cardName : ['',[Validators.required]],
         // cardNumber : ['', [CreditCardValidators.validateCCNumber]],
-        cardNumber : ['', [Validators.required, Validators.maxLength(16)]],
+        cardNumber : ['', [Validators.maxLength(16)]],
         
         // expirationDate : ['', [CreditCardValidators.validateExpDate], Validators.required],
-        expirationDate : ['', [Validators.required]],
+        expirationDate : ['', [Validators.required, Validators.pattern('/^(0[1-9]|1[0-2])\/?([0-9]{2})$/'),
+        Validators.maxLength(5)]],
 
         // cvv :  ['', [Validators.maxLength(3),Validators.minLength(3)]]
         cvv :  ['',[ Validators.required ,Validators.pattern("^[0-9]*$"),Validators.maxLength(3)]]
       });
+
+      this.data;
+      if(this.data.PaymentForm){
+        paymentArr = this.data.PaymentForm.value.paymentId;
+        payment = paymentArr.split(',');
+        paymentId = payment[0];
+        paymentMethodName = payment[1];
+
+        this.invoiceId =  this.data.InvoiceId;
+        this.AmountInvoice = 
+        this.data.PaymentForm.value.amount.toFixed(2);
+      }
+      if(this.data.invoiceData){
+        this.invoiceId =  this.data.invoiceData.invoiceId;
+        this.AmountInvoice = 
+        this.data.invoiceData.amountPayment.toFixed(2);
+
+      }
+    
   }
 
 
@@ -55,59 +76,99 @@ export class StripePaymentModalComponent implements OnInit {
   }
 
   onSubmit(){
-    let paymentArr,payment, paymentId, paymentMethodName, expiryDate, expiryDateArr, expiryMonth,expiryYear;
-     paymentArr = this.data.PaymentForm.value.paymentId;
-     payment = paymentArr.split(',');
-     paymentId = payment[0];
-     paymentMethodName = payment[1];
+   
+    this.data.invoiceData;
 
-     expiryDate = (this.stripeForm.value.expirationDate);
-     expiryDateArr = expiryDate.split('/');
-     expiryMonth  = expiryDateArr[0];
-     expiryYear = expiryDateArr[1];
- 
-    // this.decimalPipe.transform(this.data.PaymentForm.value.amount, '1.2-2');
- 
-    if(this.stripeForm.valid){
-      const params: InvoicesOutstandingModel = {
-        "customerId": this.data.CusId,
-        "invoiceId": Number(this.data.InvoiceId),
-        "jobOrderId": Number(this.data.JobId),
-        "methodPayId": paymentId > 0 ? Number(paymentId) : null,
-        "methodPayName" :paymentMethodName,
-        "methodRefrenceNumberPayment": this.data.PaymentForm.value.methodRef > 0 ? Number(this.data.PaymentForm.value.methodRef > 0) : null,
-        "paymentDate": new Date(),
-        "amountPayment": this.data.PaymentForm.value.amount,
-        "cardName": this.stripeForm.value.cardName,
-        "cardNumber" :this.stripeForm.value.cardNumber,
-        "cvv": this.stripeForm.value.cvv,
-        "month": Number(expiryMonth),
-        "year": Number(expiryYear),
-        "createdBy": "Micheal"
-      }; 
-      this.spinner.show();
-      
-      this.paymentService.addPayment(params).subscribe((res)=>{
-          // console.log(res);
-          this.messages(res.responseMessage);
-          setTimeout(() => {
-          this.spinner.hide();
-           }, 500);
-           this.dialogRef.close(true);
-      },error =>{
-        setTimeout(() => {
-          this.spinner.hide();
-           }, 500);
-           this.dialogRef.close(false);
-      });
-      
-    }else{
-      const controls = this.stripeForm.controls
-      Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
-      return false;
-    }
+    expiryDate = (this.stripeForm.value.expirationDate);
+    expiryDateArr = expiryDate.split('/');
+    expiryMonth  = expiryDateArr[0];
+    expiryYear = expiryDateArr[1];
+
+    // if(this.stripeForm.valid){
+      let mehtodPayId =  paymentId ? paymentId : this.data.invoiceData.methodPayId;
+      if(this.data.PaymentForm){
+        let params: InvoicesOutstandingModel = {
+          "customerId": Number(this.data.CusId) ? this.data.CusId : this.data.invoiceData.customerId,
+          "invoiceId": this.data.InvoiceId ? Number(this.data.InvoiceId) :  this.invoiceId,
+          "jobOrderId": Number(this.data.JobId),
+          "methodPayId": mehtodPayId  > 0 ? Number(mehtodPayId) : null,
+          "methodPayName" :paymentMethodName ?paymentMethodName : this.data.invoiceData.methodPayName,
+          "methodRefrenceNumberPayment": this.data.PaymentForm.value.methodRef > 0? Number(this.data.PaymentForm.value.methodRef): null,
+          "paymentDate": new Date(),
+          "amountPayment": this.data.PaymentForm.value.amount ,
+          "cardNumber" :this.stripeForm.value.cardNumber,
+          "cvv": this.stripeForm.value.cvv,
+          "month": Number(expiryMonth) ,
+          "year": Number(expiryYear),
+          "createdBy": "Micheal"
+        }; 
+        this.payInvoiceMethod(params);
+        
+      }
+
+      if(this.data.invoiceData){
+        let params: InvoicesOutstandingModel = {
+          "customerId": this.data.CusId ? this.data.CusId : this.data.invoiceData.customerId,
+          "invoiceId": this.data.InvoiceId ? Number(this.data.InvoiceId) :  this.invoiceId,
+          "jobOrderId": Number(this.data.JobId)? this.data.JobId : this.data.invoiceData.jobOrderId ,
+          "methodPayId": mehtodPayId  > 0 ? Number(mehtodPayId) : null,
+          "methodPayName" :paymentMethodName ?paymentMethodName : this.data.invoiceData.methodPayName,
+          "methodRefrenceNumberPayment": null,
+          "paymentDate": new Date(),
+          "amountPayment": this.data.invoiceData.amountPayment ? this.data.invoiceData.amountPayment : this.data.PaymentForm.value.amount ,
+          "cardNumber" :this.stripeForm.value.cardNumber,
+          "cvv": this.stripeForm.value.cvv,
+          "month": Number(expiryMonth) ,
+          "year": Number(expiryYear),
+          "createdBy": "Micheal"
+        }; 
+        this.payInvoiceMethod(params);
+      }
+    
+    //  let methodRefNo = this.data.PaymentForm.value.methodRef ? this.data.PaymentForm.value.methodRef: null;
+      // const params: InvoicesOutstandingModel = {
+      //   "customerId": this.data.CusId ? this.data.CusId : this.data.invoiceData.customerId,
+      //   "invoiceId": this.data.InvoiceId ? Number(this.data.InvoiceId) :  this.invoiceId,
+      //   "jobOrderId": Number(this.data.JobId)? this.data.JobId : this.data.invoiceData.jobOrderId ,
+      //   "methodPayId": mehtodPayId  > 0 ? Number(mehtodPayId) : null,
+      //   "methodPayName" :paymentMethodName ?paymentMethodName : this.data.invoiceData.methodPayName,
+      //   "methodRefrenceNumberPayment": null,
+      //   // methodRefNo > 0 ? Number(methodRefNo > 0) : null,
+      //   "paymentDate": new Date(),
+      //   "amountPayment": this.data.invoiceData.amountPayment ? this.data.invoiceData.amountPayment : this.data.PaymentForm.value.amount ,
+      //   "cardNumber" :this.stripeForm.value.cardNumber,
+      //   "cvv": this.stripeForm.value.cvv,
+      //   "month": Number(expiryMonth) ,
+      //   "year": Number(expiryYear),
+      //   "createdBy": "Micheal"
+      // }; 
+      // console.log(params);
+      // this.spinner.show();
+
+    // }else{
+    //   const controls = this.stripeForm.controls
+    //   Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
+    //   return false;
+    // }
   }
 
+  // post api call function
+   payInvoiceMethod(params : any){
+    this.spinner.show();
+    this.paymentService.addPayment(params).subscribe((res)=>{
+      // console.log(res);
+      this.messages(res.responseMessage);
+      setTimeout(() => {
+      this.spinner.hide();
+       }, 500);
+       this.dialogRef.close(true);
+  },error =>{
+    setTimeout(() => {
+      this.spinner.hide();
+       }, 500);
+       this.dialogRef.close(false);
+  });
+   }
 
   public messages(message) {
     this.openSnackBar(message, 'hello');

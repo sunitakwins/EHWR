@@ -4,10 +4,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import * as moment from 'moment';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ExcelService } from 'src/app/FeatureModules/Reports/Services/Excel.service';
 
 /* Service */ 
 import { ReportsService } from 'src/app/FeatureModules/Reports/Services/Reports.service';
+
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 interface months {
   value: number;
@@ -49,24 +53,13 @@ export class JobCompletedComponent implements OnInit {
    totalAmount: any;
   totalAmountPaid: any;
   
-  // report list data
-  displayData: any = [
-    {
-      column1: "Page No.",
-      column2: "Job No.",
-      column3: "Customer Name",
-      column4: "Address",
-      column5: "Job Date",
-      column6: "Due Date",
-      column7: "Amount",
-      column8: "Date Paid",
-      column9: "Amt. Paid"
-    }
-  ]
   noRecordFound: boolean = false;
+  initialDate: any;
+  endDate: any;
+  todayDate: Date;
 
 
-  constructor(private fb: FormBuilder, private excelService : ExcelService,
+  constructor(private fb: FormBuilder, private excelService : ExcelService, private spinner :NgxSpinnerService,
 
     private reportService: ReportsService) { }
 
@@ -117,6 +110,7 @@ export class JobCompletedComponent implements OnInit {
 
   // get Data from Api 
   getJobCompletedData(){
+    
     const params = {
       CustomerTypeId: (this.cusTypeId != 5 && this.cusTypeId != undefined) ? this.cusTypeId : -1,
       ReportStartDate: moment(this.JobTypePrintForm.value.from).format('MM/DD/yyyy'),
@@ -126,10 +120,12 @@ export class JobCompletedComponent implements OnInit {
       this.reportService.getJobCompleted(params).subscribe(res => {
         this.JobCompletedArray = res;
         this.noRecordFound = (this.JobCompletedArray.length > 0) ?false : true;
+        this.initialDate =  moment(this.JobTypePrintForm.value.from).format('DD-MM-yyyy');
+        this.endDate =moment(this.JobTypePrintForm.value.to).format('DD-MM-yyyy');
+        this.todayDate = new Date();
         if(res > 0){
+         
         this.printData = res;
-        // this.totalAmountPaid =res[0].totalAmountPaid
-        // this.totalAmount = res[0].totalAmount
         }
         setTimeout(() => {
         }, 500); 
@@ -143,14 +139,23 @@ export class JobCompletedComponent implements OnInit {
     }
   }
  // ================Export to Excel Data =================================
+
  excelExport(){
   if(this.JobTypePrintForm.valid){
     this.getJobCompletedData();
+    this.spinner.show();
     setTimeout(() => {
     let element, fileName;
     fileName = 'JobCompletedData.xlsx';
     element = document.getElementById(`JobCompletedExcelData`);
+
     this.excelService.exportexcel(element , fileName);
+    // const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.JobCompletedArray);
+    // const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    // const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    // this.saveAsExcelFile(excelBuffer, fileName);
+    
+    this.spinner.hide();
     }, 2000);
   }else{
     const controls = this.JobTypePrintForm.controls
@@ -160,11 +165,20 @@ export class JobCompletedComponent implements OnInit {
  
 }
 
+// private saveAsExcelFile(buffer: any, fileName: string): void {
+//   const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+//   const data: Blob = new Blob([buffer], {
+//     type: EXCEL_TYPE
+//   });
+//   FileSaver.saveAs(data, fileName);
+// }
+
   // ================ print Function======================================
   print() {
     if(this.JobTypePrintForm.valid){
       this.getJobCompletedData();
       // if(this.JobCompletedArray.length > 0){
+        this.spinner.show();
         setTimeout(() => {
           let printContents, popupWin, printbutton;
           printbutton = document.getElementById('inputprintbutton3').style.display = "none";
@@ -241,10 +255,20 @@ export class JobCompletedComponent implements OnInit {
          padding: 2px ;
         border-top: none;
 		    border-left: 1px solid #ccc;
+        border-bottom : 0.5px solid #ccc;
       }
       
       table {
         border-right: 1px solid #ccc;
+      }
+
+      .footerDate {
+        border-top: 1px solid #eee;
+          margin: 10px 0 0;
+          padding-top: 10px;
+      }
+      .footerDate p {
+          margin: 0 0 4px;
       }
       
             </style>
@@ -257,6 +281,7 @@ export class JobCompletedComponent implements OnInit {
             </html>`)
           printbutton = document.getElementById('inputprintbutton3').style.display = "inline-block";
           popupWin.document.close();
+          this.spinner.hide();
         }, 2000)
       // }else{
       //    alert('No Record Found');

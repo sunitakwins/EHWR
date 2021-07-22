@@ -140,6 +140,7 @@ export class AddJobsComponent implements OnInit {
   public employeeDisable: boolean = false;
   public contactDisable: boolean = false;
   disableBtnClick : boolean = false;
+  isVisiableEmpDDL : boolean = false;
 
   /*request models */
   public customerRequestModel = new CustomerRequestModel();
@@ -551,6 +552,7 @@ ngAfterViewInit(){
           'statusId': [JobData.statusId],
           'tankDateInstalled': (JobData.tankDateInstalled == null) ? null : new Date(JobData.tankDateInstalled),
         });
+        
         if (this.employeeId.length > 0) {
           this.addJobsForm.controls["employees"].clearValidators();
           this.addJobsForm.controls["employees"].updateValueAndValidity();
@@ -901,6 +903,7 @@ ngAfterViewInit(){
 
   public searchEmployee(val) {
     this.employeeRequestModel.SearchValue = val;
+    this.isVisiableEmpDDL = true;
     this.getEmployeeBySearch();
 
   }
@@ -913,11 +916,24 @@ ngAfterViewInit(){
   }
 
   private getEmployeeBySearch() {
+    
     this.employeeRequestModel.IsActive = false;
     this.jobService.getEmployees(this.employeeRequestModel).subscribe(res => {
-      this.allEmployees = res;
-      this.employeeOptions = res;
-      this.allFruits = res;
+      if(res.length ){
+        this.allEmployees = res;
+        this.employeeOptions = res;
+        this.allFruits = res;
+      }else{
+      
+
+        // let msg = "All employee status is inactive. Please active atleast one employee.";
+        if(this.isVisiableEmpDDL &&  this.employeeRequestModel.SearchValue.length ==1)
+        // this.openSnackBar(msg,'hello');
+        this.dialog.open(WarningDialogComponent, {
+          width: '350px',
+          data: "All employees status is inactive. Please active atleast one employee." 
+        });
+      } 
     }, error => {
     })
   }
@@ -1001,6 +1017,17 @@ ngAfterViewInit(){
 
   }
 
+  // validate page number accept only numbers.
+    numberOnly(event): boolean {
+      
+      const charCode = (event.which) ? event.which : event.keyCode;
+      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+      }
+      return true;
+  
+    }
+
 
   // submitForm  ===================================
   public onSubmit() {
@@ -1065,7 +1092,7 @@ ngAfterViewInit(){
         "createdBy": "Micheal"
       }
       
-       debugger
+       
       this.disableBtnClick = false;
 
       this.spinner.show();
@@ -1147,7 +1174,7 @@ ngAfterViewInit(){
         "suburb": this.addJobsForm.value.suburb.localityId,
         "state": this.addJobsForm.value.state,
         "postCode": this.addJobsForm.value.postCode,
-        "pageNo": (this.addJobsForm.value.pageNo).toString(),
+        "pageNo": (this.addJobsForm.value.pageNo),
         // "position": "SuperAdmin",
         "tankDateInstalled": this.addJobsForm.value.tankDateInstalled,
         "modifiedBy": "Micheal"
@@ -1165,11 +1192,6 @@ ngAfterViewInit(){
           else {
             this.indexVal == 2;
           }
-
-        // if (type == true) {
-        //   this.router.navigate(["customer", "AddItems", this.id]);
-        // }
-
       }, error => {
 
       })

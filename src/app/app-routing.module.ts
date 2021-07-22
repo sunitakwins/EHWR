@@ -5,10 +5,14 @@ import { Routes, RouterModule } from '@angular/router';
 /*Components*/
 import { ContentLayoutComponent } from './ContentLayout/ContentLayout.component';
 import { LoginComponent } from './CoreModules/Components/Login/Login.component';
+import { PayInvoiceThroughEmailLinkComponent } from './FeatureModules/Customer/Modal/PayInvoiceThroughEmailLink/PayInvoiceThroughEmailLink.component';
+
+
 
 
 /*Routes*/
 const routes: Routes = [
+  {path : 'sm73.link/:id', component: PayInvoiceThroughEmailLinkComponent},
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   {

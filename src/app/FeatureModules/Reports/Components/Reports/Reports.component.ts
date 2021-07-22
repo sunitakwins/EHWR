@@ -686,7 +686,7 @@ export class ReportsComponent implements OnInit {
       this.invoiceNotSentPrintBtn = false;
       this.invoiceStatementPrintBtn = false;
     }
-    console.log(data);
+
     
    
   }

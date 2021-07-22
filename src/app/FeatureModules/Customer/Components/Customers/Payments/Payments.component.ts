@@ -404,7 +404,7 @@ export class PaymentsComponent implements OnInit, OnChanges {
    
     if (paymentMethodId === '30,Credit' && this.dueDate != undefined) {
      const dialogRef = this.dialog.open(StripePaymentModalComponent, {
-        width: '960px', disableClose: true,
+        disableClose: true,
         data: { InvoiceId, PaymentForm, JobId, CusId },
       });
       setTimeout(() => {
@@ -455,7 +455,6 @@ export class PaymentsComponent implements OnInit, OnChanges {
             "methodRefrenceNumberPayment": this.paymentForm.value.methodRef > 0 ? Number(this.paymentForm.value.methodRef > 0) : null, 
             "paymentDate": new Date(),
             "amountPayment": Number(this.paymentForm.controls.amount.value),
-            "cardName": null,
             "cardNumber": null,
             "cvv": null,
             "month" : null,

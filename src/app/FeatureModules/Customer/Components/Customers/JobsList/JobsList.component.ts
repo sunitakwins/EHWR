@@ -32,7 +32,7 @@ public message = "Job deleted successfully"
   public result:any;
   public editjobId:any;
   public jobInvoiceStatus:any;
-  public noFoundData:boolean = false;
+  public noFoundData: boolean = false;
   private pageNo: number = 1;
   public scrollModel = new InfiniteScrollModel();
 
@@ -42,6 +42,7 @@ public message = "Job deleted successfully"
   dataSource = new MatTableDataSource();
 
   @ViewChild('sort', { static: true })sort!: MatSort;
+  responseData: any;
 
   constructor( private jobService:JobService,public dialog: MatDialog,
     public snackBar:MatSnackBar,
@@ -65,20 +66,12 @@ public message = "Job deleted successfully"
   
 
   public loadMore(){
-         
+    
     this.spinner.show();        
     this.requestModel.PageNo =  ++this.pageNo;
-    // console.log(this.requestModel);
+  
     this.getJobListData();
   }
-
-//  public empty(val:any){
-//    if(val.length == 0)
-//    {
-//       this.requestModel.SearchValue=""
-//       this.setRequesetParams();
-//    }
-//  }
 
 
   public searchJobs(event){  
@@ -105,7 +98,6 @@ public sortData(sort: Sort) {
 
 
   private setRequesetParams(){
-    
     this.result = [];
     this.pageNo = 1;
     this.requestModel.PageNo = this.pageNo;
@@ -114,28 +106,40 @@ public sortData(sort: Sort) {
   }
 
   private getJobListData(){
+    
     this.spinner.show();
     this.jobService.getJobList(this.requestModel).subscribe((res)=>{
-     
-       this.noFoundData = (res.length > 0) ? false : true;
-        if(res.length > 0){
-          const finalArray = union(this.result, res);   
     
-          if(this.searchVal == true){
-            this.dataSource = new MatTableDataSource(res);
-            }else{
-            this.dataSource = new MatTableDataSource(finalArray);
-            }
+        if(res.length > 0){
+         
+          let finalArray = union(this.result, res); 
+          this.responseData = this.removeDuplicates(finalArray, "jobOrderId"); 
+          
+         
+           if(this.requestModel.SearchValue){
+             this.dataSource = new MatTableDataSource( this.responseData);
+             }
+             else{
+              this.noFoundData = (this.responseData.length > 0) ? false : true;
+             }
+             if(!this.requestModel.SearchValue){
+              this.dataSource = new MatTableDataSource( this.responseData);
+              }
+              else{
+               this.noFoundData = (this.responseData.length > 0) ? false : true;
+              }
+           
           this.result = finalArray;
         }else{
-         
+          this.noFoundData = (this.result.length > 0) ? false : true;
         }
+       
         setTimeout(() => {
           /* spinner ends after 5 seconds */
           this.spinner.hide();
           }, 500);
     },error=>{
-        // console.log(error);
+       
         setTimeout(() => {
           /* spinner ends after 5 seconds */
           this.spinner.hide();
@@ -144,8 +148,21 @@ public sortData(sort: Sort) {
    
   }
 
+  
+  removeDuplicates(originalArray, prop) {
+    var newArray = [];
+    var lookupObject = {};
+    for (var i in originalArray) {
+      lookupObject[originalArray[i][prop]] = originalArray[i];
+    }
+    for (i in lookupObject) {
+      newArray.push(lookupObject[i]);
+    }
+    return newArray.reverse();
+  }
+
 // delete functionality
-public  openDialog(input, event): void {
+public openDialog(input, event): void {
   event.stopPropagation(); 
   if(input.jobInvoiceStatus === true)
   {
@@ -165,7 +182,7 @@ public  openDialog(input, event): void {
        this.setRequesetParams();
        this.deletedMessage()
        },error=>{
-        //  console.log(error);
+        
        })
      }
    });
@@ -187,7 +204,7 @@ public  openDialog(input, event): void {
 }
 
 openMoveJobDialog(data:any, event): void {
-  //console.log(data.jobInvoiceStatus);
+  
   event.stopPropagation(); 
   if(data.jobInvoiceStatus === true)
   {

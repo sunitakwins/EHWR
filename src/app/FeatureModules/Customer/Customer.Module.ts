@@ -49,6 +49,11 @@ import { IConfig, NgxMaskModule } from 'ngx-mask';
 import { CreditCardDirectivesModule } from 'angular-cc-library';
 import { SendAllUnsentInvoicesModalComponent } from './Modal/SendAllUnsentInvoicesModal/SendAllUnsentInvoicesModal.component';
 
+import { SafePipePipe } from 'src/app/SharedModules/Pipes/safePipe.pipe';
+import { PayInvoiceThroughEmailLinkComponent } from './Modal/PayInvoiceThroughEmailLink/PayInvoiceThroughEmailLink.component';
+import { AskAQuestionModalComponent } from './Modal/AskAQuestionModal/AskAQuestionModal.component';
+import { EmailModalComponent } from './Modal/EmailModal/EmailModal.component';
+
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -87,6 +92,10 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         PaymentsComponent,
         NotesGridModalComponent,
         StripePaymentModalComponent,
+     
+        PayInvoiceThroughEmailLinkComponent,
+        EmailModalComponent,
+        AskAQuestionModalComponent,
         SendAllUnsentInvoicesModalComponent
     ],
     imports:[
@@ -103,7 +112,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     ],
     
     providers:[CustomerService,JobService,ItemService,InvoiceService,PaymentService],
-    bootstrap:[]
+    bootstrap:[SafePipePipe]
 })
 export class CustomerModule{
 

@@ -47,34 +47,37 @@
 </div>
 
 <!-- Print div -->
-<section id="jobCompPrintDiv" class="d-none" >
+<section id="jobCompPrintDiv" class="d-none">
   <div class="container pb-3">
-    <div class="pagebreak loginWrapper">
+    <div class="loginWrapper" >
       <header>
-        <div class="headerWrapper">
+        <div class="headerWrapper pagebreak" *ngIf ="JobCompletedArray.length > -1">
             <div class="row">
-              <div class="col-sm-12 col-md-6">
+              <div class="col-sm-12 col-md-6 " >
                   <div class="addressWrapper1">
-                    <h4>Job Completed</h4>
+                    <h2>Job Completed</h2>
+                  </div>
+                  <div>
+                    <h4><tr>Between <span> {{initialDate }}</span> And <span> {{endDate }}</span></h4>
                   </div>
                 </div>
             </div>
-
             <div class="row">
               <div class="col-sm-12">
-                  <div class="table-responsive ">
+                  <div class="table-responsive">
                     <table  class="table tableBodyScroll1" id ="JobCompletedExcelData">
                       <thead>
-                        <tr *ngFor = "let res of displayData">
-                          <th>{{res.column1}}</th>
-                          <th>{{res.column2}}</th>
-                          <th>{{res.column3}}</th>
-                          <th>{{res.column4}}</th>
-                          <th>{{res.column5}}</th>
-                          <th>{{res.column6}}</th>
-                          <th>{{res.column7}}</th>
-                          <th>{{res.column8}}</th>
-                          <th>{{res.column9}}</th> 
+                        <tr>
+                          <th>Page no.</th>
+                          <th>Job no.</th>
+                          <th>Customer </th>
+                          <th>Address</th>
+                          <th>Job Date</th>
+                          <th>Due Date</th>
+                          <th>Amount</th>
+                          <th>GST</th>
+                          <th>Date Paid</th>
+                          <th>Amount Paid</th> 
                         </tr>
                       </thead>
                       <tbody class="boxscroll">
@@ -85,18 +88,23 @@
                           <td>{{data.address}}</td>
                           <td>{{data.jobDate | date: 'dd/MM/yyyy'}}</td>
                           <td>{{data.dateDue | date: 'dd/MM/yyyy'}}</td>
-                          <td>{{data.amount}}</td>
-                          <td  *ngIf = "data.datePaid > '0001-01-01T00:00:00' ? data.datePaid : null">
-                            {{data.datePaid | date: 'dd/MM/yyyy'}}</td>
-                          <td>{{data.amountPaid}}</td>
+                          <td>${{data.amount}}</td>
+                          <td>${{data.gst}}</td>
+                          <td>
+                            {{ (data.datePaid > '0001-01-01T00:00:00') ? (data.datePaid | date: 'dd/MM/yyyy') : ""}}
+                          </td>
+                          <td>${{data.amountPaid}}</td>
                         </tr>
+                        <tr></tr>
+                        <tr></tr>
                           <tr *ngFor="let data of JobCompletedArray; let i = index">
                             <div *ngIf ="i === 0">
-                              <td colspan="3" style="border-top: 1px solid #ccc; text-align: right;"><strong>Total Amount: {{data.totalRecords}} </strong></td>
-                              <td colspan="3" style="border-top: 1px solid #ccc; text-align: right;"><strong>Total Amount: {{data.totalAmount}} </strong></td>
-                              <td colspan="6" style="border-top: 1px solid #ccc; text-align: right;"><strong>Total Amount Paid : {{data.totalAmountPaid}} </strong></td>
+                              <td colspan="1" style="border-top: 1px solid #ccc; text-align: right;"><strong> Total </strong></td>
+                              <td colspan="1" style="border-top: 1px solid #ccc; text-align: right;"><strong>  {{data.totalRecords}}  </strong></td>      
+                              <td colspan="5" style="border-top: 1px solid #ccc; text-align: right;"><strong> ${{data.totalAmount}} </strong></td>
+                              <td colspan="1" style="border-top: 1px solid #ccc; text-align: right;"><strong> ${{data.totalGST}}  </strong></td>
+                              <td colspan="5" style="border-top: 1px solid #ccc; text-align: right;"><strong> ${{data.totalAmountPaid}} </strong></td>
                             </div>
-                           
                           </tr>
                       </tbody>
                     </table>
@@ -105,8 +113,16 @@
             </div>
             <div *ngIf ="noRecordFound" class="text-center noDataFound">No Record Found</div>
         </div>
-      </header>
+      </header> 
     </div>
+    <!-- <div>
+      {{todayDate}}
+   </div>
+   <div class ="float-right">
+     Emergency Hot Water
+   </div> -->
   </div>
   
 </section>
+
+<!-- ================================================ -->

@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiGateway: 'http://92.204.135.120:8084/api'
+  apiGateway: 'http://92.204.135.120:8084/api',
+  imagePathUrl :'http://92.204.135.120:8084/upload/'
 };
 
 

@@ -3,7 +3,6 @@ import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DeleteDialogComponent } from 'src/app/SharedModules/Components/DeleteDialog/DeleteDialog.component';
 import { InfiniteScrollModel } from 'src/app/SharedModules/Models/InfiniteScroll.model';
 /* Models*/
 import { CustomerListModel } from '../../../Models/Customer/CustomerListModel';
@@ -14,7 +13,6 @@ import { CustomerService } from '../../../Services/CustomerServices/Customer.ser
 /*** Lodash ***/
 import { union } from 'lodash';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
 import { AuditModalComponent } from '../../../Modal/AuditModal/AuditModal.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -39,6 +37,7 @@ export class CustomersListComponent implements OnInit {
 
   @ViewChild('sort', { static: true }) sort!: MatSort;
   noFoundData: boolean = false;
+   responseData: any;
   
   constructor(private customerService:CustomerService,public dialog: MatDialog,
     public snackBar:MatSnackBar,private activeRouter:ActivatedRoute,
@@ -58,38 +57,41 @@ export class CustomersListComponent implements OnInit {
 
   }
 
-  // load more
-
-  public loadMore(){  
-    this.spinner.show();           
-    this.requestModel.PageNo =  ++this.pageNo;
-    this.getCustomerListData();
-  }
+ 
 
 
   // search data
   public searchUser(val:any){  
-   
-      this.requestModel.SearchValue = val;   
-      this.setRequestParams();    
-  }
 
+    if(val.length == 0){
+      this.requestModel.SearchValue = "";
+
+      this.setRequestParams();
+    
+    }else{
+      this.requestModel.SearchValue = val; 
+
+      this.setRequestParams();  
+    }
+        
+  }
   
- public empty(val:any){
-  if(val.length == 0)
-  {
-     this.requestModel.SearchValue=""
-     this.setRequestParams();
-  }
-}
-
   // Sort Data
+  
+  
   public sortData(sort: Sort) {
     this.requestModel.SortColumn = sort.active;
     this.requestModel.SortOrder = sort.direction;
     this.setRequestParams();
   }
 
+ // load more
+
+ public loadMore(){ 
+  this.spinner.show();           
+  this.requestModel.PageNo =  ++this.pageNo;
+  this.getCustomerListData();
+}
 
   public setRequestParams(){
     this.result = [];
@@ -99,27 +101,35 @@ export class CustomersListComponent implements OnInit {
     this.getCustomerListData();
   }
 
-public getCustomerListData(){
+public getCustomerListData( ){
   this.spinner.show();
       this.customerService.getCustomerList(this.requestModel).subscribe((res:any) =>{
-        //this.dataSource = new MatTableDataSource(res);
-        this.noFoundData = (res.length > 0) ? false : true;
         if(res.length > 0){
-         const finalArray = union(this.result, res);   
-         // console.log(finalArray);     
-          //this.dataSource = new MatTableDataSource(finalArray);
-          // this.noFoundData = true;
-          if(this.searchVal == true){
-            this.dataSource = new MatTableDataSource(res);
-            }else{
-            this.dataSource = new MatTableDataSource(finalArray);
+      
+         let finalArray = union(this.result, res); 
+         this.responseData = this.removeDuplicates(finalArray, "customerId"); 
+         
+          if(this.requestModel.SearchValue){
+            this.dataSource = new MatTableDataSource( this.responseData);
             }
+            else{
+             this.noFoundData = (this.responseData.length > 0) ? false : true;
+            }
+            if(!this.requestModel.SearchValue){
+             this.dataSource = new MatTableDataSource( this.responseData);
+             }
+             else{
+              this.noFoundData = (this.responseData.length > 0) ? false : true;
+             }
           this.result = finalArray;
+        }else{
+          this.noFoundData = (this.result.length > 0) ? false : true;
         }
         setTimeout(() => {
           /* spinner ends after 5 seconds */
           this.spinner.hide();
           }, 500);
+          
       },error =>{
         // console.log(error)
         setTimeout(() => {
@@ -129,6 +139,18 @@ public getCustomerListData(){
       })
   }
 
+
+  removeDuplicates(originalArray, prop) {
+    var newArray = [];
+    var lookupObject = {};
+    for (var i in originalArray) {
+      lookupObject[originalArray[i][prop]] = originalArray[i];
+    }
+    for (i in lookupObject) {
+      newArray.push(lookupObject[i]);
+    }
+    return newArray;
+  }
 
 
 // On Audit Button Click

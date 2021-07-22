@@ -136,6 +136,7 @@ export class InvoicesPaidComponent implements OnInit {
     element = document.getElementById(`invoicePaidData`);
     this.excelService.exportexcel(element , fileName);
     }, 2000);
+    
    }else{
     const controls = this.JobTypePrintForm.controls
     Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());

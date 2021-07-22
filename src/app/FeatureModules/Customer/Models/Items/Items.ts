@@ -2,6 +2,7 @@ export class ItemsModel {
     jobOrderId: number;
     itemType: number;
     itemId: number;
+    itemName :string;
     jobItemDescription: string;
     unitPrice: number;
     quantity: number;
@@ -13,6 +14,7 @@ export class PutJobItemsRequestModel{
     jobOrderId: number;
     itemType: number;
     itemId: number;
+    itemName : string;
     jobItemDescription: string;
     unitPrice: number;
     quantity: number;

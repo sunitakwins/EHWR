@@ -70,6 +70,14 @@ export class InvoiceStatementComponent implements OnInit {
       Ref: '',
       Address: '',
       TotalAmountDue: ''
+    }],
+    overDueDays: [{
+      Current: '',
+      Days30 : '',
+      Days60:'',
+      Days90:'',
+      More90Days:'',
+      TotalDue:''
     }]
   }];
 
@@ -79,8 +87,8 @@ export class InvoiceStatementComponent implements OnInit {
   startDate: string;
   startDate1: string;
   finalDate1: string;
-
-
+  daysArray: any[];
+  invoiceIdArray: any[];
 
   constructor(private fb: FormBuilder, private excelService: ExcelService,
     private reportService: ReportsService) {
@@ -93,15 +101,12 @@ export class InvoiceStatementComponent implements OnInit {
       customerId: [''],
     })
     this.getCustomerBySearch();
-
-
   }
 
 
   ngOnChanges() {
     this.invoiceStatementValue1 = this.invoiceStatementBoolean.invoiceStatementValue;
     this.cusTypeId = this.invoiceStatementBoolean.custTypeId;
-    //console.log('Invoice Paid :',this.jobByEmployeeBoolean);
   }
 
 
@@ -168,36 +173,7 @@ export class InvoiceStatementComponent implements OnInit {
 
   getInvoiceStmtData() {
     // get date at the time of page initialilization
-    
     const ctrlValue = this.date.value._d;
-
-    // let sDay, sMonth, fDay, fMonth;
-
-    // if(normalizedMonth["_i"].date < 10){
-    //   sDay = '0'+ normalizedMonth["_i"].date
-    // }else{
-    //   sDay = normalizedMonth["_i"].date
-    // }
-
-    // if(_month < 10){
-    //   sMonth = '0'+ _month
-    // }else{
-    //   sMonth = _month
-    // }
-
-    // this.startDate1 = sMonth + '/'+ sDay +'/'+ normalizedMonth["_i"].year
-    
-    // const monthYear = normalizedMonth["_i"].year + "-" + _month;
-    // fDay = moment(monthYear, "YYYY-MM").daysInMonth();
-
-    // if(_month < 10){
-    //   fMonth = '0'+ _month
-    // }else{
-    //   fMonth = _month
-    // }
-
-    // this.finalDate1 = fMonth + '/'+ fDay +'/'+ normalizedMonth["_i"].year;
-
 
     let StartDate1 = ctrlValue.getFullYear() + '/' + (ctrlValue.getMonth() + 1) + '/' + '01';
     let month = ctrlValue.getMonth() +1;
@@ -213,8 +189,7 @@ export class InvoiceStatementComponent implements OnInit {
       StartDate: this.startDate == undefined ? StartDate1 : this.startDate,
       EndDate: this.finalDate == undefined ? finalDate1 : this.finalDate
     }
-    // console.log(params);
-
+    
     if (this.JobTypePrintForm.valid) {
       this.reportService.getInvoiceStatement(params).subscribe(res => {
         console.log('Invoice Stmt :', res);
@@ -236,52 +211,40 @@ export class InvoiceStatementComponent implements OnInit {
     
     const data = this.invoiceStatementData;
     this.dataArray = [];
+    this.invoiceIdArray = [];
+    debugger
     this.invoiceStatementData.forEach(data => {
       let dataInvoiceDetail = JSON.parse(data.invoices);
+      let daysData = JSON.parse(data.invoiceOverdue);
       let objData = {
         customerName: data.customerName,
         customerAddress: data.customerAddress,
-        invoiceDetails: dataInvoiceDetail
+        customerDetailAddress : data.customerDetailAddress,
+        monthEnding : data.monthEnding,
+        invoiceDetails: dataInvoiceDetail,
+        overDueDays : daysData,
       };
       this.dataArray.push(objData);
+     
+      let invoiceIdObj = {
+        invoiceID : dataInvoiceDetail.invoiceId
+      };
+      this.invoiceIdArray.push(invoiceIdObj)
     });
+    console.log(this.dataArray);
   }
 
-
-  // ================Export to Excel Data =================================
-
-  // excelExport() {
-  //   this.getInvoiceStmtData();
-  //   setTimeout(() => {
-  //     const json  = this.invoiceStatementData;
-  //     let element, fileName;
-  //     fileName = 'InvoiceStatementData.xlsx';
-  //     element = document.getElementById(`InvoiceStatementExcelData`);
-  //     this.excelService.exportexcel(element, fileName);
-  //     // ==========================================
-  //   // const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
-  //   // console.log('worksheet',worksheet);
-  //   // const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-  //   // const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  //   // this.saveAsExcelFile(excelBuffer, fileName);
-  //   }, 2000);
-  // }
-
-  // =========== save excel file ========================
-  // private saveAsExcelFile(buffer: any, fileName: string): void {
-  //   const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-  //   const EXCEL_EXTENSION = '.xlsx';
-  //   const data: Blob = new Blob([buffer], {
-  //     type: EXCEL_TYPE
-  //   });
-  //   FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
-  // }
-
+  // send statement
+  sendStatement(){
+    
+    this.getInvoiceStmtData();
+    this.dataArray;
+  }
 
   // ====================Print Data ===========================
   print() {
-
-    if(this.JobTypePrintForm.valid){
+   
+    if(this.JobTypePrintForm.valid){ 
     this.getInvoiceStmtData();
 
     // if(this.invoiceStatementData.length > 0){
@@ -294,235 +257,144 @@ export class InvoiceStatementComponent implements OnInit {
         popupWin.document.write(`
         <html>
           <head>
-  
             <title>Print tab</title>
-            <style media="print">
-  
-  * {
-  -webkit-print-color-adjust: exact; /*Chrome, Safari */
-  color-adjust: exact; /*Firefox*/
-  box-sizing: border-box;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  }
-  .pagebreak {page-break-after: always;}
-  
-  .page-break { display: block; page-break-before: always; }
-  .row {
-  display: flex;
-  flex-wrap: wrap;
-  }
-  .ehwrLogo{
-    margin-top:35px;
-  }
-  .col-sm-12 {
-  flex: 0 0 100%;
-  max-width: 100%;
-  position: relative;
-  }
-  .col-md-6 {
-  flex: 0 0 50%;
-  max-width: 50%;
-  position: relative;
-  }
-  header {
-  background-color: transparent;
-  }
-  .loginWrapper {
-  background-color: rgba(255, 255, 255, 0.97);
-  box-shadow: none;
-  padding: 0px;
-  border-radius: 5px;
-  margin-bottom: 50px;
-  }
-  .headerWrapper {
-  padding: 15px;
-  }
-  h4.logoText {
-  margin: 0 !important;
-  line-height: 20px !important;
-  font-size: 2.2rem;
-  padding: 0 !important;
-  color:#f00;
-  }
-  h4.logoText span {
-  font-size: 20px;
-  font-weight: normal;
-  line-height: 18px !important;
-  color:#000;
-  }
-  h6 {
-  font-size: 20px;
-  font-weight: normal;
-  line-height: 18px !important;
-  margin: 0 0 20px !important;
-  padding: 0 !important;
-  }
-  .headerWrapper .invoiceRecipt {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  margin-top: 25px;
-  float:right;
-  }
-  td.minWidth {
-  min-width: 400px;
-  }
-  td.minWidth h6{
-  text-align: center;
-  margin-top:8px;
-  }
-  td.minWidth img{
-  width:250px;
-  }
-  .colWidth{
-    width:250px;
-  }
-  .footerNote{
-  position: fixed;
-  bottom: 0;
-  padding-bottom: 2rem !important;
-  }
-  .footerNote p{
-    font-size: 13px;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    
-    }
-  
-  .addressWrapper p ,.addressWrapper2 p{
-  font-size: 17px;
-  margin: 0 !important;
-  line-height: 20px !important;
-  padding: 0 !important;
-  }
-  .addressWrapper2 {
-  width: 450px;
-  text-align: center !important;
-  margin-top: -50px;
-  }
-  .invoiceRecipt{
-  margin-top: 40px;
-  }
-  
-  .queryContent thead th{
-  text-align:left;
-  }
-  
-  .table-responsive .table{
-  width : 100% ;
-  }
-  
-  .table-responsive .tableBodyScroll td {
-  border-right: 1px solid #ccc;
-  padding: 15px 15px;
-  }
-  .table-responsive .tableBodyScroll th {
-  padding: 10px 15px;
-  }
-  .text-center {
-  text-align: center !important;
-  }
-  .text-center h6 {
-  text-align: center !important;
-  margin: 0 0 !important;
-  padding: 0 !important;
-  }
-  .addressWrapper1 {
-  margin-top:20px;
-  margin-bottom:30px;
-  }
-  .addressWrapper1 h4{
-  font-size:25px;
-  line-height:25px;
-  margin:0;
-  padding:0;
-  }
-  .invoiceRecipt td {
-  border: 1px solid #ccc;
-  padding: 5px 10px;
-  }
-  .invoiceRecipt th {
-  text-align:enter;
-  padding: 5px 10px 20px;
-  font-size:25px;
-  }
-  .invoiceRecipt td {
-  border: 1px solid #ccc;
-  padding: 5px 10px;
-  }
-  .borderBox {
-  display: inline-block;
-  border: 1px solid #ccc;
-  padding: 10px 15px;
-  min-width: 260px;
-  }
-  .borderBox p {
-  font-size: 16px;
-  margin: 0 !important;
-  line-height: 18px !important;
-  padding: 0 !important;
-  }
-  
-  .invoiceRecipt {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  width:240px;
-  }
-  .dueDateCol .invoiceRecipt {
-  width:240px;
-  display: block;
-  float:right;
-  }
-  .dueDateCol .invoiceRecipt table{
-  width:100%;
-  }
-  .invoiceRecipt ul {
-  padding: 0;
-  list-style: none;
-  }
-  .invoiceRecipt ul li strong {
-  min-width: 70px;
-  display: inline-block;
-  }
-  .dueDateCol .addressWrapper {
-  display: flex;
-  align-items: flex-end;
-  flex-direction: column;
-  }
-  .table-responsive table thead {
-  background-color: #095239;
-  color: #fff;
-  }
-  .table-responsive table thead th.comWidth {
-  min-width: 120px;
-  }
-  .table-responsive table tbody td .alPrice h6 span {
-  font-weight: normal;
-  font-size: 18px;
-  margin-left: 15px;
-  }
-  .table-responsive table tbody td .tgInclusive {
-  border-top: 1px solid #eee;
-  padding-top: 8px;
-  }
-  
-  .statementWrapper{
-    width:200px;
-    text-align:center;
-    margin-left:60px;
-    margin-top:15px;
-  }
-  .statementWrapper h5{
-    font-size:22px;
-    margin:0;
-  }
-  .statementWrapper h5.monthYearWrap{
-    margin-left:80px;
-  }
-  
-  
-  
-  </style>
+            <style>
+            .pagebreak {page-break-after: always;}
+            .statementTemplate{
+              font-family: 'Lora', serif;
+              box-sizing: border-box;
+              // margin: 0 auto;
+              display: flex;
+              padding: 20px;
+              background-color: #fff;
+              box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+              font-size: 13px;
+              flex-direction: column;
+              position: relative;
+              height:auto;
+              padding-bottom:100px;
+            }
+            .statementTemplate table ,.statementTemplate table thead,.statementTemplate table tbody ,.statementTemplate table tr{		
+              width: 100%;
+            }
+            .infoWrapper .logoImage{
+              width: 150px;
+            }
+            .infoWrapper h5{
+              font-size: 20px;
+              margin: 5px 0;
+              text-align: left;
+              box-sizing: border-box;
+            }
+            .infoWrapper  p{
+                  margin: 0;
+              font-size: 14px;
+              text-align: left;
+              box-sizing: border-box;
+              line-height: 16px;
+            }
+            .infoWrapper h4{
+              box-sizing: border-box;
+              color: #f00;
+              margin: 0;
+              display: flex;
+              align-items: center;
+              justify-content: flex-start;
+              font-size: 18px;
+              padding-left: 30px;
+            }
+            .infoWrapper h4 span{
+              font-weight: 800;
+              font-family: 'Roboto', sans-serif;
+              font-size: 22px;
+              margin: 0 5px;
+            }
+            .infoWrapper h6{
+              margin: 0;
+              font-size: 14px;
+              font-weight: 600;
+              text-shadow: 3px 3px 4px rgb(0 0 0 / 30%);
+              color: #014711;
+              box-sizing: border-box;
+            }
+            .addressWqrap {
+              margin-top: 30px;
+            }
+            .addressCol{
+              margin-top: 20px;
+              width: 100%;
+            }
+            .addressCol table, .addressCol table tr{		
+              width: 100%;
+            }
+            .addressCol table td{
+              vertical-align: top;
+            }
+            .dateWraper {
+              text-align: right;
+            }
+            .addressWqrap p{
+              margin: 0;
+              line-height: 18px;
+              font-weight: 400;
+              font-size: 14px;
+              font-family: 'Roboto', sans-serif;
+            }
+            .dateWraper h1{
+              margin: 0;
+              font-size: 26px;
+              text-transform: uppercase;
+              font-family: 'Roboto', sans-serif;
+            }
+            .dateWraper p{
+              margin: 0;
+            }
+            .dataTableWrap{
+              margin-bottom: 10px;
+              margin-top: 30px;
+            }
+            .dataTableWrap h3{
+              margin-bottom: 10px;
+              font-size: 18px;
+              margin-top: 0;
+            }
+            .dataTableWrap table {
+              border: 1px solid #ccc;
+              width: 100%;
+            }
+            .dataTableWrap table th,.dataTableWrap table td{
+              border-right: 1px solid #ccc;
+              border-bottom: 1px solid #ccc;
+              padding: 3px;
+              font-size: 14px;
+              text-align: center;
+            }
+            .dataTableWrap table tr:last-child td{
+              border-bottom: none;
+            }
+            .dataTableWrap table tr td:last-child ,.dataTableWrap table tr th:last-child {
+              border-right: none;
+            }
+            .tagLine{
+              text-align: center;
+              font-weight: 600;
+              margin-top: 20px;
+              font-size: 14px;
+              width:100%;
+            }
+            .footerAddress{
+              box-sizing: border-box;
+              border-top: 1px solid #eee;
+              margin-top:-100px;
+              padding-top: 15px;
+              width: 100%;
+            }
+            .footerAddress p{
+              box-sizing: border-box;
+              margin: 0 0 4px;
+              font-size: 14px;
+            }
+          </style>
           </head>
       <body onload="window.print();window.close()">
   
@@ -531,7 +403,6 @@ export class InvoiceStatementComponent implements OnInit {
       </body>
         </html>`
         );
-  
         printbutton = document.getElementById('inputprintbutton7').style.display = "inline-block";
         popupWin.document.close();
       }, 2000);
@@ -545,3 +416,6 @@ export class InvoiceStatementComponent implements OnInit {
   }
  }
 }
+
+
+

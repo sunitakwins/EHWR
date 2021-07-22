@@ -1,0 +1,26 @@
+#moveJob{
+    .modal-dialog {
+        .modal-header {
+            background-color : transparent ;
+            color: rgb(48, 47, 47);
+            // text-align: center;
+            font-size: 1.28rem !important;
+        }
+        .modal-body {
+            height: 105px;
+        }
+    }
+}
+
+.greenBtn{
+    background-color: #7dc836;
+    color: #fff;
+    margin-right: 10px;
+}
+.greenBtn:hover{
+    background-color: #6fbf23;
+}
+
+#span{
+    color :black;
+}

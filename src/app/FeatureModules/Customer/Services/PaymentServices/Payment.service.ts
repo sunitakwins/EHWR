@@ -1,12 +1,13 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { InvoicesOutstandingModel, InvoicesOutstandingRequestModel, PaymentPaidRequestModel } from '../../Models/Payments/Payments.model';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PaymentService {
   url: string = environment.apiGateway;
+  
 
   constructor(private http: HttpClient) { }
   // paid Payment Outstanding grid list
@@ -49,4 +50,9 @@ export class PaymentService {
     return this.http.delete(this.url + '/Payment?', { params: params })
   }
 
+  // get GUId 
+  getInvoiceDetailsWithGUId(params){
+    return this.http.get<any>(this.url + '/Payment/InvoicePaymentDetail?', {params} )
+  }
+  
 }

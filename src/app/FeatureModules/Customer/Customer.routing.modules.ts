@@ -15,16 +15,6 @@ import { InvoiceListComponent } from './Components/Customers/InvoiceList/Invoice
 import { CanDeactivateGuard } from 'src/app/SharedModules/Guards/can-deactivate.guard';
 
 
-// import { AddJobsComponent } from './Components/Customers/AddJobs/AddJobs.component';
-// import { EditJobComponent } from './Components/Customers/EditJob/EditJob.component';
-// import { ItemListComponent } from './Components/Customers/ItemList/ItemList.component';
-// import { AddItemsComponent } from './Components/Customers/AddItems/AddItems.component';
-// import { InvoiceComponent } from './Components/Customers/Invoice/Invoice.component';
-// import { PaymentsComponent } from './Components/Customers/Payments/Payments.component';
-// import { DetailsComponent } from './Components/Customers/NewCustomer/_subs/Details/Details.component';
-// import { ContactComponent } from './Components/Customers/NewCustomer/_subs/Contact/Contact.component';
-
-
 /*Routes*/
 const routes: Routes = [
   {
@@ -42,29 +32,6 @@ const routes: Routes = [
       { path: 'Payment', component: NewCustomerComponent, data: { slug: 'editPayment' } },
 
       { path: 'edit/:id', component: EditCustomerComponent, canDeactivate: [CanDeactivateGuard] },
-
-
-
-      //  {path : 'customerNew', component : DetailsComponent},
-      //  {path : 'contact', component : ContactComponent},
-
-
-      //  { path:'jobs/edit/:id', component:EditJobComponent},
-      //  { path:'AddJobs/:id', component:AddJobsComponent  },
-      //  { path:'AddJob', component:AddJobsComponent},
-
-
-      //  { path:'Items', component:ItemListComponent },
-      //  { path:'AddItems', component:AddItemsComponent },
-      //  { path:'AddItems/:id', component:AddItemsComponent},
-
-
-      // { path:'Invoices', component:InvoiceComponent },
-      // { path:'Invoice/:id', component:InvoiceComponent},
-
-
-      // { path:'payments', component:PaymentsComponent},
-      // { path:'payments/:id', component:PaymentsComponent},
 
     ]
   },

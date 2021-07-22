@@ -33,7 +33,7 @@ export class InvoicesOutstandingModel{
     "methodPayName": string;
     "paymentDate": Date;
     "amountPayment": number;
-    "cardName": string;
+    // "cardName": string;
     "cardNumber" : string;
     "cvv": string;
     "month": number;

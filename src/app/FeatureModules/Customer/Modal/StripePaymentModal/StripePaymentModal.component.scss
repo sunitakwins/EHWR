@@ -1,5 +1,88 @@
 
-::ng-deep.mat-dialog-container {
-    background-color: transparent !important;
-    box-shadow: none !important;    
+// ::ng-deep.mat-dialog-container {
+//     background-color: transparent !important;
+//     box-shadow: none !important;    
+// }
+
+
+/* modal css */
+#exampleModalCenter .modal-dialog {
+    width: 100%;
+    margin: 30px auto;
+    max-width:500px;
 }
+#exampleModalCenter .modal-header {
+    border-bottom: none;
+    background-color: transparent;
+    padding-bottom: 0;
+}
+#exampleModalCenter .modal-header .close {
+    font-size: 32px;
+    opacity: 0.5;
+    color: #000;
+    padding: 10px 15px;
+}
+#exampleModalCenter .modal-body {
+    text-align: center;
+    height: auto;
+}
+#exampleModalCenter .modal-body h2 {
+    margin: 0 0 10px;
+    font-size: 24px;
+    font-weight: 600;
+}
+#exampleModalCenter .modal-body p {
+    font-size: 18px;
+}
+#exampleModalCenter .modal-footer button {
+    width: 100%;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    background-color: #7dc836;
+    border: none;
+}
+.cardDetai {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    padding: 10px 10px;
+    border-radius: 5px;
+    margin-top: 40px;
+}
+.cardDetai .expireDetail {
+    display: flex;
+    flex-direction: row;
+}
+.cardDetai input[type="text"]:focus-visible ,.cardDetai input[type="text"]:focus{
+    border:none;
+    outline: none;
+}
+.cardNumber input[type="text"] {
+    border: none;
+}
+.cardNumber {
+    position: relative;
+    padding-left: 40px;
+}
+.cardNumber img{
+    position: absolute;
+    left: 0;
+    width: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.cardDetai .expireDetail input[type="text"] {
+    max-width: 70px;
+    margin-left: 10px;
+    // padding: 0 10px;
+    text-align: center;
+    border: none;
+}
+#exampleModalCenter .modal-footer {
+    padding: 5px 15px 15px;
+    text-align: right;
+    border-top: none;
+}
+

@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 import { GetAllInvoicesModel, InvoiceNotesModel, InvoiceRequestModel, jobInvoiceRequestModel } from '../../Models/Invoice/Invoice/InvoiceRequest.model';
 
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class InvoiceService {
 
   url: string = environment.apiGateway;
@@ -91,6 +91,18 @@ export class InvoiceService {
   //resend invoice
   resendInvoice(data): Observable<any>{
     return this.http.post(this.url+ '/CustomerInvoice/InvoiceResend',data);
+  }
+
+  //preview Invoice
+  previewInvoice(params :any){
+    // const params = new HttpParams()
+    //   .set('JobOrderId',)
+    return this.http.get(this.url + '/CustomerInvoice/InvoicePreview?', {params : params})
+  }
+
+  //get pdf data
+  getPdfData(url :any){
+  //  this.http.get(url , { headers: this.headers })
   }
 
 

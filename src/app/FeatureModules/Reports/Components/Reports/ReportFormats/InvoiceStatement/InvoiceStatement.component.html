@@ -39,6 +39,7 @@
       <div class="col-sm-12 mb-3">
         <div class="actionBtn mb-2 mt-2 reportBtn">
           <button type="button" class="btn primary-btn comBtn" (click)="clearDate()">Clear Dates</button>
+          <!-- <button type="button" class="btn primary-btn comBtn" (click)="sendStatement()">Send Statement</button> -->
           <!-- <button type="button" class="btn primary-btn comBtn" (click)="clearFilter()">Clear Filter</button> -->
         </div>
       </div>
@@ -49,180 +50,110 @@
 
 <!-- ============================================================================================= -->
 <!-- Print Format -->
-<section class="d-none" id="invoiceStatementPrintDiv">
-  <!-- *ngIf ="newArr" -->
-  <div  *ngFor="let data of dataArray" class="pagebreak">
-    <!-- *ngFor="let printData of newArr; let i = index;" -->
-    <header>
-      <div class="container pb-3">
-        <div class="headerWrapper">
-          <div class="row">
-            <div class="col-sm-12 col-md-6">
-              <table>
-                <tr>
-                  <td class="minWidth">
-                    <h4 class="logoText">EMERGENCY <span> hot water repairs</span></h4>
-                    <h6>(kingsFord) Pty Ltd</h6>
-                  </td>
-                  <td>
-                    <img class="ehwrLogo" src="/ehwr/assets/images/img-2.jpg" alt="">
-                  </td>
-                  <td align="right">
-                    <div class="statementWrapper">
-                      <h5>
-                        Statement of
-                        Invoices for the
-                        Month of
-                      </h5>
-                      <h5 class="monthYearWrap">June, 2025</h5>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-
-              <div class="addressWrapper2">
-                <p class="mb-0" style="font-size: 12px;">87 Bunnerong Road, Kingsford, NSW, 2032</p>
-                <p class="mb-0" style="font-size: 12px;">ABN: 78003998 329</p>
-                <p class="mb-0" style="font-size: 20px;">Ph: 9344 6602 Fax: 9344 9529</p>
-                <p class="mb-0" style="font-size: 12px;"><b>Email:</b>ehwr@bigpond.com <b>Website:</b> www.emergencyhotwaterrepairs.com.au</p>
-                <p style="font-style:italic; font-size: 12px;" >'Proudly servicing the eastern suburbs of Sydney for over 30 years'</p>
-
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6">
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-    <section>
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="loginWrapper mb-4">
-              <div class="row">
-                <div class="col-sm-12 col-md-6">
-                  <div class="addressWrapper1">
-                    <h4 style="margin-bottom: 10px;">Invoice To</h4>
-                    <div class="borderBox">
-                      <p class="mb-0">{{data.customerName}}</p>
-                      <p class="mb-0">{{data.customerAddress}}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-sm-12">
-                  <div class="table-responsive">
-                    <table class="table tableBodyScroll queryContent mb-4">
-                      <thead>
-                        <tr>
-                          <th>Invoice No.</th>
-                          <th>Ref</th>
-                          <th>Address</th>
-                          <th>Due Date</th>
-                          <th>Amount</th>
-                        </tr>
-                      </thead>
-                      <tbody class="boxscroll">
-                          <tr *ngFor="let data2 of data.invoiceDetails" >
-                              <td>{{data2.InvoiceId}}</td>
-                              <td>{{data2.Ref}}</td>
-                              <td>{{data2.Address}}</td>
-                              <td>{{data2.DueDate | date : 'dd/MM/yyyy'}}</td>
-                              <td>{{data2.Amount}}</td>
-                          </tr>
-                          <tr></tr>
-                          <hr>
-                          <tr *ngFor="let data2 of data.invoiceDetails; let i = index;">
-                            <div *ngIf="i === 0">
-                              <td colspan="3" align="right" style="border-top :1px solid #ccc;"></td>
-                              <td align="right" style="border-top :1px solid #ccc;"><b>Total Amount Due :</b></td>
-                              <td style="border-top :1px solid #ccc;"> {{data2.TotalAmountDue }}</td>
-                            </div>
-                          </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-2"></div>
-          <div class="col-sm-8 footerNote" >
-            <p style="margin-bottom: 0;"><b>Notice:</b></p> 
-            <div>
-              <p>1. Any Costs incurred in the collection of this Account including dept 
-              collection or legal costs will be borne by the client.</p>
-            </div>
-            <div>
-            <p>2. All Goods remain the property of Emergency Hot Water Repairs 
-              Pvt Ltd until this account is paid in full.</p>
-            </div>  
-          </div>
-          <div class="col-sm-2"></div>
-        </div>
-      </div>
-
-    </section>
-    <!-- <div class="row">
-      <div class="col-sm-2"></div>
-      <div class="col-sm-8 font-size">
-        Notice: <br>
-        1. Any Costs incurred in the collection of this Account including dept collection or legal costs will be borne
-        by the client.<br>
-        2. All Goods remain the property of Emergency Hot Water Repairs Pvt Ltd until this account is paid in full.
-      </div>
-      <div class="col-sm-2"></div>
-    </div> -->
-  </div>
-</section>
-<!-- ==================================================================================================== -->
-<!-- id="invoiceStatementPrintDiv"-->
-<div class="row d-none"  >
-  <div class="col-sm-12">
-    <div class="table-responsive">
-      <table class="table" id='InvoiceStatementExcelData' *ngFor="let data of dataArray">
-        <thead>
+<section class="statementTemplate d-none " id="invoiceStatementPrintDiv">
+  <div *ngFor="let data of dataArray" class="pagebreak">
+      <div class="infoWrapper ">
+        <table cellpadding="0" cellspacing="0">
           <tr>
-            <!-- <td>Customer Name & Address</td> -->
+            <table align="center">
+              <tr>
+                <td>
+                  <img src="assets/images/tax-invoice-logo.jpg" alt="images" class="logoImage">
+                </td>
+                <td>
+                  <h5>Emergency Hot Water Repairs (Kingsford) Pty. Ltd.</h5>
+                  <p>87 Bunnerong Rd. Kingsford, NSW, 2032 Ph: 02 9344 6602</p>
+                  <p>Bondi: Cnr Curlewis & Old South Head Rd, Bondi: 2026 Ph: 02 9365 4533</p>
+                  <p>ewhr@bigpond.com www.emergencyhotwaterrepairs.com.au</p>
+                  <p>ABN: 78 003 998 329 Lic No. 284905c</p>
+                  <h4><img src="assets/images/raheem-logo.jpg" alt="images" style="width: 30px;"> <span>Rinnai</span>
+                    Accredited Service Agents </h4>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" align="center">
+                  <h6>Proudly servicing the eastern suburbs of Sydney for over 30 years</h6>
+                </td>
+              </tr>
+            </table>
+  
           </tr>
-        </thead>
-        <tbody>
+        </table>
+      </div>
+  
+      <div class="addressCol">
+        <table cellpadding="0" cellspacing="0">
           <tr>
-            <td colspan="4">Customer Name : {{data.customerName}} </td>
-            <td colspan="4">Customer Address : {{data.customerAddress}}</td>
-          </tr>
-          <tr></tr>
-        </tbody>
-        <thead>
-          <tr>
-            <td>Invoice No.</td>
-            <td>Ref</td>
-            <td>Address</td>
-            <td>Due Date</td>
-            <td>Amount</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data2 of data.invoiceDetails">
-            <td>{{data2.InvoiceId}}</td>
-            <td>{{data2.Ref}}</td>
-            <td>{{data2.Address}}</td>
-            <td>{{data2.DueDate | date : 'dd/MM/yyyy'}}</td>
-            <td>{{data2.Amount}}</td>
             <td>
-
+              <div class="addressWqrap">
+                <p><strong> {{data.customerName}}</strong></p>
+                <p><strong> {{data.customerAddress}}</strong></p>
+                <p><strong>{{data.customerDetailAddress}}</strong></p>
+              </div>
+            </td>
+            <td>
+              <div class="dateWraper">
+                <h1>STATEMENT</h1>
+                <p>Month Ending: <span>{{data.monthEnding | date: 'dd/MM/yyyy'}}</span></p>
+              </div>
+            </td>
           </tr>
-          <tr></tr>
-          <tr *ngFor="let data2 of data.invoiceDetails; let i = index;">
-            <div *ngIf="i === 0">
-              <td colspan="4">Total Amount Due : {{data2.TotalAmountDue }}</td>
-            </div>
+        </table>
+      </div>
+  
+      <div class="dataTableWrap">
+        <h3>Transactions For (Month/Year):</h3>
+        <table cellpadding="0" cellspacing="0">
+          <tr>
+            <th>Date:</th>
+            <th>Invoice No:</th>
+            <th>Cust Ref No:</th>
+            <th>Amount:</th>
+            <th>Due Date</th>
+            <th>Payments/ Credits</th>
+            <th>Unpaid Balance</th>
           </tr>
-        </tbody>
-      </table>
-    </div>
+          <tr *ngFor ="let data2 of data.invoiceDetails">
+            <td>{{data2.SendDate | date: 'dd/MM/yyyy'}}</td>
+            <td>#{{data2.InvoiceId}}</td>
+            <td>{{data2.CustomerContactReference}}</td>
+            <td>{{data2.Amount}}</td>
+            <td>{{data2.DueDate | date: 'dd/MM/yyyy'}}</td>
+            <td>{{data2.MethodPayType}}</td>
+            <td>{{data2.TotalAmountDue}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="dataTableWrap">
+        <h3>Totals/Overdue:</h3>
+        <table style="border: 1px solid #ccc; width: 100%;" cellpadding="0" cellspacing="0">
+          <tr>
+            <th>Current:</th>
+            <th>30 Days:</th>
+            <th>60 Days:</th>
+            <th>90 Days:</th>
+            <th>>90 Days:</th>
+            <th>Total Due:</th>
+          </tr>
+          <tr style="text-align:center;" *ngFor ="let res of data.overDueDays" >
+            <td>${{res.Current}}</td>
+            <td>${{res.ThirtyDays}}</td>
+            <td>${{res.SixtyDays}}</td>
+            <td>${{res.NinetyDays}}</td>
+            <td>${{res.MoreDays}}</td>
+            <td>${{res.TotalDue}}</td>
+          </tr>
+        </table>
+      </div>
+   
+      <div class="tagLine">Thank you for the payments that were received this month. Prior months invoices included in these
+         payments have now been cleared from your account.</div>   
   </div>
-</div>
+  <footer class="footerAddress">
+    <p><strong>Our Bank Acc Details:</strong></p>
+    <p>Name: Commonwealth Bank</p>
+    <p>BSB: 06 2121</p>
+    <p>Account No: 28061210</p>
+  </footer>
+
+</section>

@@ -28,9 +28,6 @@ export class HeaderComponent implements OnInit {
   }
 
   logout(){
-    // let requestParams : Logout ={
-    //   "userName" :  "Micheal"
-    // };{
     let UserId  = Number(this.localStorage.getUserId());
     let requestParams : Logout = {
       "userId": UserId,

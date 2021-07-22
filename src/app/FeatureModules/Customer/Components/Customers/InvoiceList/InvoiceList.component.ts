@@ -83,7 +83,7 @@ export class InvoiceListComponent implements OnInit {
 
   // load more
   public loadMore() {
-    // this.spinner.show();           
+    this.spinner.show();           
     this.requestModel.PageNo = ++this.pageNo;
     this.getInvoiceListData();
   }
@@ -150,13 +150,26 @@ export class InvoiceListComponent implements OnInit {
 
     event.stopPropagation();
     const data = {
-      invoiceId: invoiceId,
+      "invoiceIds" : [
+        {
+          invoiceId: invoiceId,
+        }
+      ]
     };
-    
+     this.spinner.show();  
     this.invoiceService.resendInvoice(data).subscribe(res => {
      if(res) {
        let msg = "Invoice has been sent to through email.";
        this.openSnackBar(msg, 'hello');
+       setTimeout(() => {
+         this.spinner.hide();
+       }, 200);
+     }else{
+       let msg = "Please try again later.";
+       this.openSnackBar(msg,'hello');
+       setTimeout(() => {
+        this.spinner.hide();
+      }, 200);
      }
     })
   } 

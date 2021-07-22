@@ -3,8 +3,7 @@ import { ExcelService } from 'src/app/FeatureModules/Reports/Services/Excel.serv
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
-// import * as _ from 'underscore';
-// import  {_.keyBy, _.mapValues }from 'Lodash';
+
 
 @Component({
   selector: 'app-InvoiceOverDue',
@@ -47,10 +46,10 @@ export class InvoiceOverDueComponent implements OnInit {
 
   // get Data from api
   getInvoiceOverDueData() {
-
-    const data = this.invoiceOverDueList;
+   
+    this.invoiceOverDueList;
     this.dataArray = [];
-
+     debugger
     this.invoiceOverDueList.forEach(data => {
       let objData = {
         days: data.dueGroup,
@@ -69,7 +68,7 @@ export class InvoiceOverDueComponent implements OnInit {
       //  let invoiceNotes = JSON.parse(dataInvoiceDetail.Notes);
       //  invoiceNotes.forEach(dataNotes => {
       //       objData.notes.push(dataNotes);
-      //   });
+      //  });
       this.dataArray.push(objData);
 
     });
@@ -130,7 +129,7 @@ flatNestedJson(){
     FileSaver.saveAs(data, fileName);
   }
 
-  // =================  Print functionality ========================
+  // =================  Print functionality  ========================
   print() {
 
     this.getInvoiceOverDueData();
