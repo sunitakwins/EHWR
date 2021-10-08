@@ -12,6 +12,7 @@ import { SuburbRequestModel } from 'src/app/FeatureModules/Customer/Models/Custo
 import { AccountBalance, UpdateCustomer } from 'src/app/FeatureModules/Customer/Models/Customer/UpdateCustomer';
 import { CustomerService } from 'src/app/FeatureModules/Customer/Services/CustomerServices/Customer.service';
 import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
+import { WarningDialogComponent } from 'src/app/SharedModules/Components/WarningDialog/WarningDialog.component';
 
 import * as _ from 'underscore';
 
@@ -122,11 +123,13 @@ export class EditDetailsComponent implements OnInit {
         
         let totalJobOfThisCustomer = res[0].totalCustomerWiseJobsCount
         if(totalJobOfThisCustomer > 0){
-          this.EditdetailsForm.disable();
-          this.btnDisable= true;
+          this.EditdetailsForm.get('customerType').disable();
+          // this.EditdetailsForm.disable();
+          // this.btnDisable= true;
         }else{
-          this.EditdetailsForm.enable();
-          this.btnDisable= false;
+          this.EditdetailsForm.get('customerType').enable();
+          //  this.EditdetailsForm.enable();
+          // this.btnDisable= false;
         }
  
         
@@ -406,7 +409,17 @@ public onSaveAndCreateJob(type: boolean = false) {
        this.customerService.updateCustomer(params).subscribe(res =>{
        const message = res.responseMessage;
         this.cusId = res.keyId;
-        this.messages(message);
+        
+        let resCode = res.responseCode;
+        if(resCode === -1){
+          this.dialog.open(WarningDialogComponent, {
+            width: '350px',
+            data: message
+          });
+        }else {
+          this.messages(message);
+        }
+       
         if(this.cusId !== 0)
         {
           this.sendTabValue.emit({ "id": res.keyId, "cusName": this.EditdetailsForm.value.customerName });

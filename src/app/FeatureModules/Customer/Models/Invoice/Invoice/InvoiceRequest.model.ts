@@ -14,7 +14,7 @@ export class jobInvoiceRequestModel{
     PageNo:number =1;
     PageSize:number = 100;
     SearchValue:string = '';
-    SortColumn:string = 'invoiceId';
+    SortColumn:string = 'jobOrderId';
     SortOrder:string = 'desc';
 }
 

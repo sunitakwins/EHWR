@@ -11,6 +11,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { InvoiceService } from '../../../Services/InvoiceService/Invoice.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
+import { AddPaymentModalComponent } from '../../../Modal/AddPaymentModal/AddPaymentModal.component';
+import { BulkPaymentsComponent } from '../../../Modal/BulkPayments/BulkPayments.component';
 
 @Component({
   selector: 'app-PaymentList',
@@ -122,51 +124,61 @@ export class PaymentListComponent implements OnInit {
     this.getPaymentOutstandingListData();
   }
 
- 
-  // Notes Grid
-  onNotesClick(input,event){
+  onPaymentClick(input,event){
     const data = input.invoiceId;
     event.stopPropagation();
-    this.dialog.open(NotesGridModalComponent,{data});
+    this.dialog.open(AddPaymentModalComponent ,{data});
   }
+
+
+  addBulkPayments(){
+    this.dialog.open(BulkPaymentsComponent); 
+  }
+ 
+  // Notes Grid
+  // onNotesClick(input,event){
+  //   const data = input.invoiceId;
+  //   event.stopPropagation();
+  //   this.dialog.open(NotesGridModalComponent,{data});
+  // }
 
   getInvoiceId(data :any){
     this.router.navigate(['customer','Payment'],{queryParams : {jobOrderId : data.jobOrderId, invoiceId : data.invoiceId, customerId : data.customerId} });
     }
 
 // On Clicking on Row
-  OnSelectedRow(data){
+  onSelectedRow(data){
      this.router.navigate(['customer','Payment'],
      {queryParams : {jobOrderId : data.jobOrderId, customerId : data.customerId} });
   } 
 
  // Resend Invoice ==================================
- resendInvoice(invoiceId, event){
-  event.stopPropagation();
-  const data = {
-    "invoiceIds" : [
-      {
-        invoiceId: invoiceId,
-      }
-    ]
-  };
-  this.spinner.show();
-  this.invoiceService.resendInvoice(data).subscribe(res => {
-   if(res) {
-     let msg = "Invoice has been sent to through email.";
-     this.openSnackBar(msg, 'hello');
-     setTimeout(() => {
-       this.spinner.hide();
-     }, 200);
-   }else{
-     let msg = "Please try again later.";
-     this.openSnackBar(msg,'hello');
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 200);
-   }
-  })
-} 
+//  resendInvoice(invoiceId, event){
+//   event.stopPropagation();
+//   const data = {
+//     "invoiceIds" : [
+//       {
+//         invoiceId: invoiceId,
+//       }
+//     ]
+//   };
+//   this.spinner.show();
+//   this.invoiceService.resendInvoice(data).subscribe(res => {
+//    if(res) {
+//      let msg = "Invoice has been sent to through email.";
+//      this.openSnackBar(msg, 'hello');
+//      setTimeout(() => {
+//        this.spinner.hide();
+//      }, 200);
+//    }else{
+//      let msg = "Please try again later.";
+//      this.openSnackBar(msg,'hello');
+//     setTimeout(() => {
+//       this.spinner.hide();
+//     }, 200);
+//    }
+//   })
+// } 
 
 
  public openSnackBar(message: string, panelClass: string) {

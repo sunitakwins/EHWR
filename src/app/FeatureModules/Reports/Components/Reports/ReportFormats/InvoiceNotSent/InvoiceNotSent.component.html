@@ -16,7 +16,7 @@
             <div class="row">
               <div class="col-sm-12">
                   <div class="table-responsive">
-                    <table  class="table" id ="invoiceNotSentData"> 
+                    <table  class="table" > 
                       <thead>
                         <tr>
                           <td>Page</td>
@@ -28,26 +28,26 @@
                           <td>Date Paid</td>
                           <td>Amount Paid</td>
                         </tr>
-                        <!-- <tr>
-                          <th colspan="4">210 Days Overdue</th>
-                        </tr> -->
+                     
                       </thead>
                       <tbody>
                         <tr *ngFor="let data of invoiceNotSentList">
                           <td>{{data.pageNo}}</td>
-                          <td>{{data.invoiceId}}</td>
+                          <td>#{{data.jobOrderId}}</td>
                           <td>{{data.customerName}}  <br> {{data.customerAddress}} </td>
-                          <td>{{data.completedDate | date: 'dd/MM/yyyy'}}</td>
-                          <td>{{data.dueDate | date: 'dd/MM/yyyy' }}</td>
+                          <td>{{(data.completedDate > '0001-01-01T00:00:00') ? (data.completedDate | date: 'dd/MM/yyyy') : ''}}</td>
+                          <td>{{ (data.dueDate > '0001-01-01T00:00:00') ? (data.dueDate | date: 'dd/MM/yyyy') : ''}}</td>
                           <td>{{data.amountInvoice}}</td>
-                          <td>{{data.paymentDate | date: 'dd/MM/yyyy'}}</td>
+                          <td>{{(data.paymentDate > '0001-01-01T00:00:00') ? (data.paymentDate | date: 'dd/MM/yyyy') : ''}}</td>
                           <td>{{data.amountPayment}}</td>
                         </tr>
-                        <!-- <tr  *ngFor="let data of invoiceNotSentList; let i = index">
-                         <div *ngIf ="i=== 0">
-                          <td colspan="5"><strong>Total Records  : {{data.totalRows}}</strong> </td>
-                         </div>
-                        </tr> -->
+                        <tr *ngFor="let data2 of invoiceNotSentList; let i = index">
+                          <div *ngIf ="i=== 0">
+                          <td colspan="1" style="border-top: 1px solid #ccc; text-align: left;">Total Records : </td>
+                          <td colspan="1" style="border-top: 1px solid #ccc; text-align: left;">{{data2.totalRows}}</td>
+                          <td colspan="6" style="border-top: 1px solid #ccc; text-align: left;"></td>
+                          </div>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
@@ -58,3 +58,33 @@
     </div>
   </div>
 </section>
+<!-- =============== Excel Data ====================================== -->
+<table  class="table" id ="invoiceNotSentData"> 
+  <thead>
+    <tr>
+      <td>Page</td>
+      <td>Invoice</td>
+      <td>Customer</td>
+      <td>Job Date</td>
+      <td>Due Date</td>
+      <td>Amount</td>
+      <td>Date Paid</td>
+      <td>Amount Paid</td>
+      <td>Total </td>
+    </tr>
+ 
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of invoiceNotSentList">
+      <td>{{data.pageNo}}</td>
+      <td>{{data.jobOrderId}}</td>
+      <td>{{data.customerName}}  <br> {{data.customerAddress}} </td>
+      <td>{{(data.completedDate > '0001-01-01T00:00:00') ? (data.completedDate | date: 'dd/MM/yyyy') : ''}}</td>
+      <td>{{ (data.dueDate > '0001-01-01T00:00:00') ? (data.dueDate | date: 'dd/MM/yyyy') : ''}}</td>
+      <td>{{data.amountInvoice}}</td>
+      <td>{{(data.paymentDate > '0001-01-01T00:00:00') ? (data.paymentDate | date: 'dd/MM/yyyy') : ''}}</td>
+      <td>{{data.amountPayment}}</td>
+      <td>{{data.totalRows}}</td>
+    </tr>
+  </tbody>
+</table>

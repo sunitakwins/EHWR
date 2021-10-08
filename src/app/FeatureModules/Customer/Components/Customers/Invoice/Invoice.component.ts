@@ -154,9 +154,8 @@ export class InvoiceComponent implements OnInit {
   total: any;
   customerContactReference: any;
   workCompleted: any;
+  defaultEmail: boolean ;
 
-
-  //itemRecordData = [];
 
   constructor(
     private invoiceService: InvoiceService,
@@ -203,7 +202,6 @@ export class InvoiceComponent implements OnInit {
 
     // in case coming from invoice tab
     let id = this.route.snapshot.queryParamMap.get('jobOrderId');
-    // console.log(id);
     this.jobId = id;
 
 
@@ -496,7 +494,7 @@ export class InvoiceComponent implements OnInit {
 
   // Add Invoice submit
   onSubmit() {
-
+    this.spinner.show();
     if (this.putRequestModel.invoiceId > 0) {
       // console.log('Update');
 
@@ -515,10 +513,11 @@ export class InvoiceComponent implements OnInit {
 
             if (this.detailsForm.value.amountInvoice > 0) {
               this.disableBtnClick = true;
-
+           
               this.invoiceService.saveCustomerInvoice(this.detailsForm.value).subscribe(res => {
-                this.spinner.show();
+               
                 this.invoiceNo = res.keyId;
+                this.defaultEmail  = res.defaultEmail;
                 this.emailIdForInvoice = res.email;
                 if (this.invoiceNo) {
                   this.getNotesList(this.invoiceNo);
@@ -589,7 +588,7 @@ export class InvoiceComponent implements OnInit {
     this.putRequestModel.dueDate = moment(this.detailsForm.value.dueDate).format("YYYY-MM-DD");
     this.putRequestModel.tickIfInvoiceNotRequired = Boolean(this.detailsForm.value.tickIfInvoiceNotRequired);
     if (this.detailsForm.valid) {
-      this.spinner.show();
+      // this.spinner.show();
       this.invoiceService.updateCustomerInvoice(this.putRequestModel).subscribe(res => {
         // this.invoiceNo = res.keyId;
         if (res['responseCode'] == 0) {
@@ -780,12 +779,13 @@ export class InvoiceComponent implements OnInit {
     if (value == "save" && (this.jobId > 0 || this.JobId)) {
       this.message = "Invoice saved successfully";
       if (this.emailIdForInvoice = null) {
-
       } else {
+        if(this.defaultEmail){
         const emailMsg = "Invoice has been sent through email."
         setTimeout(() => {
           this.openSnackBar(emailMsg, 'hello');
         }, 3000);
+       }
       }
     } else if (value == "update" && this.jobId > 0) {
       this.message = this.resMessage;

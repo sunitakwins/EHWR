@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 // Service
@@ -23,6 +23,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
 import * as _moment from 'moment';
+import { WarningDialogComponent } from 'src/app/SharedModules/Components/WarningDialog/WarningDialog.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -71,6 +72,7 @@ export class PriceMaintenanceComponent implements OnInit {
     public snackBar: MatSnackBar,
     public maintenanceService: MaintenanceService,
     public fb: FormBuilder,
+    public dialogRef: MatDialogRef<PriceMaintenanceComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any) {
     //  console.log('Item Data ',data);
   }
@@ -80,7 +82,7 @@ export class PriceMaintenanceComponent implements OnInit {
     this.addItemsForm = this.fb.group({
       itemType: ['14'],
       itemPartsType : [''],
-      accountId: [''],
+      // accountId: [''],
       itemName: ['', Validators.required],
       itemDescription: [''],
       price_exTaxForPrivate: ['', Validators.required],
@@ -135,6 +137,12 @@ export class PriceMaintenanceComponent implements OnInit {
     this.maintenanceService.getItemTypeFromGlobalCode(params).subscribe(res => {
       //console.log(res);
       this.allItemType = res;
+      function RemoveElementFromObjectArray(key: number) {
+        res.forEach((value, index) => {
+          if (value.globalCodeId == key) res.splice(index, 1);
+        });
+      }
+      RemoveElementFromObjectArray(15);
     }, error => {
       console.log(error);
     })
@@ -143,7 +151,6 @@ export class PriceMaintenanceComponent implements OnInit {
 
 
   // Item Parts Type 
-
 public itemPartsTypeGlobalCode() {
     const params = {
       CategoryName: "ItemParts"
@@ -175,12 +182,12 @@ public itemPartsTypeGlobalCode() {
 
 
   // Save Item
-  onSaveItem() {
+  onSaveItem(type : boolean) {
     // this.data.input.itemId != null
     
     if (this.data != null) {
       this.priceDetailsWithData();
-      this.updateItems();
+      this.updateItems(type);
     } else {
 
       this.priceDetailsWithData();
@@ -189,8 +196,6 @@ public itemPartsTypeGlobalCode() {
 
         const requestPrams: MaintenanceAddItemsModel = {
           itemType: Number(this.addItemsForm.value.itemType),
-          accountId: Number(this.addItemsForm.value.accountId),
-          supplierId: 0,
           itemParts:Number(this.addItemsForm.value.itemPartsType),
           itemName: this.addItemsForm.value.itemName,
           itemDescription: this.addItemsForm.value.itemDescription,
@@ -199,10 +204,18 @@ public itemPartsTypeGlobalCode() {
           createdBy: "Micheal"
         }
         
-        // console.log(requestPrams);   
         this.maintenanceService.addItemsInMaintenance(requestPrams).subscribe(res => {
-          this.messages(res.responseMessage);
           this.onCancel();
+          let resCode = res.responseCode;
+          if(resCode === -1){
+            this.dialog.open(WarningDialogComponent, {
+              width: '350px',
+              data:  res.responseMessage
+            });
+          }else{
+            this.messages(res.responseMessage);
+          }
+          
         }, error => {
           console.log(error);
         })
@@ -215,12 +228,9 @@ public itemPartsTypeGlobalCode() {
   }
 
   // On Edit Item
-  getItemPriceList() {
-    
-    // this.itemPriceRequestModel.ItemId = this.data.itemId;
+  getItemPriceList() { 
     this.itemPriceRequestModel.ItemId = this.data.input.itemId;
     this.maintenanceService.getItemPrice(this.itemPriceRequestModel).subscribe(res => {
-      // console.log(res);
       this.itemPriceId = res[0].itemPriceId;
       this.dataSource = res;
     }, error => {
@@ -230,57 +240,8 @@ public itemPartsTypeGlobalCode() {
 
 
 
-  // bindItemData() {
-  //   
-  //   let clickedItemId = this.data.input.itemId;
-
-  //   let filteredData = this.data.dataList.filter(x => x.itemId == clickedItemId);
-
-  //   let ItemPrice1 = JSON.parse(filteredData[0].itemPrice);
-  //   let ItemPrice2 = JSON.parse(filteredData[1].itemPrice);
-
-  //   // console.log('First ', ItemPrice2, 'Second', ItemPrice1);
-
-  //   this.priceForPrivate = ItemPrice1[0].UnitPrice;
-  //   this.priceForAgent = ItemPrice2[0].UnitPrice;
-
-    
-  //   // check customer Type is Private or Agent 
-    
-  //   if (ItemPrice1[0].CustomerTypeName == 'Private') {
-  //     if (ItemPrice2[0].CustomerTypeName == 'Private') {
-  //       this.priceForPrivate = (ItemPrice2[0].UnitPrice) == null ? null : ItemPrice2[0].UnitPrice;
-  //     } else {
-  //       this.priceForAgent = (ItemPrice2[0].UnitPrice) == null ? null : ItemPrice2[0].UnitPrice;
-  //     }
-  //     this.priceForPrivate = (ItemPrice1[0].UnitPrice) == null ? null : ItemPrice1[0].UnitPrice;
-  //   }
-  //   else {
-  //     if (ItemPrice2[0].CustomerTypeName == 'Private') {
-  //       this.priceForPrivate = (ItemPrice2[0].UnitPrice) == null ? null : ItemPrice2[0].UnitPrice;
-  //     } else {
-  //       this.priceForAgent = (ItemPrice2[0].UnitPrice) == null ? null : ItemPrice2[0].UnitPrice;
-  //     }
-  //     this.priceForAgent = (ItemPrice1[0].UnitPrice) == null ? null : ItemPrice1[0].UnitPrice;
-  //   }
-
-    
-  //   this.addItemsForm.patchValue({
-  //     itemName: this.data.input.itemName,
-  //     accountId: this.data.input.accountId,
-  //     itemPartsType : this.data.input.itemParts,
-  //     itemType: this.data.input.itemType.toString(),
-  //     itemDescription: this.data.input.itemDescription,
-  //     effectiveDate: this.data.input.effectiveDate,
-  //     price_exTaxForPrivate: this.priceForPrivate,
-  //     price_exTaxForAgent: this.priceForAgent
-
-  //   });
-
-  // }
-
   bindItemData() {
-    
+    debugger
     if(this.data.input.itemId){
       let clickedItemId = this.data.input.itemId;
 
@@ -289,14 +250,12 @@ public itemPartsTypeGlobalCode() {
     let ItemPrice1 = JSON.parse(filteredData[0].itemPrice);
     let ItemPrice2 = JSON.parse(filteredData[1].itemPrice);
 
-    // console.log('First ', ItemPrice2, 'Second', ItemPrice1);
-
+   
     this.priceForPrivate = ItemPrice1[0].UnitPrice;
     this.priceForAgent = ItemPrice2[0].UnitPrice;
 
     
     // check customer Type is Private or Agent 
-    
     if (ItemPrice1[0].CustomerTypeName == 'Private') {
       if (ItemPrice2[0].CustomerTypeName == 'Private') {
         this.priceForPrivate = (ItemPrice2[0].UnitPrice) == null ? null : ItemPrice2[0].UnitPrice;
@@ -332,14 +291,12 @@ public itemPartsTypeGlobalCode() {
   }
 
 
-  public updateItems() {
+  public updateItems(type : boolean) {
     if(this.data.input.itemId > -1){
       const requestParamsOfEditItemDetail: MaintenanceEditItemsModel = {
   
         itemId: this.data.input.itemId,
         itemType: Number(this.addItemsForm.value.itemType),
-        accountId: Number(this.addItemsForm.value.accountId),
-        supplierId: 0,
         itemParts:Number(this.addItemsForm.value.itemPartsType),
         itemName: this.addItemsForm.value.itemName,
         itemDescription:this.addItemsForm.value.itemDescription,
@@ -356,13 +313,15 @@ public itemPartsTypeGlobalCode() {
         "createdBy": "Michael"
       }
   
+       
       this.maintenanceService.editItemsInMaintenance(requestParamsOfEditItemDetail).subscribe(resp => {
    
         this.maintenanceService.editItemPrice(requestParamsofPriceEffective).subscribe(res => {
       
           this.getItemPriceList();
           this.messages(resp.responseMessage);
-          this.onCancel();
+          // this.onCancel();
+          this.dialogRef.close(type);
         }, error => {
           console.log(error);
         })
@@ -375,18 +334,13 @@ public itemPartsTypeGlobalCode() {
   }
 
 
-  onCancel() {
-    const dialogRef = this.dialog.closeAll();
+  onCancel(): void {
+    this.dialogRef.close(false);
   }
 
   messages(message) {
     this.openSnackBar(message, 'hello');
   }
-
-  // savedMessage() {
-  //   const message = "Items Saved Successfully";
-  //   this.openSnackBar(message, 'hello');
-  // }
 
   public openSnackBar(message: string, panelClass: string) {
     this.snackBar.openFromComponent(MatSnackBarComponent, {
@@ -397,7 +351,6 @@ public itemPartsTypeGlobalCode() {
   }
 
   deleteEffectivePrice(input: any) {
-    //  console.log(input);
     const params = {
       Id: input.itemPriceId,
       DeletedBy: "Michael"

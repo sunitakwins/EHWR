@@ -20,6 +20,7 @@ import { HttpClientModule } from '@angular/common/http';
 /*** Infinite scroll ***/ 
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { PaymentService } from './FeatureModules/Customer/Services/PaymentServices/Payment.service';
 
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
@@ -44,7 +45,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     NgApexchartsModule,
     
   ],
-  providers: [],
+  providers: [PaymentService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

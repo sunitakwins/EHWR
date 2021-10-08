@@ -153,6 +153,7 @@ export class InvoiceListComponent implements OnInit {
       "invoiceIds" : [
         {
           invoiceId: invoiceId,
+          isResendInvoice: true
         }
       ]
     };

@@ -1,3 +1,4 @@
+
 <div class="d-none" [class.show]="invoiceStatementValue1">
   <form [formGroup]="JobTypePrintForm">
     <div class="row">
@@ -6,9 +7,13 @@
 
           <div class="col-md-12">
             <div class="dueDateWrapper mb-3 mt-3">
-              <label>Month and Year</label>
+              <label>Month and Year
+                <sup style="color: red;margin-left: 5px;">
+                <strong>*</strong>
+                </sup>
+              </label>
               <div class="dueDateCol">
-                <input matInput [matDatepicker]="dp" [formControl]="date" class="form-control" placeholder="mm/yyyy">
+                <input matInput [matDatepicker]="dp" [formControl]="date" class="form-control" placeholder="mm/yyyy" required>
                 <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
                 <div class="pickerIcon">
                   <mat-datepicker #dp startView="multi-year" (yearSelected)="chosenYearHandler($event)"
@@ -16,7 +21,9 @@
                   </mat-datepicker>
                 </div>
               </div>
-
+              <div class="help-block" *ngIf= "date.hasError('required')">
+                <p class="mb-1" style ="color: red;">Invalid Date</p>
+              </div>
             </div>
           </div>
         </div>
@@ -38,19 +45,22 @@
 
       <div class="col-sm-12 mb-3">
         <div class="actionBtn mb-2 mt-2 reportBtn">
-          <button type="button" class="btn primary-btn comBtn" (click)="clearDate()">Clear Dates</button>
-          <!-- <button type="button" class="btn primary-btn comBtn" (click)="sendStatement()">Send Statement</button> -->
-          <!-- <button type="button" class="btn primary-btn comBtn" (click)="clearFilter()">Clear Filter</button> -->
+          <button type="button" class="btn primary-btn comBtn" (click)="clearFilter()">Clear Filter</button>
+          <!-- <button type="button" class="btn primary-btn comBtn" (click)="clearDate()">Clear Dates</button> -->
+          <button type="button" class="btn primary-btn comBtn" (click)="sendStatement()">Send Statement</button>
         </div>
       </div>
     </div>
   </form>
 </div>
 
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-spin-clockwise" [fullScreen] = "true">
+  <p style="color: white" > Loading... </p>
+</ngx-spinner>
 
 <!-- ============================================================================================= -->
 <!-- Print Format -->
-<section class="statementTemplate d-none " id="invoiceStatementPrintDiv">
+<section class="statementTemplate d-none " id="invoiceStatementPrintDiv" *ngIf ="dataArray">
   <div *ngFor="let data of dataArray" class="pagebreak">
       <div class="infoWrapper ">
         <table cellpadding="0" cellspacing="0">
@@ -94,7 +104,7 @@
             <td>
               <div class="dateWraper">
                 <h1>STATEMENT</h1>
-                <p>Month Ending: <span>{{data.monthEnding | date: 'dd/MM/yyyy'}}</span></p>
+                <p>Month Ending: <span>{{data.monthEnding}}</span></p>
               </div>
             </td>
           </tr>
@@ -102,26 +112,26 @@
       </div>
   
       <div class="dataTableWrap">
-        <h3>Transactions For (Month/Year):</h3>
+        <h3>Transactions For :  {{monthYear}}:</h3>
         <table cellpadding="0" cellspacing="0">
           <tr>
-            <th>Date:</th>
+            <th>Job Date:</th>
             <th>Invoice No:</th>
             <th>Cust Ref No:</th>
-            <th>Amount:</th>
+            <th>Amount (including GST):</th>
             <th>Due Date</th>
-            <th>Payments/ Credits</th>
-            <th>Unpaid Balance</th>
+            <th>Debit/Credit</th>
+            <th> Balance</th>
           </tr>
           <tr *ngFor ="let data2 of data.invoiceDetails">
-            <td>{{data2.SendDate | date: 'dd/MM/yyyy'}}</td>
-            <td>#{{data2.InvoiceId}}</td>
+            <td>{{data2.SendDate }}</td>
+            <td>#{{data2.JobOrderId}}</td>
             <td>{{data2.CustomerContactReference}}</td>
             <td>{{data2.Amount}}</td>
-            <td>{{data2.DueDate | date: 'dd/MM/yyyy'}}</td>
+            <td>{{data2.DueDate }}</td>
             <td>{{data2.MethodPayType}}</td>
             <td>{{data2.TotalAmountDue}}</td>
-          </tr>
+          </tr>  
         </table>
       </div>
       <div class="dataTableWrap">

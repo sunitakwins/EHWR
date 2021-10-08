@@ -17,7 +17,9 @@ import { ContactComponent } from './_subs/Contact/Contact.component';
 import { DetailsComponent } from './_subs/Details/Details.component';
 import { JobAuditComponent } from './_subs/JobAudit/JobAudit.component';
 import * as _ from 'underscore';
-import { interval } from 'rxjs';
+import { interval, Observable } from 'rxjs';
+import { UrlService } from 'src/app/SharedModules/Services/Services/Url.service';
+import { InvoiceModalComponent } from '../../../Modal/InvoiceModal/InvoiceModal.component';
 
 @Component({
   selector: 'app-NewCustomer',
@@ -27,6 +29,8 @@ import { interval } from 'rxjs';
 
 
 export class NewCustomerComponent  implements OnInit {
+  previousUrl: Observable<string> = this.urlService.previousUrl$;
+
   @ViewChild('tabGroup') tabs: MatTabGroup;
   @ViewChild(DetailsComponent) public detailsComponent: DetailsComponent;
   @ViewChild(ContactComponent) public contactComponent: ContactComponent;
@@ -61,10 +65,11 @@ export class NewCustomerComponent  implements OnInit {
   invoiceFormData: any;
   paymentFormData: any;
   public isVerifyActions: boolean = false;
-  constructor(private spinner: NgxSpinnerService, private route: ActivatedRoute,
+  accountBalance: any;
+  constructor(private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef, private router: Router, public dialog: MatDialog,
     public localStorage: LocalStorageService, private customerService: CustomerService,
-    private location: Location, public localStrorage: LocalStorageService,
+    public localStrorage: LocalStorageService, private urlService : UrlService,
     private jobService: JobService,
     public dataService: DataService) {
 
@@ -92,14 +97,13 @@ export class NewCustomerComponent  implements OnInit {
 
   
      //in 10 seconds call Job Audit Api 
-     interval(10000).subscribe(x => {
-       if(this.JobId){
-        this.jobAuditData( this.JobId);
-       }else{
-         return -1;
-       }      
-     });
-
+    //  interval(7000).subscribe(x => {
+    //    if(this.JobId){
+    //     this.jobAuditData( this.JobId);
+    //    }else{
+    //      return -1;
+    //    }      
+    //  });
 
    });
 
@@ -151,11 +155,8 @@ export class NewCustomerComponent  implements OnInit {
       } else if (this.dataName == "editInvoice") {
         this.selectedIndex = 4;
         this.newCusBtn = false
-
-
       } else {
-
-        this.selectedIndex = 5;
+        this.selectedIndex = 4;
         this.newCusBtn = false
       }
 
@@ -180,8 +181,8 @@ export class NewCustomerComponent  implements OnInit {
     }
 
   }
-
  
+  
 
   ngAfterContentChecked() {
 
@@ -266,18 +267,18 @@ export class NewCustomerComponent  implements OnInit {
         if (Number(this.JobId) > -1) {
           element[0].querySelectorAll('[role ="tab"]')[1].style.display = "none";
         
-          this.selectedIndex = 5;
+          this.selectedIndex = 4;
           this.localStorage.setTabIndex(this.selectedIndex);
 
         } else if (this.JobId > -1  && this.CusId >-1 ) {
           element[0].querySelectorAll('[role ="tab"]')[1].style.display = "none";
-          this.selectedIndex = 5;
+          this.selectedIndex = 4;
         
         } else {
           element[0].querySelectorAll('[role ="tab"]')[1].style.display = "block";
         
           if (this.CusId > -1 || this.CusId == undefined) {
-            this.selectedIndex = 5;
+            this.selectedIndex = 4;
           }
         }
       }
@@ -355,8 +356,7 @@ export class NewCustomerComponent  implements OnInit {
   }
 
   sendTabJobValue(value) {
-    
-    // this.jobAuditComponent.getJobAuditData(value);
+
     this.detailsComponent.detailsForm.disable();
     this.tabDisable = true;
     this.JobId = value;
@@ -387,11 +387,11 @@ export class NewCustomerComponent  implements OnInit {
   }
 
   sendJobIdToInvoiceValue(value) {
-
     this.JobIdFromItems = value;
     this.contact = false;
     this.markFormGroupTouched(this.addJobData.ItemForm);
     this.nextStep();
+
   }
 
   sendJobIdToPaymentValue(value) {
@@ -406,13 +406,11 @@ export class NewCustomerComponent  implements OnInit {
   // ==============================================================================
   // Tab Change Event Function 
   public tabChanged(tabChangeEvent: MatTabChangeEvent) {
-  
     if (this.JobId) {
+      this.jobAuditData( this.JobId);
       this.getCusIdFromJobId(this.JobId); 
-     
     }
 
-  
     if (tabChangeEvent.index == 0) {
       if (this.CusId <= 0 || this.CusId == undefined) {
         this.tabDisable = true;
@@ -469,6 +467,9 @@ export class NewCustomerComponent  implements OnInit {
   
   public nextStep() {
     this.selectedIndex += 1;
+    // if(this.JobId){
+    //   this.jobAuditData(this.JobId);
+    // }
   }
 
   public previousStep() {
@@ -479,8 +480,8 @@ export class NewCustomerComponent  implements OnInit {
     if (cusid) {
       this.requestModel.CustomerId = cusid ? cusid : 0;
       this.customerService.getCustomerList(this.requestModel).subscribe((res: any) => {
-
         this.customerName = res[0].customerName;
+        this.accountBalance = res[0].overDueInvoice;
         this.JobId = this.JobId;
       });
     }
@@ -490,7 +491,8 @@ export class NewCustomerComponent  implements OnInit {
     this.jobRequestModel.JobOrderId = JobId;
     this.jobService.getJobList(this.jobRequestModel).subscribe((res) => {
       this.CusId = res[0].customerId;
-      this.customerName = res[0].customerName
+      this.customerName = res[0].customerName;
+      // this.accountBalance = res[0].overDueInvoice;
     })
   }
 
@@ -529,12 +531,12 @@ export class NewCustomerComponent  implements OnInit {
        else if (this.addJobData.ItemForm.touched && !this.isVerifyActions) { 
         this.confirmationMessage(clickedTabIndex,currentTabIndex,this.addJobData.ItemForm);
        }
-       else if (this.addJobData.InvoiceForm.touched && !this.isVerifyActions) { 
-        this.confirmationMessage(clickedTabIndex,currentTabIndex,this.addJobData.InvoiceForm);
-       }
-       else if (this.addJobData.PaymentForm.touched && !this.isVerifyActions) { 
-        this.confirmationMessage(clickedTabIndex,currentTabIndex,this.addJobData.PaymentForm);
-       }
+      //  else if (this.addJobData.InvoiceForm.touched && !this.isVerifyActions) { 
+      //   this.confirmationMessage(clickedTabIndex,currentTabIndex,this.addJobData.InvoiceForm);
+      //  }
+      //  else if (this.addJobData.PaymentForm.touched && !this.isVerifyActions) { 
+      //   this.confirmationMessage(clickedTabIndex,currentTabIndex,this.addJobData.PaymentForm);
+      //  }
        else if (this.detailsComponent.detailsForm.touched && !this.isVerifyActions) { 
         this.confirmationMessage(clickedTabIndex,currentTabIndex,this.detailsComponent.detailsForm);
        }
@@ -586,8 +588,8 @@ export class NewCustomerComponent  implements OnInit {
     let contactFormTouched = await this.contactComponent.contactForm.touched;
     let jobFormTouched = await this.addJobData.JobForm.touched;
     let itemFormTouched = await this.addItemData.ItemForm.touched;
-    let invoiceFormTouched = await this.invoiceFormData.InvoiceForm.touched;
-    let paymentFormTouched = await this.paymentFormData.PaymentForm.touched;
+    // let invoiceFormTouched = await this.invoiceFormData.InvoiceForm.touched;
+    // let paymentFormTouched = await this.paymentFormData.PaymentForm.touched;
     if(detailsFormTouched){
       return true
     }else if(contactFormTouched){
@@ -596,10 +598,10 @@ export class NewCustomerComponent  implements OnInit {
       return true;
     }else if(itemFormTouched){
       return true;
-    }else if(invoiceFormTouched){
-      return true;
-    }else if(paymentFormTouched){
-      return true;
+    // }else if(invoiceFormTouched){
+    //   return true;
+    // }else if(paymentFormTouched){
+    //   return true;
     }else {
       return false;
     }
@@ -611,7 +613,14 @@ jobAuditData(jobId : number){
     this.jobAuditComponent.getJobAuditData(jobId);
   }
     
-  }
+}
+
+printAllUnsentInvoices(){
+  const dialogRef = this.dialog.open(InvoiceModalComponent, {
+    width: '840px', disableClose: true,
+    data: { cusId: this.CusId }
+  });
+}
 }
 
 

@@ -116,7 +116,7 @@ export class SendAllUnsentInvoicesModalComponent implements OnInit {
   
     // Checkbox click
     listCheckbox(index: number, value: any, invoiceId: number) {
-      debugger
+      
       if (value.checked == true) {
         //ss
         this.checkBox = value.checked;
@@ -157,15 +157,17 @@ export class SendAllUnsentInvoicesModalComponent implements OnInit {
         this.invoiceDataListNew = this.removeDuplicates(this.invoiceDataList, "customerId");
         this.invoiceDataList =  this.invoiceDataListNew;
          let newArray = []; let data;
-         debugger
+         
          this.invoiceDataList.forEach(ele => {
            if(ele.length == 1){
              data = {
-              invoiceId: ele[0].invoiceId
+              invoiceId: ele[0].invoiceId,
+              createdBy : 'Michael'
             } 
            }else{
             data = {
-              invoiceId: ele.invoiceId
+              invoiceId: ele.invoiceId,
+              createdBy : 'Michael'
             }
            }
          

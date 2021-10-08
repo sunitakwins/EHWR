@@ -4,8 +4,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Observable } from 'rxjs';
 import { ConfirmationBoxComponent } from 'src/app/SharedModules/Components/ConfirmationBox/ConfirmationBox.component';
 import { LocalStorageService } from 'src/app/SharedModules/Services/Services/LocalStorage.service';
+import { UrlService } from 'src/app/SharedModules/Services/Services/Url.service';
 import { CustomerRequestModel } from '../../../Models/Customer/CustomerRequestModel';
 import { CustomerService } from '../../../Services/CustomerServices/Customer.service';
 import { EditContactComponent } from './_subs/EditContact/EditContact.component';
@@ -17,6 +19,7 @@ import { EditDetailsComponent } from './_subs/EditDetails/EditDetails.component'
   styleUrls: ['./EditCustomer.component.scss']
 })
 export class EditCustomerComponent implements OnInit {
+  previousUrl: Observable<string> = this.urlService.previousUrl$;
 
   @ViewChild(EditDetailsComponent) private editDetailsComponent: EditDetailsComponent;
   @ViewChild(EditContactComponent) private editContactComponent: EditContactComponent;
@@ -30,13 +33,13 @@ export class EditCustomerComponent implements OnInit {
   indexValue: any;
   accountBalance: any;
   constructor(private spinner: NgxSpinnerService, private customerService: CustomerService, public dialog: MatDialog,
-    private router: Router, private route: ActivatedRoute, private cdRef: ChangeDetectorRef,
+    private router: Router, private route: ActivatedRoute, private cdRef: ChangeDetectorRef, private urlService :UrlService,
     public localStorage: LocalStorageService) {
 
   }
 
   ngOnInit() {
-
+    
     this.route.queryParams.subscribe((params: Params) => {
       this.indexValue = params['val']
     });
@@ -45,7 +48,10 @@ export class EditCustomerComponent implements OnInit {
     this.spinner.show();
     this.getCustomerId();
     this.getCustomerName();
-
+    
+    this.urlService.previousUrl$.subscribe((previousUrl: string) => {
+      //console.log('previous url: ', previousUrl);
+    });
   }
 
 

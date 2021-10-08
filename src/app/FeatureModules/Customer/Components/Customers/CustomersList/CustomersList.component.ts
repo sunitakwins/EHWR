@@ -16,6 +16,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuditModalComponent } from '../../../Modal/AuditModal/AuditModal.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { UrlService } from 'src/app/SharedModules/Services/Services/Url.service';
+import { Observable } from 'rxjs';
+import { MergeCustomerComponent } from '../../../Modal/MergeCustomer/MergeCustomer.component';
+import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
+import { WarningDialogComponent } from 'src/app/SharedModules/Components/WarningDialog/WarningDialog.component';
 @Component({
   selector: 'app-CustomersList',
   templateUrl: './CustomersList.component.html',
@@ -23,14 +28,16 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 
 export class CustomersListComponent implements OnInit {
-  // public message = "Customer deleted successfully";
+  previousUrl: Observable<string> = this.urlService.previousUrl$;
+
   public result:Array<CustomerListModel> =[];
-  public displayedColumns: string[] = ['customerName','overDueInvoice','address1','phoneNo','action'];
+  public displayedColumns: string[] = ['merge','customerName','overDueInvoice','address1','phoneNo','action'];
   public requestModel = new CustomerRequestModel();
   public dataSource = new MatTableDataSource();
   public deleteCatalogEvent: EventEmitter<number> = new EventEmitter<number>();
 
-  public searchVal : boolean =false;
+  searchVal : boolean =false;
+  customerIdArr :number[]; 
 
   private pageNo: number = 1;
   public scrollModel = new InfiniteScrollModel();
@@ -38,9 +45,13 @@ export class CustomersListComponent implements OnInit {
   @ViewChild('sort', { static: true }) sort!: MatSort;
   noFoundData: boolean = false;
    responseData: any;
+  storeDeletedIndex = [];
+  customerDataList: any =[];
+  customerDataListNew: any[];
+  storeCustomerData: any;
   
   constructor(private customerService:CustomerService,public dialog: MatDialog,
-    public snackBar:MatSnackBar,private activeRouter:ActivatedRoute,
+    public snackBar:MatSnackBar,private activeRouter:ActivatedRoute, private urlService: UrlService,
     private spinner: NgxSpinnerService, private router : Router){  }
   
 
@@ -54,12 +65,13 @@ export class CustomersListComponent implements OnInit {
       });
 
      this.getCustomerListData();
-
+      
+     this.urlService.previousUrl$.subscribe((previousUrl: string) => {
+      //console.log('previous url: ', previousUrl);
+    });
   }
 
- 
-
-
+  
   // search data
   public searchUser(val:any){  
 
@@ -77,8 +89,6 @@ export class CustomersListComponent implements OnInit {
   }
   
   // Sort Data
-  
-  
   public sortData(sort: Sort) {
     this.requestModel.SortColumn = sort.active;
     this.requestModel.SortOrder = sort.direction;
@@ -86,7 +96,6 @@ export class CustomersListComponent implements OnInit {
   }
 
  // load more
-
  public loadMore(){ 
   this.spinner.show();           
   this.requestModel.PageNo =  ++this.pageNo;
@@ -131,7 +140,7 @@ public getCustomerListData( ){
           }, 500);
           
       },error =>{
-        // console.log(error)
+        // let msg = "Connection Error. Please try again later.";
         setTimeout(() => {
           /* spinner ends after 5 seconds */
           this.spinner.hide();
@@ -149,7 +158,7 @@ public getCustomerListData( ){
     for (i in lookupObject) {
       newArray.push(lookupObject[i]);
     }
-    return newArray;
+    return newArray.reverse();
   }
 
 
@@ -168,6 +177,58 @@ public onAudit(input:any,event){
 // On Clicking on Row
 OnSelectedRow(customerId){
   this.router.navigate(['customer/edit/',customerId]);
+}
+
+
+listCheckbox(customerId : number, event : any ,index: number, value: any){
+  
+  event.stopPropagation(); 
+  customerId; event; index; value;
+  // add selected customer id in Array
+  if (value.checked == true) {
+    this.responseData[index].checkbox = value.checked;
+    const ind = this.storeDeletedIndex.findIndex(x => x.customerId == customerId);
+    if (ind > -1) {
+      this.customerDataList.push(this.storeDeletedIndex[ind]);
+      this.customerDataListNew = this.removeDuplicates(this.customerDataList, "customerId");
+      this.customerDataList = [];
+      this.customerDataList.push(this.customerDataListNew);
+      
+    } else {
+      this.customerDataList.push(this.responseData[index]);
+      this.customerDataListNew = this.removeDuplicates(this.customerDataList, "customerId");
+      // this.customerDataList = [];
+      // this.customerDataList = this.customerDataListNew;
+    }
+    
+  } else {
+    this.storeDeletedIndex.push(this.customerDataList[index]);
+    
+    let ind = this.customerDataList.findIndex(x => x.customerId == customerId);
+    if(ind){
+      this.customerDataList.splice(ind, 1);
+    }else{
+      return
+    }
+    
+    //this.customerDataList = this.removeDuplicates(this.customerDataList, "customerId");
+  }
+  // this.checkBox = !this.checkBox;
+     this.customerDataList;
+}
+
+onMergeClick(){
+  let selectedcustomerData = this.customerDataList;
+  if(this.customerDataList.length > 1){
+    this.dialog.open(MergeCustomerComponent,{ 
+    width: '300px',
+    data: selectedcustomerData});
+  }else{
+    this.dialog.open(WarningDialogComponent, {
+      width: '350px',
+      data: " Please select atleast two customer for merge." 
+    });
+  } 
 }
 
 }

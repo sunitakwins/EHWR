@@ -41,20 +41,7 @@ export class InvoiceSentComponent implements OnInit {
   public years: any = [];
   cusTypeId: any;
   noDataFound : boolean = false;
-  // report list data
-  displayData: any = [
-    {
-      column1: "Page No.",
-      column2: "Invoice",
-      column3: "Customer ",
-      column4: "Job Date",
-      column5: "Due Date",
-      column6: "Amount",
-      column7: "Date Paid",
-      column8: "Amt. Paid",
-    }
-  ]
-  noFoundData: boolean;
+  // noFoundData: boolean;
 
 
   constructor(private fb: FormBuilder, private excelService: ExcelService,
@@ -161,6 +148,7 @@ export class InvoiceSentComponent implements OnInit {
       printContents = document.getElementById('invoiceSentPrintDiv').innerHTML;
       popupWin = window.open('', 'top=0,left=0,height=100%,width=auto');
       popupWin.document.open();
+
       popupWin.document.write(`
       <html>
       <head>

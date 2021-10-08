@@ -76,7 +76,7 @@
 
                 <div class="col-sm-12 col-md-4">
                   <div class="mb-4 printCheck">
-                    <button type="button" *ngIf="defaultBtn" (click)="exportToExcelDefault()" class="btn primary-btn comBtn">Export to Excel</button>
+                    <button type="button" *ngIf="defaultBtnExcel" (click)="exportToExcelDefault()" class="btn primary-btn comBtn">Export to Excel</button>
 
                     <button type ="button" *ngIf="jobTypePrintBtn" (click)="jobType.excelExport()" class="btn primary-btn comBtn">Export to Excel</button>
                     
@@ -160,4 +160,7 @@
 </section>
 
 <!-- Print Report -->
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-spin-clockwise" [fullScreen] = "true">
+  <p style="color: white" > Loading... </p>
+</ngx-spinner>
 

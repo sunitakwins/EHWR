@@ -1,0 +1,29 @@
+
+.create-invoice {
+    table {
+        thead {
+            tr {
+                background-color: initial !important;
+                th{
+                    *{
+                        color: initial ;
+                    }
+                    p{
+                        line-height: 15px;
+                    }
+                    
+                }
+            }
+        }
+    }
+}
+
+.createInvoiceBtn{
+    background-color: #f2f2f2!important;
+    color: #04773B;
+    min-width: 80px;
+    margin-bottom: 5px;
+}
+
+
+  

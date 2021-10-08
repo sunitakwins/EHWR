@@ -1,3 +1,5 @@
+import { InvoicePaymentComponent } from './Components/Customers/NewCustomer/_subs/InvoicePayment/InvoicePayment.component';
+import { MergeCustomerComponent } from './Modal/MergeCustomer/MergeCustomer.component';
 /* Core Modules*/ 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -35,7 +37,6 @@ import { InvoiceModalComponent } from './Modal/InvoiceModal/InvoiceModal.compone
 import { NotesModal } from './Modal/NotesModal/NotesModal.component';
 import { MoveJobComponent } from './Modal/MoveJob/MoveJob.component';
 import { PaymentsComponent } from './Components/Customers/Payments/Payments.component';
-import { PaymentService } from './Services/PaymentServices/Payment.service';
 import { AuditModalComponent } from './Modal/AuditModal/AuditModal.component';
 import { NotesGridModalComponent } from './Modal/NotesGridModal/NotesGridModal.component';
 import { InvoiceListComponent } from './Components/Customers/InvoiceList/InvoiceList.component';
@@ -51,8 +52,9 @@ import { SendAllUnsentInvoicesModalComponent } from './Modal/SendAllUnsentInvoic
 
 import { SafePipePipe } from 'src/app/SharedModules/Pipes/safePipe.pipe';
 import { PayInvoiceThroughEmailLinkComponent } from './Modal/PayInvoiceThroughEmailLink/PayInvoiceThroughEmailLink.component';
-import { AskAQuestionModalComponent } from './Modal/AskAQuestionModal/AskAQuestionModal.component';
-import { EmailModalComponent } from './Modal/EmailModal/EmailModal.component';
+import { PaymentModalComponent } from './Modal/PaymentModal/PaymentModal.component';
+import { PreviewInvoiceModalComponent } from './Modal/PreviewInvoiceModal/PreviewInvoiceModal.component';
+
 
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
@@ -72,6 +74,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         AuditComponent,
         CusPaymentComponent,
         AuditModalComponent,
+        MergeCustomerComponent,
 
 
         JobsListComponent,
@@ -82,11 +85,15 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
         AddItemsComponent,
         ItemListComponent,
-
+        PreviewInvoiceModalComponent,
+        
+        InvoicePaymentComponent,
+        
         InvoiceListComponent,
         InvoiceComponent,
         InvoiceModalComponent,
         NotesModal,
+        PaymentModalComponent,
        
         PaymentListComponent,
         PaymentsComponent,
@@ -94,8 +101,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         StripePaymentModalComponent,
      
         PayInvoiceThroughEmailLinkComponent,
-        EmailModalComponent,
-        AskAQuestionModalComponent,
         SendAllUnsentInvoicesModalComponent
     ],
     imports:[
@@ -111,7 +116,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         CreditCardDirectivesModule,
     ],
     
-    providers:[CustomerService,JobService,ItemService,InvoiceService,PaymentService],
+    providers:[CustomerService,JobService,ItemService,InvoiceService],
     bootstrap:[SafePipePipe]
 })
 export class CustomerModule{

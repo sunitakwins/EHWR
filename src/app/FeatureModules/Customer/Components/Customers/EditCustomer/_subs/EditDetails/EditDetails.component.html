@@ -4,7 +4,8 @@
       <div class="form-group">
         <label>Customer Name <sup>*</sup></label>
         <input class="form-control" type="text" placeholder="Customer Name" 
-        (keyup) ="checkExistingCustomer($event)" formControlName="customerName" required>
+        (keyup) ="checkExistingCustomer($event)" formControlName="customerName"
+        [value]="EditdetailsForm.get('customerName').value | titlecase" required>
         <!-- (keyup) ="checkExistingCustomer($event)" -->
         <div class="help-block" *ngIf=" EditdetailsForm.get('customerName').invalid && EditdetailsForm.get('customerName').touched">
           <p>Customer Name is required</p>
@@ -66,7 +67,7 @@
         <div class="col-sm-12 col-md-6 mt-1" >
           <div class="form-group">
             <label>Contact No. </label>
-            <input class="form-control" type="text" formControlName ="telephoneNo" mask="(00) 0000 0000">
+            <input class="form-control" type="text" formControlName ="telephoneNo" mask="0000 000 000">
             <div *ngIf="(EditdetailsForm.get('telephoneNo').hasError('minlength'))">
               <div class="help-block" *ngIf="EditdetailsForm.get('telephoneNo').hasError('minlength') && EditdetailsForm.get('telephoneNo').touched">
                 <p>Min 10 digit</p>
@@ -74,16 +75,7 @@
             </div>
          </div> 
         </div> 
-        <!-- <div class="col-sm-12 col-md-6 mt-1" >
-          <div class="form-group">
-            <label>Contact No. <sup></sup></label>
-            <input class="form-control" type="text" formControlName ="telephoneNo" mask="(00) 0000 0000"  >
-          <div *ngIf="(detailsForm.get('telephoneNo').hasError('minlength') || detailsForm.get('telephoneNo').hasError('maxlength'))">
-            <div class="help-block" *ngIf="detailsForm.get('telephoneNo').hasError('minlength') && detailsForm.get('telephoneNo').touched">
-              <p >Min 10 digit</p>
-            </div>
-          </div>
-        </div> -->
+    
 
         <div class="col-sm-12 col-md-6">
           <div class="form-group">
@@ -101,19 +93,22 @@
       <h3 class="subTitle">Street Address</h3>
       <div class="form-group">
         <label>Address 1<sup>*</sup></label>
-        <input class="form-control" type="text" formControlName="address1" placeholder="Address 1" required>
+        <input class="form-control" type="text" formControlName="address1" placeholder="Address 1"
+        [value]="EditdetailsForm.get('address.address1').value | titlecase"  required>
         <div class="help-block" *ngIf="EditdetailsForm.get('address.address1').invalid && EditdetailsForm.get('address.address1').touched">
           <p>Address is required</p>
         </div>
       </div>
       <div class="form-group">
         <label>Address 2</label>
-        <input class="form-control" type="text" formControlName="address2" placeholder="Address 2">
+        <input class="form-control" type="text" formControlName="address2" placeholder="Address 2"
+        [value]="EditdetailsForm.get('address.address2').value | titlecase" >
 
       </div>
       <div class="form-group">
         <label>Address 3</label>
-        <input class="form-control" type="text" formControlName="address3" placeholder="Address 3">
+        <input class="form-control" type="text" formControlName="address3" placeholder="Address 3"
+        [value]="EditdetailsForm.get('address.address3').value | titlecase">
 
       </div>
       <div class="form-group">
@@ -135,7 +130,8 @@
         <div class="col-sm-12 col-md-7">
           <div class="form-group">
             <label>State<sup>*</sup></label>
-            <input type="text" class="form-control" formControlName="state" placeholder="State">
+            <input type="text" class="form-control" formControlName="state" placeholder="State"
+            [value]="EditdetailsForm.get('address.state').value | uppercase">
             <div class="help-block" *ngIf="EditdetailsForm.get('address.state').invalid && EditdetailsForm.get('address.state').touched">
               <p>State is required</p>
               </div>
@@ -166,19 +162,22 @@
       </h3>
       <div class="form-group">
         <label>Address 1<sup>*</sup></label>
-        <input class="form-control" type="text" formControlName="postaladdress1" placeholder="Address 1" required>
+        <input class="form-control" type="text" formControlName="postaladdress1" placeholder="Address 1" 
+        [value]="EditdetailsForm.get('postal.postaladdress1').value | titlecase" required>
         <div class="help-block" *ngIf="EditdetailsForm.get('postal.postaladdress1').invalid && EditdetailsForm.get('postal.postaladdress1').touched" >
           <p>Address is required</p>
         </div>
       </div>
       <div class="form-group">
         <label>Address 2</label>
-        <input class="form-control" type="text" formControlName="postaladdress2" placeholder="Address 2">
+        <input class="form-control" type="text" formControlName="postaladdress2" placeholder="Address 2"
+        [value]="EditdetailsForm.get('postal.postaladdress2').value | titlecase">
 
       </div>
       <div class="form-group">
         <label>Address 3</label>
-        <input class="form-control" type="text" formControlName="postaladdress3" placeholder="Address 3">
+        <input class="form-control" type="text" formControlName="postaladdress3" placeholder="Address 3"
+        [value]="EditdetailsForm.get('postal.postaladdress3').value | titlecase">
 
       </div>
       <div class="form-group">
@@ -203,7 +202,8 @@
           <div class="form-group">
             <label>State<sup>*</sup></label>
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="State" formControlName="postalState">
+              <input type="text" class="form-control" placeholder="State" formControlName="postalState"
+              [value]="EditdetailsForm.get('postal.postalState').value | uppercase">
               <div class="help-block" *ngIf="EditdetailsForm.get('postal.postalState').invalid && EditdetailsForm.get('postal.postalState').touched">
                 <p>State is required</p>
                 </div>

@@ -17,6 +17,8 @@ import { DataService } from './Services/Services/Data.service';
 import { WarningDialogComponent } from './Components/WarningDialog/WarningDialog.component';
 import { ConfirmationBoxComponent } from './Components/ConfirmationBox/ConfirmationBox.component';
 import { SafePipePipe } from './Pipes/safePipe.pipe';
+import { UrlService } from './Services/Services/Url.service';
+
 
 
 @NgModule({
@@ -46,7 +48,7 @@ import { SafePipePipe } from './Pipes/safePipe.pipe';
         JsonParsePipe,
         SafePipePipe
     ],
-    providers:[LocalStorageService, DataService, CanDeactivateGuard],
+    providers:[LocalStorageService, DataService,UrlService, CanDeactivateGuard],
     bootstrap:[]
 })
 

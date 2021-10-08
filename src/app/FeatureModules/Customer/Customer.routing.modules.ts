@@ -1,3 +1,4 @@
+import { PaymentLinkResolver } from './RouteResolvers/PaymentLinkResolver';
 /*Core Modules*/
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -13,13 +14,14 @@ import { EditCustomerComponent } from './Components/Customers/EditCustomer/EditC
 import { PaymentListComponent } from './Components/Customers/PaymentList/PaymentList.component';
 import { InvoiceListComponent } from './Components/Customers/InvoiceList/InvoiceList.component';
 import { CanDeactivateGuard } from 'src/app/SharedModules/Guards/can-deactivate.guard';
+import { PayInvoiceThroughEmailLinkComponent } from './Modal/PayInvoiceThroughEmailLink/PayInvoiceThroughEmailLink.component';
 
 
 /*Routes*/
 const routes: Routes = [
   {
     path: '', component: CustomersComponent, children: [
-
+      
       { path: '', component: CustomersListComponent },
       { path: 'jobs', component: JobsListComponent },
       { path: 'Invoiceslist', component: InvoiceListComponent },

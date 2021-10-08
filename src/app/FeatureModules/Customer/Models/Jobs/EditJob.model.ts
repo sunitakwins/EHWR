@@ -23,6 +23,7 @@ export class NewEditJobModels{
         customerId: number;
         statusId: number;
         jobEmail:JobEmail[];
+        jobDefaultEmail: number;
         sameAsCustomer: boolean;
         customerContactReference: number;
         employees: EmployeeDetail[];

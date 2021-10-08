@@ -14,26 +14,26 @@
               </nav>
             </div>
             <div class="col-sm-12 col-lg-6 col-md-9 d-flex">
-              <div class="customerNameCol text-center" *ngIf="customerName">Customer:<strong class="jobId">{{ customerName | titlecase}}</strong> </div>&nbsp;
+              <div class="customerNameCol text-center" *ngIf="customerName">Customer:<strong class="jobId">{{
+                  customerName | titlecase}}</strong> </div>&nbsp;
+                  
               <div class="customerNameCol text-center" *ngIf="accountBalance>-1">Account Balance:
                 <strong class="jobId">
-                  <!-- <div *ngIf ="accountBalance > 0 else Zero">
-                    -${{accountBalance}}
+                  <div *ngIf="accountBalance === 0 else Zero">
+                    <div>
+                      $ {{accountBalance}}
+                    </div>
                   </div>
-                  <ng-template #Zero >
-                    ${{accountBalance}} 
+                  <ng-template #Zero>
+                    <div style="color: red;">
+                      -$ {{accountBalance}}
+                    </div>
+
                   </ng-template>
-                </strong></div> -->
-                 <!-- ====================== -->
-                  <div *ngIf ="accountBalance == 0 else Zero">
-                    ${{accountBalance}}
-                  </div>
-                  <ng-template #Zero >
-                    -${{accountBalance}} 
-                  </ng-template>
-                </strong></div>
+                </strong>
+              </div>
             </div>
-           
+
             <!-- <div class="col-sm-12 col-md-7 text-right">
               <ul class="customerDetails">
                 <li><strong>Entered By:</strong><span>EHW</span></li>
@@ -42,9 +42,9 @@
                 <li><strong>Date:</strong><span>27 jan, 2008 11:00</span></li>
               </ul>
             </div> -->
-           
+
             <div class="col-sm-12 col-md-3">
-            
+
               <div class="form-group actionBtn toggleAct text-right">
                 <!-- <a routerLink ="../../jobs/addjob" class="btn primary-btn comBtn mr-1">Save & Create Job</a>
                 <button type="button" class="btn primary-btn comBtn mr-1">Save</button> -->
@@ -53,37 +53,33 @@
               </div>
             </div>
           </div>
-          
-            <div class="row">
-              <div class="col-sm-12">
-                <mat-tab-group [(selectedIndex)]="selectedIndex" (selectedTabChange)="tabChanged($event)">
-                  <mat-tab label="Customer" #tabGroup>
-                    <br>
-                    <app-EditDetails (sendTabValue)="saveTabValue($event)" ></app-EditDetails>
-                  </mat-tab>
-                  <mat-tab label="Contacts"> 
-                    <br>
-                    <app-EditContact></app-EditContact>
-                   </mat-tab>
-                   <mat-tab label="Job Details"> 
-                    <br>
-                    <app-EditJobs></app-EditJobs>
-                    </mat-tab>
-                    <!-- <mat-tab label="Invoices"> 
-                    <br>
-                    <app-CusInvoices></app-CusInvoices>
-                   </mat-tab> -->
-                  <mat-tab label="Paid Payments"> 
-                    <br>
-                    <app-cusPayment></app-cusPayment>
-                   </mat-tab>
-                    <mat-tab label="Audits"> 
-                    <br>
-                    <app-audit></app-audit>
-                    </mat-tab> 
-                </mat-tab-group>
-              </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <mat-tab-group [(selectedIndex)]="selectedIndex" (selectedTabChange)="tabChanged($event)">
+                <mat-tab label="Customer" #tabGroup>
+                  <br>
+                  <app-EditDetails (sendTabValue)="saveTabValue($event)"></app-EditDetails>
+                </mat-tab>
+                <mat-tab label="Contacts">
+                  <br>
+                  <app-EditContact></app-EditContact>
+                </mat-tab>
+                <mat-tab label="Job Details">
+                  <br>
+                  <app-EditJobs></app-EditJobs>
+                </mat-tab>
+                <mat-tab label="Payments">
+                  <br>
+                  <app-cusPayment></app-cusPayment>
+                </mat-tab>
+                <mat-tab label="Audits">
+                  <br>
+                  <app-audit></app-audit>
+                </mat-tab>
+              </mat-tab-group>
             </div>
+          </div>
         </div>
       </div>
     </div>

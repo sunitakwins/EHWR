@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 
 /*models */
 import { GetAllInvoicesModel, InvoiceNotesModel, InvoiceRequestModel, jobInvoiceRequestModel } from '../../Models/Invoice/Invoice/InvoiceRequest.model';
+import { InvoicesOutstandingModel, InvoicesOutstandingRequestModel } from '../../Models/Payments/Payments.model';
 
 
 @Injectable({ providedIn: 'root' })
@@ -39,7 +40,7 @@ export class InvoiceService {
     return this.http.get(this.url + '/CustomerInvoice?', { params })
   }
 
-  // Delete notes
+  // Delete invoice
   deleteCustomerInvoice(params:any){
     return this.http.delete(this.url+'/CustomerInvoice?',{params:params})
   }
@@ -77,8 +78,6 @@ export class InvoiceService {
 
   // Save Notes 
   public saveNotes(data): Observable<any> {
-    // console.log(data);
-    
     return this.http.post(this.url + '/Notes', data);
    
   }
@@ -93,6 +92,11 @@ export class InvoiceService {
     return this.http.post(this.url+ '/CustomerInvoice/InvoiceResend',data);
   }
 
+  // view invoice 
+  viewInvoice(data): Observable<any>{
+      return this.http.post(this.url+ '/CustomerInvoice/InvoiceView',data);
+  }
+  
   //preview Invoice
   previewInvoice(params :any){
     // const params = new HttpParams()
@@ -105,5 +109,31 @@ export class InvoiceService {
   //  this.http.get(url , { headers: this.headers })
   }
 
+  getInvoiceData(params){
+    return this.http.get(this.url + '/CustomerInvoice/GetInvoicePayment?', {params : params})
+  }
+
+  // =========== Payment =============================================================
+
+    //Payment Method global code 
+    getPaymentMethod(params) {
+      return this.http.get<any>(this.url + '/GlobalCode?', { params })
+    }
+
+   getInvoiceOutstandingList(model: InvoicesOutstandingRequestModel): Observable<any> {
+    const params = new HttpParams()
+      .set('InvoiceId', `${model.InvoiceId}`)
+      .set('CustomerId', `${model.CustomerId}`)
+      .set('PageNo', `${model.PageNo}`)
+      .set('PageSize', `${model.PageSize}`)
+      .set('SearchValue', `${model.SearchValue}`)
+      .set('SortColumn', model.SortColumn)
+      .set('SortOrder', model.SortOrder);
+    return this.http.get(this.url + '/Payment/PaymentOutstanding?', { params })
+  }
+
+  addPayment(data: InvoicesOutstandingModel): Observable<any> {
+    return this.http.post<any>(this.url + '/Payment?', data)
+  }
 
 }

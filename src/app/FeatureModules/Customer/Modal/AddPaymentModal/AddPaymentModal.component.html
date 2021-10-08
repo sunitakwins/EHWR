@@ -1,0 +1,54 @@
+<div class="modal fade" id="moveJob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Payments 
+          <span>For Job no. </span>
+          <span>For Customer Name </span></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body smHeight">
+          <div mat-dialog-content>
+            <div class="container">
+              <form>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Amount :</label>
+                       <span>$ 275</span>
+                    </div>
+                    <div class="form-group">
+                      <label>Due Date :</label>
+                       <span>10/10/2021</span>
+                    </div>
+                    <div class="form-group d-flex">
+                      <label>Payment Amount : </label>
+                      <input formControlName="invoiceTo" class="form-control" type="text" placeholder="Amount">
+                    </div>
+                    <div class="form-group d-flex">
+                      <label>Payment Type :</label>
+                      <input formControlName="invoiceTo" class="form-control" type="text" placeholder="Invoice To">
+                    </div>
+                    <div class="form-group d-flex">
+                      <label>Date Paid :</label>
+                      <input formControlName="invoiceTo" class="form-control" type="text" placeholder="Invoice To" disabled>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <button type = "button " class ="btn comBtn float-right">Add Payment</button>
+                  </div>
+                </div>
+              </form>
+            </div> 
+          
+          </div>
+      </div>
+      <!-- <div class="modal-footer">
+        <button class ="comBtn" mat-button (click)="onNoClick()" >No</button>&nbsp;
+        <button class ="comBtn" mat-button (click)="onYesClick()">Yes</button>
+      </div> -->
+    </div>
+  </div>
+</div>

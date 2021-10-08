@@ -124,7 +124,7 @@ export class EditContactComponent implements OnInit {
      Id: input['customerContactId'],
      DeletedBy: 'Micheal'
    }
-
+ 
    const dialogRef = this.dialog.open(DeleteDialogComponent, {
         width: '350px',
         data: "Are you sure you want to delete this contact?"
@@ -134,20 +134,27 @@ export class EditContactComponent implements OnInit {
               this.spinner.show();
                this.customerService.deleteContact(data).subscribe(res=>{
                 //  console.log(res['responseMessage']);
-                this.deleteMessage();
+                let msg = res['responseMessage'];
+                this.deleteMessage(msg);
                   this.getContactListData();
                   setTimeout(() => {
                     this.spinner.hide();
                     }, 500);
               },error=>{
                 console.log(error);
+                setTimeout(() => {
+                  this.spinner.hide();
+                  }, 500);
               })
+              setTimeout(() => {
+                this.spinner.hide();
+                }, 500);
             }
           });
  }
  
  onSubmit(){
- 
+  this.spinner.show()
    if(this.contactId > 0) {
     // console.log('Update');
        this.onUpdate();
@@ -162,7 +169,7 @@ export class EditContactComponent implements OnInit {
 // On Contact Save
 
 public onSave(){
- 
+
   if(this.updateForm.valid){
     const requestParams : ContactModel = {
     "customerId":this.id,
@@ -176,10 +183,12 @@ public onSave(){
     "createdBy": "Micheal"
    }
   // console.log(requestParams);
+  
    this.customerService.addContact(requestParams).subscribe(res => {
-    this.spinner.show()
+    
      this.cusContactID = 'Contact'+ res.keyId;
-      this.savedMessage();
+     let msg = res.responseMessage;
+      this.savedMessage(msg);
       this.sendSaveButtonBoolean = true;
      this.getContactListData();
      setTimeout(() => {
@@ -211,15 +220,15 @@ public onSave(){
 
    }
  
-  public  savedMessage() {
-    this.openSnackBar(this.message,'hello');
+  public  savedMessage(msg) {
+    this.openSnackBar(msg,'hello');
   }
-  public deleteMessage(){
-    this.openSnackBar(this.deletedMessage,'hello');
+  public deleteMessage(msg){
+    this.openSnackBar(msg,'hello');
   }
 
-  public updateMessage(){
-    this.openSnackBar(this.updatedMessage, 'hello');
+  public updateMessage(msg){
+    this.openSnackBar(msg, 'hello');
   }
 
   openSnackBar(message: string, panelClass: string) {
@@ -289,6 +298,7 @@ public onUpdate(){
   }
 
    const data: UpdateContact = {
+     "customerId" :  this.id,
     "customerContactId": this.contactId,
     "firstName": this.updateForm.value.firstname ,
     "lastName": this.updateForm.value.lastname,
@@ -302,8 +312,9 @@ public onUpdate(){
    this.customerService.updateContact(data).subscribe(res =>{
     //  console.log(res);
     this.contactId = -1;
-    this.spinner.show()
-     this.updateMessage();
+    // this.spinner.show();
+    let msg = res.responseMessage;
+     this.updateMessage(msg);
      this.getContactListData();
      setTimeout(() => {
       this.spinner.hide();

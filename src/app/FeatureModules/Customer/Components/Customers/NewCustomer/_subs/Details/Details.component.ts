@@ -15,6 +15,7 @@ import { JobsRequestModel } from 'src/app/FeatureModules/Customer/Models/Jobs/Jo
 import { CustomerService } from 'src/app/FeatureModules/Customer/Services/CustomerServices/Customer.service';
 import { JobService } from 'src/app/FeatureModules/Customer/Services/JobService/Job.service';
 import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
+import { WarningDialogComponent } from 'src/app/SharedModules/Components/WarningDialog/WarningDialog.component';
 import { LocalStorageService } from 'src/app/SharedModules/Services/Services/LocalStorage.service';
 import * as _ from 'underscore';
 
@@ -37,8 +38,7 @@ export class DetailsComponent implements OnInit, OnChanges {
   public hideSearch: boolean = true;
   public checkingCustomer: boolean = false;
 
-  // public message = "Customer added successfully";
-  // public updateEmailMessage = "Customer updated succesfully";
+
   public submitted: boolean = false;
   public detailsForm: FormGroup;
   public cusId: number;
@@ -170,7 +170,6 @@ export class DetailsComponent implements OnInit, OnChanges {
 
 
   ngOnChanges() {
-
     const headerName = this.localStorage.getHeaderName();
     if (headerName == "invoice") {
       this.indexVal = 0;
@@ -196,8 +195,6 @@ export class DetailsComponent implements OnInit, OnChanges {
     else {
       this.indexVal = 2;
     }
-
-    
         this.route.data.subscribe((res) => {
         if (res.slug == 'newJob') {
          if (this.cusId == undefined && this.jobId == undefined) {
@@ -542,21 +539,24 @@ if(this.makeFormNull==true)
         
         this.cusId = res.keyId;
         const resMessage = res.responseMessage;
-        this.message(resMessage);
+        let resCode = res.responseCode;
+        
+        if(resCode === -1){
+          this.dialog.open(WarningDialogComponent, {
+            width: '350px',
+            data: resMessage
+          });
+        }else {
+          this.message(resMessage);
+        }
+      
         
         if (this.cusId !== 0) {
           this.sendTabValue.emit({ "id": res.keyId, "cusName": this.detailsForm.value.customerName });
           // this.savedMessage();
         }
-
-        // if (type == true) {
-        //   if (this.cusId === 0) {
-        //     // this.emailMessages();
-        //   } else {
-        //     // this.route.navigate(["customer", "AddJobs", this.cusId]);
-        //     // this.savedMessage();
-        //   }
-        // }
+       
+       
 
         setTimeout(() => {
           this.spinner.hide();
@@ -621,24 +621,15 @@ if(this.makeFormNull==true)
       this.customerService.updateCustomer(params).subscribe(res => {
         this.spinner.show()
         
-        // console.log(res);
         this.cusId = res.keyId;
         const resMessage = res.responseMessage;
         this.message(resMessage);
-        // this.customerName = this.detailsForm.value.customerName;
-        // this.sendCusName.emit({"id":this.detailsForm.value.customerName})
+
         if (this.cusId !== 0) {
           
           this.sendTabValue.emit({ "id": res.keyId, "cusName": this.detailsForm.value.customerName });
         }
-        // if (type == true) {
-        //   if (this.cusId === 0) {
-        //     this.emailMessages();
-        //   } else {
-        //     this.route.navigate(["customer", "AddJobs", this.cusId]);
-        //     this.savedMessage()
-        //   }
-        // }
+      
         setTimeout(() => {
           this.spinner.hide();
         }, 500);

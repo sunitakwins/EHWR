@@ -10,3 +10,13 @@ export class CustomerRequestModel{
 export class CustomerNameModel{
     CustomerName: string ='';
 }
+
+export class MergeCustomer{
+    "customerId": number;
+      "mergeCustomerId": MergeCustomerId[]
+      "modifiedBy": string;
+}
+
+export class MergeCustomerId{
+    "customerId": number
+}

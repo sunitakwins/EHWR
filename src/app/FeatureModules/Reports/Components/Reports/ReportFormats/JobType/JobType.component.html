@@ -65,7 +65,7 @@
             <div class="row">
               <div class="col-sm-12">
                   <div class="table-responsive">
-                    <table  class="table tableBodyScroll" id ="jobTypeExcelData" >
+                    <table  class="table tableBodyScroll" >
                       <thead>
                         <tr>Between <span> {{ initialDate | date: 'dd/MM/yyyy'}} </span> to <span> {{endDate | date: 'dd/MM/yyyy'}}</span></tr>
                         <tr>
@@ -79,7 +79,7 @@
                           <td>{{res.itemCount}}</td>
                         </tr>
                         <tr>
-                          <td><strong>Total:{{totalRecords}}</strong></td>
+                          <td><strong>Total :{{totalRecords}}</strong></td>
                           <td><strong>{{totalItems}}</strong></td>
                         </tr>
                         
@@ -97,3 +97,25 @@
    </div>
   </div>
 </section>
+<!-- ======================================================================================================== -->
+<table  class="table tableBodyScroll d-none" id ="jobTypeExcelData" >
+  <thead>
+    <tr>Between <span> {{initialDate}} </span> to <span> {{endDate | date: 'dd/MM/yyyy'}}</span></tr>
+    <tr>
+      <th class="comWidth">Job Type</th>
+      <th class="comWidth">Count</th>
+    </tr>
+  </thead>
+  <tbody class="boxscroll">
+    <tr *ngFor="let res of printData;let i=index">
+      <td>{{res.itemName}}</td>
+      <td>{{res.itemCount}}</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><strong>Total :{{totalRecords}}</strong></td>
+      <td><strong>{{totalItems}}</strong></td>
+    </tr>
+    
+  </tbody>
+</table>

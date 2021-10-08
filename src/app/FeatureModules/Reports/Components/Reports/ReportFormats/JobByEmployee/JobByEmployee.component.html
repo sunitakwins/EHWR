@@ -81,7 +81,7 @@
         <div class="row">
           <div class="col-sm-12">
             <div class="table-responsive ">
-              <table class="table " id ="jobsByEmployeeData">
+              <table class="table">
                 <thead>
                   <tr>
                     <th>Job</th>
@@ -115,3 +115,49 @@
     </div>
   </div>
 </section>
+<!-- =================Excel Data ====================================== -->
+
+<table class="table d-none " id ="jobsByEmployeeData">
+  <thead>
+    <tr>
+      <th>Customer Id</th>
+      <th>Customer</th>
+      <th>Job</th>
+      <th>Reference</th>
+      <th>JobAddress</th>
+      <th>Completed Date</th>
+      <th>Amount Invoice</th>
+      <th>Job Amount(excl. tax)</th>
+      <th>Job Amount Tax</th>
+      <th>Employee Id</th>
+      <!-- <th>Job Amt(incl. GST)</th> -->
+      <th>Employees</th>
+      <th>Number of Employees</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of jobsByEmployeeData">
+      <td>{{data.customerId}}</td>
+      <td>{{data.customerName}}</td>
+      <td>{{data.jobOrderId}}</td>
+      <td></td>
+      <td>{{data.jobAddress}}</td>
+      <td>{{data.completedDate | date: 'dd/MM/yyyy'}}</td>
+      <td>{{data.amountInvoice}}</td>
+      <td></td>
+      <td></td>
+      <td>
+        <div *ngFor="let employee of data.employees | jsonParse">
+          {{employee.EmployeeId}}
+        </div>
+      </td>
+      <td> 
+          <div *ngFor="let employee of data.employees | jsonParse">
+            {{employee.EmployeeName}}
+          </div>
+      </td>
+      <td>{{data.employeeCountbyJob}}</td>
+
+    </tr>
+  </tbody>
+</table>

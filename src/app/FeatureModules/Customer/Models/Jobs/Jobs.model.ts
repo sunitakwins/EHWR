@@ -21,6 +21,7 @@ export class JobModel{
     customerId:number= 0;
     statusId:number= 0;
     jobEmail:JobEmail[];
+    jobDefaultEmail : number = 0;
     sameAsCustomer:boolean;
     customerContactReference: string='';
     employees:EmployeeDetail[];

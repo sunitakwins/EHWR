@@ -23,8 +23,8 @@
 
               <div class="col-sm-12 col-md-9">
                 <div class="form-group d-flex align-items-center justify-content-end">
-                  <span class="labelNo" *ngIf="JobOrderId"><label class="mb-0">Job No.</label> <strong class="jobId">
-                      #{{JobOrderId}}</strong></span>
+                  <!-- <span class="labelNo" *ngIf="JobOrderId"><label class="mb-0">Job No.</label> <strong class="jobId">
+                      #{{JobOrderId}}</strong></span> -->
                   <button type="submit" *ngIf="!isUpdatingJob" (click)="onSaveAndCreateItem()"
                     class="btn primary-btn comBtn">
                     Save Job
@@ -66,13 +66,15 @@
 
                     <div class="form-group">
                       <label>Owner Name</label>
-                      <input class="form-control" type="text" formControlName="ownerName" placeholder="Owner Name">
+                      <input class="form-control" type="text" formControlName="ownerName"
+                      [value]="addJobsForm.get('ownerName').value | titlecase" placeholder="Owner Name">
                     </div>
 
                     <div class="form-group">
                       <label>Customer Ref No.</label>
-                      <input class="form-control removeArrow" type="text" formControlName="customerContactReference"
-                       placeholder="Customer ref no."> 
+                      <input class="form-control removeArrow" type="text" 
+                      formControlName="customerContactReference"
+                      [value]="addJobsForm.get('customerContactReference').value | titlecase"  placeholder="Customer ref no."> 
                     </div>
 
                    
@@ -82,38 +84,37 @@
                           <div class="alertCheck ml-2">
                             <div class="csRadioBtn form-group mb-0">
                               <label class="radioBtn checkBox mb-0">Same as customers
-                                <!-- <input type="checkbox" [disabled]="btnDisable" [checked]="isChecked"
-                                  (change)="onChange()" name="Types"> -->
+                            
                                   <input type="checkbox" formControlName="sameAsCustomer" [disabled]="btnDisable" 
                                   (change)="onChange($event)" >
                                 <span class="checkmark"></span>
                               </label>
                             </div>
                           </div>
-                          <!--div class="alertCheck"><input type="checkbox" [checked]="isChecked"
-                          (change)="onChange()" name="Types"> <span class="ml-1">Same as Customers</span>
-                      </div-->
+                      
                         </h3>
                       </div>
                     </div>
 
                     <div class="form-group">
                       <label>Address 1<sup>*</sup></label>
-                      <input class="form-control" type="text" formControlName="address1" placeholder="Address 1"
+                      <input class="form-control" type="text" formControlName="address1" 
+                      [value]="addJobsForm.get('address1').value | titlecase" placeholder="Address 1"
                         required>
                       <div class="help-block"
                         *ngIf="submitted || addJobsForm.get('address1').invalid && addJobsForm.get('address1').touched">
                         <p>Address is required</p>
                       </div>
                     </div>
-                    <!-- value="{{result[0].jobAddress}}" -->
                     <div class="form-group">
                       <label>Address 2</label>
-                      <input class="form-control" type="text" formControlName="address2" placeholder="Address 2">
+                      <input class="form-control" type="text" formControlName="address2" 
+                      [value]="addJobsForm.get('address2').value | titlecase" placeholder="Address 2">
                     </div>
                     <div class="form-group">
                       <label>Address 3</label>
-                      <input class="form-control" type="text" formControlName="address3" placeholder="Address 3">
+                      <input class="form-control" type="text" formControlName="address3" 
+                      [value]="addJobsForm.get('address3').value | titlecase"placeholder="Address 3">
                     </div>
                     <div class="form-group">
                       <label>Suburb<sup>*</sup></label>
@@ -134,7 +135,8 @@
                       <div class="col-sm-12 col-md-7">
                         <div class="form-group">
                           <label>State<sup>*</sup></label>
-                          <input type="text" class="form-control" formControlName="state" placeholder="State">
+                          <input type="text" class="form-control" formControlName="state"
+                          [value]="addJobsForm.get('state').value | uppercase" placeholder="State">
                           <div class="help-block"
                             *ngIf="addJobsForm.get('state').invalid && addJobsForm.get('state').touched">
                             <p>State is required</p>
@@ -172,7 +174,16 @@
                     </div>
 
                     <div class="form-group">
-                      <label>CC Invoice To <span class ="labelmsg"> (only 3 emails are allowed)</span> </label> 
+                      <label>CC Invoice To <span class ="labelmsg">(only 3 emails are allowed)</span> </label> 
+                      <div class="csRadioBtn invoiceMethod d-flex">
+                        <label class="radioBtn mb-1 inline-block"  style ="font-size:11px;" 
+                        *ngFor="let res of GlobalCodeForCCInvoice ">{{res.codeName}}
+                          <input type="radio" [value]="res.globalCodeId" name="globalCodeForCCInvoice" 
+                          (change) ="onJobEmailDefaultChange(res.globalCodeId)"  formControlName="globalCodeForCCInvoice" 
+                          *ngIf ="res.globalCodeId">
+                          <span class="checkmark"></span>
+                        </label>
+                      </div>
                       <div class="form-control d-flex control-tags">
                         <mat-chip-list #chipListContact>
                           <mat-chip *ngFor="let fruit of contactFruits;let indx=index; co" [selectable]="selectable"
@@ -282,7 +293,7 @@
                 <div class="form-group actionBtn text-right mb-0">
                   <button type="submit" (click)="onSaveAndCreateItem()"  *ngIf="!isUpdatingJob"
                     class="btn primary-btn comBtn">
-                    <span > Save Job </span>
+                    <span> Save Job </span>
                   </button>
                   <button type="submit" [disabled]="btnDisable" (click)="onSaveAndCreateItem()" *ngIf="isUpdatingJob" 
                     class="btn primary-btn comBtn" >

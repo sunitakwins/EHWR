@@ -15,7 +15,8 @@
                                 <div class="form-group">
                                     <label>Date</label>
                                     <div class="datePickerCol f-flex">
-                                        <input class="form-control" formControlName="date" matInput
+                                        <input class="form-control" formControlName="date" matInput 
+                                       
                                             [matDatepicker]="date" placeholder="Choose a date" readonly>
                                         <div class="pickerIconCol">
                                             <mat-datepicker-toggle matSuffix [for]="date">
@@ -28,7 +29,8 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Notes</label>
-                                    <textarea name="notes" formControlName="notes" id="" cols="5" rows="5" class="form-control"></textarea>
+                                    <textarea name="notes"  [value]="notesForm.get('notes').value | titlecase"
+                                     formControlName="notes" id="" cols="5" rows="5" class="form-control"></textarea>
                                 </div>
                             </div>
                         </div>

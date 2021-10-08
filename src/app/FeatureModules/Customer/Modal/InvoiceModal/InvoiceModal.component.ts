@@ -86,6 +86,7 @@ export class InvoiceModalComponent implements OnInit {
 
   // Check Radion btn value
   public getBtnValue(value) {
+    
     this.invoiceDataList = [];
     if (value == 1) {
       this.requestModel.Printtype = this.InvoicesForm.value.customer;
@@ -136,7 +137,11 @@ export class InvoiceModalComponent implements OnInit {
 
   // Get all print Invoices
   public getPrintAllInvoices() {
+    
+    this.invoiceDataList =[];
     this.invoiceService.getPrintAllInvoices(this.requestModel).subscribe(res => {
+      this.dataSource = null;
+       (res !=null) ? this.dataSource = res : this.notFoundData = true; 
       this.notFoundData = res.length > 0 ? false : true;
       this.spinner.show();
       if(res.length > 0){
@@ -144,7 +149,7 @@ export class InvoiceModalComponent implements OnInit {
         data.checkbox = false;
         return;
       })
-      this.dataSource = res;
+      // this.dataSource = res;
       this.storeInvoiceData = res;
      }
       //this.allCheckBox(Event);

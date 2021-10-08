@@ -158,7 +158,6 @@ export class ContactComponent implements OnInit {
       if (result) {
         this.spinner.show();
         this.customerService.deleteContact(data).subscribe(res => {
-
           const responseMessage = res['responseMessage'];
           this.messages(responseMessage);
           setTimeout(() => {
@@ -299,6 +298,7 @@ validateNumber(number : string){
     
     if (this.contactForm.valid) {
       const data: UpdateContact = {
+        "customerId" : this.CusId,
         "customerContactId": this.contactId,
         "firstName": this.contactForm.value.firstname,
         "lastName": this.contactForm.value.lastname,

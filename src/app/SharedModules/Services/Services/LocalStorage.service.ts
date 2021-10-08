@@ -12,6 +12,7 @@ export class LocalStorageService {
 
  // storing current Logged In USER ID
  CURRENT_LOGGED_IN_USER_ID: string = 'USERID';
+  CURRENT_LOGGED_IN_INVOICE_ID: string = 'INVOICEID';
 
 
 
@@ -54,7 +55,19 @@ export class LocalStorageService {
       return {UserId : null};
    }
 
-   // getting and Setting monthYear
+   // setting Invoice Id 
+   setInvoiceId(data){
+    localStorage.setItem(this.CURRENT_LOGGED_IN_INVOICE_ID, data);
+  }
+
+  getInvoiceId(){
+    let InvoiceId = localStorage.getItem(this.CURRENT_LOGGED_IN_INVOICE_ID);
+    if(InvoiceId)
+      return true;
+     return false;
+  }
+
+
    
  
 }

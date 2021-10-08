@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
 
 import { ReportRequestModel } from '../../Models/ReportRequestModel';
@@ -18,6 +19,7 @@ export class ReportsComponent implements OnInit {
   active: boolean = false;
   public allCustomerType:any;
   defaultBtn: boolean = true;
+  defaultBtnExcel: boolean = true;
   cusTypeId: number;
   jobTypeboolean : any;
 
@@ -91,7 +93,8 @@ export class ReportsComponent implements OnInit {
   displayedColumns: string[] = ['reportName', 'dateRequired'];
   dataSource = new MatTableDataSource();
   public requestModel = new ReportRequestModel();
-  constructor(private reportsService:ReportsService,public snackBar: MatSnackBar) {
+  constructor(private reportsService:ReportsService,public snackBar: MatSnackBar,
+    private spinner : NgxSpinnerService) {
     this.jobTypeboolean = {
       custTypeId : 0,
       jobTypeVal: false 
@@ -200,9 +203,15 @@ export class ReportsComponent implements OnInit {
   }
 
   public reportList(){
+    this.spinner.show();
    this.reportsService.getReportListType(this.requestModel).subscribe(res=>{
     //  console.log(res);
-     this.dataSource = new MatTableDataSource(res);
+    if(res.length > 0){
+      this.dataSource = new MatTableDataSource(res);
+    }
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 500); 
    },error=>{
      console.log(error);
      
@@ -212,14 +221,14 @@ export class ReportsComponent implements OnInit {
  
   onSelectReport(data){
     this.defaultBtn = false;
-
+    this.defaultBtnExcel = false;
     if(data.reportId == 3){
       // job exception===================
       this.jobExceptionList = this.jobExceptionData;
       this.invoiceStatementBoolean = {
         custTypeId:this.cusTypeId? this.cusTypeId : -1,
         invoiceStatementValue:false
-    }
+      }
       this.invoiceNotPaidBoolean = {
         custTypeId : 0,
         invoiceNotPaidValue: false 
@@ -252,6 +261,8 @@ export class ReportsComponent implements OnInit {
         custTypeId :this.cusTypeId? this.cusTypeId : -1,
         invoiceNotPaidValue: false 
       }
+      this.defaultBtnExcel = false;
+      this.defaultBtn = false;
       this.invoiceNotPaidPrintBtn = false;
       this.invoicePaidPrintBtn = false;
       this.jobExceptionPrintBtn = true;
@@ -296,6 +307,8 @@ export class ReportsComponent implements OnInit {
         custTypeId : this.cusTypeId? this.cusTypeId : -1,
         invoiceNotPaidValue: false 
       }
+      this.defaultBtnExcel = false;
+      this.defaultBtn = false;
       this.invoiceNotPaidPrintBtn = false;
       this.invoicePaidPrintBtn = false;
       this.jobExceptionPrintBtn = false;
@@ -337,6 +350,8 @@ export class ReportsComponent implements OnInit {
         custTypeId : this.cusTypeId? this.cusTypeId : -1,
         invoiceNotPaidValue: false 
       }
+      this.defaultBtnExcel = false;
+      this.defaultBtn = false;
       this.invoiceNotPaidPrintBtn = false;
       this.invoicePaidPrintBtn = false;
       this.jobExceptionPrintBtn = false;
@@ -379,6 +394,8 @@ export class ReportsComponent implements OnInit {
         custTypeId:this.cusTypeId? this.cusTypeId : -1,
         jobByEmployeeValue:false
       }
+      this.defaultBtnExcel = false;
+      this.defaultBtn = false;
       this.invoiceNotPaidPrintBtn = true;
       this.invoicePaidPrintBtn = false;
       this.jobExceptionPrintBtn = false;
@@ -423,6 +440,8 @@ export class ReportsComponent implements OnInit {
      custTypeId:this.cusTypeId? this.cusTypeId : -1,
      jobByEmployeeValue:false
    }
+   this.defaultBtnExcel = false;
+   this.defaultBtn = false;
    this.invoiceNotPaidPrintBtn = false;
    this.invoicePaidPrintBtn = false;
    this.jobExceptionPrintBtn = false;
@@ -466,6 +485,8 @@ export class ReportsComponent implements OnInit {
         custTypeId : this.cusTypeId? this.cusTypeId : -1,
         invoiceNotPaidValue: false 
       }
+      this.defaultBtnExcel = false;
+      this.defaultBtn = false;
       this.invoiceNotPaidPrintBtn = false;
       this.invoicePaidPrintBtn = true;
       this.jobExceptionPrintBtn = false;
@@ -509,6 +530,8 @@ export class ReportsComponent implements OnInit {
         custTypeId : this.cusTypeId? this.cusTypeId : -1,
         invoiceNotPaidValue: false 
       }
+      this.defaultBtnExcel = false;
+      this.defaultBtn = false;
       this.invoiceNotPaidPrintBtn = false;
       this.invoicePaidPrintBtn = false;
       this.jobExceptionPrintBtn = false;
@@ -550,6 +573,8 @@ export class ReportsComponent implements OnInit {
         custTypeId : this.cusTypeId? this.cusTypeId : -1,
         invoiceNotPaidValue: false 
       }
+      this.defaultBtnExcel = false;
+      this.defaultBtn = false;
       this.invoiceNotPaidPrintBtn = false;
       this.invoicePaidPrintBtn = false;
       this.jobExceptionPrintBtn = false;
@@ -592,6 +617,8 @@ export class ReportsComponent implements OnInit {
         custTypeId : this.cusTypeId? this.cusTypeId : -1,
         invoiceNotPaidValue: false 
       }
+      this.defaultBtnExcel = false;
+      this.defaultBtn = false;
       this.invoiceNotPaidPrintBtn = false;
       this.invoicePaidPrintBtn = false;
       this.jobExceptionPrintBtn = false;
@@ -633,6 +660,8 @@ export class ReportsComponent implements OnInit {
         custTypeId : this.cusTypeId? this.cusTypeId : -1,
         invoiceNotPaidValue: false 
       }
+      this.defaultBtnExcel = false;
+      this.defaultBtn = false;
       this.invoiceNotPaidPrintBtn = false;
       this.invoicePaidPrintBtn = false;
       this.jobExceptionPrintBtn = false;
@@ -675,6 +704,8 @@ export class ReportsComponent implements OnInit {
         custTypeId : this.cusTypeId? this.cusTypeId : -1,
         invoiceNotPaidValue: false 
       }
+      this.defaultBtnExcel = false;
+      this.defaultBtn = false;
       this.invoiceNotPaidPrintBtn = false;
       this.invoicePaidPrintBtn = false;
       this.jobExceptionPrintBtn = false;

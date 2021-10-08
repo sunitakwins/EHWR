@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepicker } from '@angular/material/datepicker';
@@ -38,15 +38,24 @@ export const MY_FORMATS = {
 
 export class MonthYearComponent implements OnInit {
   @Output() monthYearValue = new EventEmitter<any>();
+  // monthDatePickerForm : FormGroup;
   
   date = new FormControl(moment());
+  // date = new FormControl(moment(), [
+  //   Validators.required
+  // ]);
   finalDate: string;
   startDate: string;
 
   
-  constructor(private localStorage : LocalStorageService, private dataService : DataService) { }
+  constructor() { 
+    // this.monthDatePickerForm = new FormGroup({
+    //   date: new FormControl(moment(), Validators.required)
+    // });
+  }
 
   ngOnInit() {
+  
   }
 
   // Month year datepicker function
@@ -59,6 +68,7 @@ export class MonthYearComponent implements OnInit {
 
   chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
     
+
     const ctrlValue = this.date.value;
     ctrlValue.month(normalizedMonth.month());
     this.date.setValue(ctrlValue);

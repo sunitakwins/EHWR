@@ -4,9 +4,9 @@
       <div class="col-sm-12">
         <div class="loginWrapper">
           <div class="row">
-            <div class="col-sm-12 d-flex flex-sm-row flex-column">
+            <div class="col-sm-7 d-flex flex-sm-row flex-column">
               <div class="ptBreadcrumb" *ngIf="customerData">
-                <h2 >Customers</h2>
+                <h2>Customers</h2>
                 <nav aria-label="breadcrumb">
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="customer">Customers</a></li>
@@ -25,23 +25,36 @@
                   <span (click)="getCusID()" *ngIf="customerName"> Customer :
                     <strong class="jobId" style="cursor:pointer;">{{ customerName | titlecase}}</strong></span>
                 </div>
+                <div *ngIf="accountBalance">
+                  <span>:
+                    <strong class="jobId">
+                      <div *ngIf="accountBalance === 0 else Zero">
+                        <div>
+                          $ {{accountBalance}}
+                        </div>
+                      </div>
+                      <ng-template #Zero>
+                        <div style="color: red;">
+                          -$ {{accountBalance}}
+                        </div>
+                      </ng-template>
+                    </strong></span>
+                </div>
               </div>
               <div *ngIf="!hideNewJob || !customerData" style="cursor:pointer;">
                 <a routerLink="../NewCustomer" *ngIf="newCusBtn" class="btn primary-btn comBtn newCusBtn d-none">New
                   Customer</a>
               </div>
             </div>
-            <!-- <div class="col-sm-12" >
-              <div class="form-group actionBtn toggleAct text-right" *ngIf ="!hideNewJob || !customerData" style ="cursor:pointer;">
-               <a  routerLink ="../NewCustomer" *ngIf ="newCusBtn" routerLink="../../customer/NewCustomer" class="btn primary-btn comBtn">New Customer</a> 
-              </div>
-            </div> -->
+            <div class="col-sm-5 text-right" *ngIf= "JobIdFromInvoice > 0 ">
+              <button class="btn primary-btn comBtn" (click) ="printAllUnsentInvoices(JobIdFromInvoice)">Print/Email All Unsent Invoices</button>
+            </div>
           </div>
-          <!-- ======================================================================= -->
-          <!-- <p>{{disableContactTab}}</p> -->
+
+
           <div class="row">
             <div class="col-sm-12">
-              <mat-tab-group  #tabGroup [(selectedIndex)]="selectedIndex" (selectedTabChange)="tabChanged($event)">
+              <mat-tab-group #tabGroup [(selectedIndex)]="selectedIndex" (selectedTabChange)="tabChanged($event)">
                 <mat-tab label="Customer" [disabled]="CusId? false:true">
                   <br>
                   <app-Details (sendTabValue)="saveTabValue($event)" [CustIdForUpdate]="CusId" [jobId]="JobId"
@@ -49,13 +62,13 @@
                     [indexVal]="selectedIndex" (setTabIndex)="setTabIndex($event)">
                   </app-Details>
                 </mat-tab>
-             
+
                 <mat-tab label="Contacts" [disabled]="CusId? false:true">
                   <app-Contact (sendCusIdValue)="sendCusIdValue($event)" [CusId]="CusId" [indexVal]="selectedIndex"
                     (setTabIndex)="setTabIndex($event)" [CustIdForUpdate]="CusId" [JobId]="JobId">
                   </app-Contact>
                 </mat-tab>
-              
+
                 <mat-tab label="Job Details" [disabled]="CusId? false:true">
                   <app-AddJobs (sendTabJobValue)="sendTabJobValue($event)" [isUpdatingJob]="isUpdatingJob"
                     [customerData]="customerData" (sendCustomerDataValue)="sendCustomerDataValue($event)"
@@ -67,13 +80,16 @@
                   <app-AddItems (sendJobIdToInvoiceValue)="sendJobIdToInvoiceValue($event)" [JobId]="JobId"
                     [indexVal]="selectedIndex" [JobIdFromInvoice]="JobId"></app-AddItems>
                 </mat-tab>
-                <mat-tab label="Invoices" [disabled]="JobIdFromItems? false:true">
+                <mat-tab label="Invoice/Payments" [disabled]="JobIdFromItems? false:true">
+                  <app-InvoicePayment [JobId]="JobIdFromItems" [indexVal]="selectedIndex"></app-InvoicePayment>
+                </mat-tab>
+                <!-- <mat-tab label="Invoices" [disabled]="JobIdFromItems? false:true">
                   <app-invoice (sendJobIdToPaymentValue)="sendJobIdToPaymentValue($event)" [JobId]="JobIdFromItems"
                     [indexVal]="selectedIndex" (onSelectingJobId)="selectedJobfromInvoices($event)"></app-invoice>
                 </mat-tab>
                 <mat-tab label="Payments" [disabled]="JobIdFromInvoice? false:true">
                   <app-Payments [JobId]="JobIdFromInvoice" [indexVal]="selectedIndex"></app-Payments>
-                </mat-tab>
+                </mat-tab> -->
                 <mat-tab label="Job Audit" *ngIf="JobId">
                   <br>
                   <app-JobAudit></app-JobAudit>

@@ -1,0 +1,201 @@
+<div class="modal fade " id="moveJob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog smallModal payModal" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"> Add Payments</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body smHeight">
+          <div mat-dialog-content>
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="loginWrapper">
+                      <form [formGroup]="paymentForm">
+                        <div class="row">
+                          <div class="col-sm-6 mb-2 text-center">
+                            <div class="customerNameCol font18">Invoice no. 
+                              <span><strong class="jobId ml-1">#{{jobId}} </strong></span>
+                              <!-- <span class= "ml-1" *ngIf ="amountData > 0 ; else elseBlock">For Amount : 
+                              <span class ="redColor ml-1" ><strong>-$ {{amountData}}</strong></span></span> 
+                              <ng-template #elseBlock>
+                                <span class ="redColor ml-1"><strong>$ {{amountData}}</strong></span>
+                              </ng-template> -->
+                              <span >For Amount :</span>
+                              <strong class="jobId">
+                                <div *ngIf="amountData === 0 else Zero">
+                                  <div>
+                                    $ {{amountData}}
+                                  </div>
+                                </div>
+                                <ng-template #Zero>
+                                  <div style="color: red;">
+                                    -$ {{amountData}}
+                                  </div>
+                                </ng-template>
+                              </strong>
+                            </div>
+                          </div>
+
+                          <div class="col-sm-6 col-md-6 text-right">
+                            <button type="submit" class="btn primary-btn comBtn mr-1" (click) ="onSubmit()" *ngIf ="!disableClick" [disabled] ="amountData ===0 "> Save Payment </button>
+                          </div>
+                          <!--  -->
+                        </div>
+            
+                        <div class="mt-4">
+                          <div class="row">
+                            <div class="col-sm-12 col-md-4">
+                              <div class="form-group">
+                                <label>Due Date</label>
+                                <div class="datePickerCol f-flex">
+                                  <input class="form-control disable" formControlName="paymentDate" disabled matInput [matDatepicker]="paymentDate"
+                                  placeholder="dd/mm/yyyy" readonly>
+                                  <div class="pickerIconCol">
+                                    <mat-datepicker-toggle  class="none"matSuffix [for]="paymentDate"></mat-datepicker-toggle>
+                                    <mat-datepicker class="none" #paymentDate></mat-datepicker>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-4">
+                              <div class="form-group">
+                                <label>Method</label>
+                                <select class="form-control " formControlName="paymentId" *ngIf ="paymentMethod" (change)="onSelectPaymentMethod($event.target.value)">
+                                  <option *ngFor="let method of paymentMethod" value="{{method.globalCodeId}},{{method.codeName}}" >
+                                    {{method.codeName}}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row"> 
+                            <div class="col-sm-12 col-md-4">
+                              <div class="form-group">
+                                <label>Amount<sup>*</sup></label>
+                                <input class="form-control removeArrow" type="number" placeholder="Amount" formControlName="amount">
+                                <div class="help-block"
+                                  *ngIf="paymentForm.get('amount').invalid && paymentForm.get('amount').touched">
+                                  <p>Amount is required</p>
+                                </div>
+                              </div>
+                              <!-- <div class="alert alert-warning" role="alert">The Amount will be filled in as you select the Invoices
+                                below.</div> -->
+                            </div>
+                            <div class="col-sm-12 col-md-4">
+                              <div class="form-group">
+                                <label>Method Reference Number</label>
+                                <div class="form-group typeableWrapper">
+                                  <input class="form-control typeableNumber" formControlName="methodRef"
+                                    placeholder="Method Reference No." />
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-2">
+                              <!-- <div class="form-group">
+                                <label>Customer Balance</label>
+                                <div class="form-control font-weight-bold disableCol" > 
+                                  <div *ngIf="balanceAmount != 0">-${{balanceAmount}}</div>
+                                  <div *ngIf="balanceAmount == 0">${{balanceAmount}}</div>
+                                </div>
+                              </div> -->
+                            </div>
+                          </div>
+            
+                          <div class="row mt-2">
+                            <div class="col-sm-12 mt-2 paymentGrid">
+                              <h3>Invoice Outstanding</h3>
+                              
+                              <div class="table-responsive">
+                                <table mat-table [dataSource]="dataSourceInvoice" matSort class="mat-elevation-z8"
+                                  >
+            
+                                  <ng-container matColumnDef="invoiceNo">
+                                    <th mat-header-cell *matHeaderCellDef> Invoice No.</th>
+                                    <td mat-cell *matCellDef="let element">
+                                      <a style="color: #137d59;text-decoration: none;cursor: pointer;" >
+                                        #{{element.jobOrderId}}
+                                      </a>
+                                    </td>
+                                  </ng-container>
+                              
+            
+                                  <ng-container matColumnDef="dateDue">
+                                    <th mat-header-cell *matHeaderCellDef> Date Due</th>
+                                    <td mat-cell *matCellDef="let element"> {{element.dueDate | date: 'dd-MM-yyyy' }} </td>
+                                  </ng-container>
+            
+            
+                                  <ng-container matColumnDef="pageNo">
+                                    <th mat-header-cell *matHeaderCellDef> Page No.</th>
+                                    <td mat-cell *matCellDef="let element"> {{element.pageNo}} </td>
+                                  </ng-container>
+            
+            
+                                  <ng-container matColumnDef="jobAddress">
+                                    <th mat-header-cell *matHeaderCellDef> Job Address</th>
+                                    <td mat-cell *matCellDef="let element"> {{element.jobAddress}} </td>
+                                  </ng-container>
+            
+            
+                                  <ng-container matColumnDef="amountInvoice">
+                                    <th mat-header-cell *matHeaderCellDef> Amount Invoice</th>
+                                    <td mat-cell *matCellDef="let element"> ${{element.amountInvoice}} </td>
+                                  </ng-container>
+            
+                                  <ng-container matColumnDef="amountDue">
+                                    <th mat-header-cell *matHeaderCellDef> Amount Due</th>
+                                    <td mat-cell *matCellDef="let element"> ${{element.amountDue}} </td>
+                                  </ng-container>
+            
+            
+                                  <ng-container matColumnDef="payment">
+                                    <th mat-header-cell *matHeaderCellDef><span class="paymentCaption">Tick if Paid in Full</span> Payment</th>
+                                    <td mat-cell *matCellDef="let element">
+              
+                                    <mat-checkbox (change) = "onCheckClick($event,element)"></mat-checkbox>
+                                    
+                                      ${{element.amountDue}} 
+                                   
+                                    </td>
+                                  </ng-container>
+            
+                                  <!-- <ng-container matColumnDef="Notes">
+                                    <th mat-header-cell *matHeaderCellDef> Notes</th>
+                                    <td mat-cell *matCellDef="let element">
+                                      <mat-checkbox (change) ="onNotesClick($event,element)"></mat-checkbox>
+                                      {{element.Notes}}
+                                    </td>
+                                  </ng-container> -->
+                                
+                                  <tr mat-header-row *matHeaderRowDef="displayedColumnsInvoice" ></tr>
+                                  <tr mat-row  *matRowDef="let row; columns: displayedColumnsInvoice;" ></tr>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="notFoundData" class="col-sm-12 col-md-12 text-center noDataFound">
+                            <b>No record found</b>
+                          </div>
+          
+                        </div>
+                      </form>
+            
+                    </div>
+                  </div>
+                </div>
+              </div>         
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button class ="comBtn" mat-button (click)="onNoClick()" >Cancel</button>
+      </div>
+    </div>
+  </div>
+</div> 
+
+ <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-spin-clockwise" [fullScreen]="true">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>

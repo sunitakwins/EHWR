@@ -11,7 +11,7 @@ import { SuburbRequestModel } from '../../../Models/Jobs/SuburbRequestModel.mode
 
 /*Services */
 import { JobService } from '../../../Services/JobService/Job.service';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Params, Router, RouterEvent, RoutesRecognized } from '@angular/router';
 import { CustomerRequestModel } from '../../../Models/Customer/CustomerRequestModel';
 import { CustomerService } from '../../../Services/CustomerServices/Customer.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -26,7 +26,7 @@ import { NewCustomerComponent } from '../NewCustomer/NewCustomer.component';
 
 // ======================
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { map, startWith } from 'rxjs/operators';
+import { filter, map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -40,6 +40,8 @@ import { ContactRequestModel } from '../../../Models/CustomerContact/ContactRequ
 import { JsonParsePipe } from 'src/app/SharedModules/Pipes/jsonParse.pipe';
 import { WarningDialogComponent } from 'src/app/SharedModules/Components/WarningDialog/WarningDialog.component';
 import { DataService } from 'src/app/SharedModules/Services/Services/Data.service';
+import { UrlService } from 'src/app/SharedModules/Services/Services/Url.service';
+
 
 
 export const MY_FORMATS = {
@@ -66,6 +68,7 @@ export const MY_FORMATS = {
 export class AddJobsComponent implements OnInit {
   // =================
 
+  
   visible = true;
   selectable = true;
   removable = true;
@@ -187,6 +190,10 @@ export class AddJobsComponent implements OnInit {
 
   size :any;
   square : any;
+  GlobalCodeForCCInvoice: any;
+  JobDefaultEmailglobalCode: any;
+
+  currentUrl: any;
 
   constructor(private fb: FormBuilder,
     private jobService: JobService,
@@ -197,15 +204,18 @@ export class AddJobsComponent implements OnInit {
     public dialog: MatDialog,
     public localStorage: LocalStorageService,
     private el: ElementRef,
-    public dataService : DataService
+    public dataService : DataService,
+    public urlService: UrlService,
   ) {
     this.tomorrow.setDate(this.tomorrow.getDate());
     
+   
     // form 
     this.addJobsForm = this.fb.group({
       'customerId': [''],
       'searchDetail': [''],
       'contactEmail': [''],
+      'globalCodeForCCInvoice' : [37],
       'ownerName': [''],
       'address1': ['', Validators.required],
       'address2': '',
@@ -216,7 +226,6 @@ export class AddJobsComponent implements OnInit {
       'jobOrderDescription': [''],
       'pageNo': ['', Validators.required],
       'employees': ['', Validators.required],
-      // 'employeeId': ['', Validators.required],
       'completedDate': [null, Validators.required],
       'statusId': ['', Validators.required],
       'tankDateInstalled': [null],
@@ -225,11 +234,10 @@ export class AddJobsComponent implements OnInit {
     });
   
     this.dataService.setOption('JobForm',this.addJobsForm);  
- 
+   
   }
 
 ngAfterViewInit(){
-  // this.dataService.currentMessage.subscribe(message => this.message = message);
   this.route.data.subscribe((res) => {
     if (res.slug == 'newJob') { 
       this.indexVal = 2;
@@ -251,7 +259,8 @@ ngAfterViewInit(){
         this.fruits = [];
         this.addJobsForm.patchValue({
           'contactEmail' : null,
-          'employees' : null
+          'employees' : null,
+          'globalCodeForCCInvoice' : 37
         });
         this.addJobsForm.get('contactEmail').markAsPristine();
         this.addJobsForm.get('employees').markAsPristine();
@@ -272,7 +281,7 @@ ngAfterViewInit(){
 
   ngOnInit() {
     
-
+   
     this.route.queryParams.subscribe((params: Params) => {
       this.id = params['customerId'];
       if (this.id === undefined) {
@@ -304,7 +313,8 @@ ngAfterViewInit(){
             this.fruits = [];
             this.addJobsForm.patchValue({
               'contactEmail' : null,
-              'employees' : null
+              'employees' : null,
+              'globalCodeForCCInvoice' : 37
             });
             this.addJobsForm.get('contactEmail').markAsPristine();
             this.addJobsForm.get('employees').markAsPristine();
@@ -330,11 +340,12 @@ ngAfterViewInit(){
       }
     })
 
-
+    
     this.addJobsForm = this.fb.group({
       'customerId': [''],
       'searchDetail': [''],
       'contactEmail': [''],
+      'globalCodeForCCInvoice' : [37],
       'ownerName': [''],
       'address1': ['', Validators.required],
       'address2': '',
@@ -345,7 +356,6 @@ ngAfterViewInit(){
       'jobOrderDescription': [''],
       'pageNo': ['', Validators.required],
       'employees': ['', Validators.required],
-      // 'employeeId': ['', Validators.required],
       'completedDate': [null, Validators.required],
       'statusId': ['', Validators.required],
       'tankDateInstalled': [null],
@@ -357,6 +367,7 @@ ngAfterViewInit(){
     this.getStatus();
     this.getSuburbData();
     this.searchCustomer();
+    this.getGlobalCodeForCCInvoice();
 
     // ==================
 
@@ -374,7 +385,6 @@ ngAfterViewInit(){
 
 
   ngOnChanges() {
-     
     this.route.queryParams.subscribe(params => {
       this.JobOrderId = params['jobOrderId'];
     });
@@ -414,7 +424,6 @@ ngAfterViewInit(){
         this.jobIdDetails();
       }
       this.searchDisabled = true;
-      // this.employeeDisable = true;
     }
 
     const headerName = this.localStorage.getHeaderName();
@@ -447,6 +456,28 @@ ngAfterViewInit(){
     this.invoiceId = localStorage.getItem("invoiceId");
     if (this.invoiceId != null) {
       this.jobIdDetails();
+    }
+  }
+
+  // get Job Email Default global code values
+  getGlobalCodeForCCInvoice(){
+    let queryParams = {
+      CategoryName: 'JobEmailDefault'
+    }
+
+    this.customerService.getInvoiceMethod(queryParams).subscribe(res => {
+      this.GlobalCodeForCCInvoice = res;
+    }, error => {
+      // console.log(error);
+    })
+  }
+
+
+  // on change of Job Email Default
+  onJobEmailDefaultChange(id : any){
+    
+    if(this.cusID){
+      this.JobDefaultEmailglobalCode = id;
     }
   }
 
@@ -537,6 +568,7 @@ ngAfterViewInit(){
           'sameAsCustomer': JobData.sameAsCustomer,
           "customerContactReference": JobData.customerContactReference,
           'contactEmail': '',
+          'globalCodeForCCInvoice' : JobData.jobDefaultEmail,
           'searchDetail': JobData.customerName,
           'ownerName': JobData.ownerName,
           'address1': JobData.address1,
@@ -552,6 +584,7 @@ ngAfterViewInit(){
           'statusId': [JobData.statusId],
           'tankDateInstalled': (JobData.tankDateInstalled == null) ? null : new Date(JobData.tankDateInstalled),
         });
+        
         
         if (this.employeeId.length > 0) {
           this.addJobsForm.controls["employees"].clearValidators();
@@ -577,21 +610,22 @@ ngAfterViewInit(){
   //====== for employee Chiplist   =================================================
 
   add(event: MatChipInputEvent): void {
-
+     
     const input = event.input;
     const value = event.value;
 
     // Add our fruit
     if ((value || '').trim()) {
-      // this.fruits.push({
-      //   employeeId:Math.random(),
-      //   employeeName:value.trim()
-      // });
     }
 
     // Reset the input value
     if (input) {
       input.value = '';
+      
+      this.dialog.open(WarningDialogComponent, {
+        width: '350px',
+        data: "Please select employee from list."
+      });
     }
 
     this.fruitCtrl.setValue(null);
@@ -605,6 +639,7 @@ ngAfterViewInit(){
 
     this.fruits.splice(indx, 1);
     this.employeeId.splice(indx, 1);
+   
     if (this.employeeId.length < 1) {
       this.addJobsForm.controls["employees"].setValidators([Validators.required]);
       this.addJobsForm.controls["employees"].updateValueAndValidity();
@@ -649,20 +684,6 @@ ngAfterViewInit(){
     if (this.id > -1) {
       this.onCustomerSelection.emit({ id: event.customerId, cusName: event.customerName });
     }
-
-
-    // this.onCustomerSelection.emit(this.id);
-    // let suburbData = JSON.parse(event.suburb);
-    // this.addJobsForm.patchValue({
-    //   'customerId':this.id,
-    //   'address1':event.address1,
-    //   'address2':event.address2,
-    //   'address3':event.address3,
-    //   'suburb':suburbData[0],
-    //   'state':event.state,
-    //   'postCode':event.postCode,
-    // });
-    // //console.log(this.addJobsForm.value);
   }
 
 
@@ -691,7 +712,6 @@ ngAfterViewInit(){
   public searchCustomer() {
 
     this.jobService.getCustomerList(this.jobCustomerRequestModel).subscribe(res => {
-      // console.log(res);
       this.allsearch = res;
       this.customerOptions = res;
 
@@ -715,11 +735,6 @@ ngAfterViewInit(){
       'state': suburb[0].state,
       'postCode': suburb[0].postCode,
     });
-
-
-    // if (this.id > -1) {
-    //   this.onCustomerSelection.emit({ id: input.customerId, cusName: input.customerName });
-    // }
 
   }
 
@@ -847,7 +862,6 @@ ngAfterViewInit(){
         if (emailIndex == -1) {
          
           this.contactFruits.push({ email: value.trim() });
-          // console.log(this.contactFruits);
         }
 
       }
@@ -902,6 +916,7 @@ ngAfterViewInit(){
   }
 
   public searchEmployee(val) {
+    
     this.employeeRequestModel.SearchValue = val;
     this.isVisiableEmpDDL = true;
     this.getEmployeeBySearch();
@@ -924,14 +939,10 @@ ngAfterViewInit(){
         this.employeeOptions = res;
         this.allFruits = res;
       }else{
-      
-
-        // let msg = "All employee status is inactive. Please active atleast one employee.";
-        if(this.isVisiableEmpDDL &&  this.employeeRequestModel.SearchValue.length ==1)
-        // this.openSnackBar(msg,'hello');
+        if(this.isVisiableEmpDDL &&  this.employeeRequestModel.SearchValue.length ==1 && this.allEmployees.length < 0)
         this.dialog.open(WarningDialogComponent, {
           width: '350px',
-          data: "All employees status is inactive. Please active atleast one employee." 
+          data: "All employees status is inactive. Please active at least one employee." 
         });
       } 
     }, error => {
@@ -1074,6 +1085,7 @@ ngAfterViewInit(){
         "customerId": this.id ? Number(this.id) : (Number(this.cusID) ? Number(this.cusID) : Number(this.backCusId)),
         "statusId": Number(this.addJobsForm.value.statusId),
         "jobEmail": this.contactFruits,
+        "jobDefaultEmail": this.addJobsForm.controls.globalCodeForCCInvoice.value,
         "sameAsCustomer": this.addJobsForm.value.sameAsCustomer,
         "customerContactReference": this.addJobsForm.value.customerContactReference,
         "employees": this.employeeId,
@@ -1092,7 +1104,6 @@ ngAfterViewInit(){
         "createdBy": "Micheal"
       }
       
-       
       this.disableBtnClick = false;
 
       this.spinner.show();
@@ -1162,6 +1173,7 @@ ngAfterViewInit(){
         "customerId": this.cusID ? this.cusID : (Number(this.CusId) ? Number(this.CusId) : 0),
         "statusId": Number(this.addJobsForm.value.statusId),
         "jobEmail": this.contactFruits,
+        "jobDefaultEmail": this.addJobsForm.controls.globalCodeForCCInvoice.value,
         "sameAsCustomer": this.addJobsForm.value.sameAsCustomer,
         "customerContactReference": this.addJobsForm.value.customerContactReference,
         "employees": this.employeeId,
@@ -1216,12 +1228,26 @@ ngAfterViewInit(){
     });
   }
 
-
+ 
   // back button Click
   onBack() {
+    
     // this.router.navigate(['customer/edit', this.CusId], { queryParams: { val: 2 } });
     this.router.navigate(['customer', 'jobs']);
+
+    // this.urlService.previousUrl$.subscribe((previousUrl: string) => {
+    //   if(previousUrl === "/customer/jobs"){
+    //       this.router.navigate(['customer', 'jobs']);
+    //   }else {
+    //     if(previousUrl === '/customer/edit'){
+    //       this.router.navigate(['customer/edit', this.CusId]);
+    //     }else{
+      
+    //     }
+    //   }
+    // });
   }
+
 
   // refresh data
   refreshData(){

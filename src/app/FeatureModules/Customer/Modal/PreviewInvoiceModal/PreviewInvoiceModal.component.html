@@ -1,0 +1,300 @@
+<div class="modal fade" id="moveJob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document" style="height: 720px;">
+    <div class="modal-content" style="height: 100%;">
+      <div class="modal-header">
+        <h5 class="modal-title" style ="padding: 10px;">Confirm and Create Invoice</h5>
+        <div>
+          <button type="button" class="btn createInvoiceBtn mr-2" (click)="createInvoice()">
+            <span>Create Invoice</span>
+          </button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+
+        </div>
+        
+      </div>
+      <div class="modal-body">
+        <!-- <button type="button" class="btn primary-btn comBtn float-right" (click)="createInvoice()">
+          <span>Create Invoice</span>
+        </button> -->
+
+        <!-- preview of invoice -->
+        <div style="margin: 23px 0px;">
+            <section class="create-invoice"
+              style="padding: 10px; font-family: Roboto, sans-serif ;box-sizing: border-box;margin:0 auto;display:flex;background-color:#fff;box-shadow:0 0 10px rgb(0 0 0 / 10%);font-size:13px;flex-direction:column;width:100%; position: relative;">
+              <div
+                style="position: absolute; width: 100%; height: 100%; top: 0;left: 0; background-size: 200px; background-repeat: repeat-x; z-index: 9999;">
+              </div>
+              <table cellpadding="0" cellspacing="0" style="box-sizing: border-box;width:100%; width:100%">
+                <thead>
+                  <tr>
+                    <th colspan="3">
+                      <!-- <h5 style="font-size:15px;margin:0;  text-align: right; padding-left: 50px;">Emergency Hot Water
+                        Repairs (Kingsford) Pty. Ltd.</h5> -->
+                    </th>
+                    <th></th>
+                  </tr>
+                  <tr>
+                    <th colspan="6">
+                      <table>
+                        <tr>
+                          <th style="padding-left:20px;" width="200">
+                            <!-- <img style="float: left;" src={taxinvoicelogo} alt="images" width="190" height="180"> -->
+                            <img src="assets/images/tax-invoice-logo.jpg" alt="images" width="150px">
+                          </th>
+                          <th width="400">
+                            <div style="padding-left:0px;">
+                              <p style="margin:0;font-size:12px;text-align:left;box-sizing: border-box;">Emergency Hot
+                                Water
+                                Repairs (Kingsford) Pty. Ltd.</p>
+                              <p style="margin:0;font-size:10px;text-align:left;box-sizing: border-box;">87
+                                Bunnerong Rd. Kingsford, NSW, 2032</p>
+                              <p style="margin:0;font-size:10px;text-align:left;box-sizing: border-box;color:#f00">
+                                Ph: 02
+                                9344 6602 Fax: 02 9344 9529</p>
+                              <p style="margin:0;font-size:10px;text-align:left;box-sizing: border-box;">
+                                Bondi:
+                                Cnr Curlewis & Old South Head Rd,</p>
+                              <p style="margin:0;font-size:10px;text-align:left;box-sizing: border-box;">
+                                Bondi:
+                                2026</p>
+                              <p style="margin:0;font-size:10px;text-align:left;box-sizing: border-box;color:#f00">
+                                Ph: 02 9365 4533</p>
+                              <p style="margin:0;font-size:10px;text-align:left;box-sizing: border-box;">
+                                ewhr@bigpond.com</p>
+                              <p style="margin:0;font-size:10px;text-align:left;box-sizing: border-box;">
+                                www.emergencyhotwaterrepairs.com.au</p>
+                              <p style="margin:0;font-size:10px;text-align:left;box-sizing: border-box;">ABN:
+                                78 003 998 329 Lic No. 284905c</p>
+                            </div>
+                          </th>
+
+                          <th width="200" style="display: flex; align-items: center;">
+                            <!-- <img style="float: center; " width="150" src="{price}" alt="images"> -->
+                            <img src="assets/images/price-match.jpg" alt="images" width="90px" height="90px">
+                            <img src="assets/images/micky-images.jpg" alt="images" width="100px">
+                          </th>
+                        </tr>
+                      </table>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th colspan="4">
+                      <h6
+                        style="text-align: center; margin: 0; padding: 0px; font-size:16px; font-weight:600;text-shadow:3px 3px 4px rgb(0 0 0 / 50%);color:#014711;box-sizing: border-box; background-color: initial;">
+                        Proudly servicing the eastern suburbs of Sydney for over 30 years</h6>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th colspan="4">
+                      <table style="vertical-align:middle; margin: 10px 0 20px;">
+                        <tr>
+                          <td style="vertical-align:middle;" width="350">
+                            <div
+                              style="box-sizing: border-box;color:#f00;margin: 0; font-size: 15px; line-height:20px; text-align: left;">
+                              Accredited Rheem Service Agents</div>
+                          </td>
+                          <td width="50"><span>
+                              <!-- <img width="50" src="{raheemlogo}" alt="images"> -->
+                              <img src="assets/images/raheem-logo.jpg" alt="images">
+                            </span></td>
+                          <td width="600"></td>
+                        </tr>
+                      </table>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody style="width: 100%;">
+                  <tr>
+                    <td colspan="4">
+                      <div style="box-sizing: border-box;width:100%;text-align: right;">
+                        <!-- <h1
+                          style="margin:0 0 20px 0;font-size:25px;text-transform:uppercase; font-weight: 600;text-align: left;">
+                          Tax Invoice No: # <span>{{ }}</span></h1> -->
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4" style="vertical-align: top;">
+                      <table style="width: 100%; vertical-align: top;">
+                        <tr>
+                          <td style="vertical-align: top; padding-right: 10px;">
+                            <div
+                              style="border: 1px solid #dfdddd; padding-left: 10px; padding-top: 10px; width: 95%; height: 140px;">
+                              <span style="margin:0; font-size: 16px;">{{ownerName}}</span>
+                              <h5 style="font-size: 14px;  margin: 0 0 10px 0;">
+                                 <span
+                                 style="margin:0; font-size: 16px;"><span *ngIf ="ownerName != null">c/o</span>
+                                  {{customerName}}</span>
+                                </h5>
+                              <h5 style="font-size: 14px;  margin: 0 0 10px 0;">
+                                <span
+                                style="margin:0; font-size: 16px;">{{customerAddress}}</span>
+                                </h5>
+                                <h5 style="font-size: 14px;  margin: 0 0 10px 0;">
+                                  <span
+                                  style="margin:0; font-size: 16px;">{{customerAddressDetail}}</span>
+                                  </h5>
+                            </div>
+                          </td>
+                          <td style="vertical-align: top; padding-left: 10px;">
+                            <div
+                              style="border: 1px solid #dfdddd; text-align: right;width: 100%; height: 140px; padding-top: 10px; padding-right: 10px;">
+                              <table style="float: right; text-align:right">
+                                <tr>
+                                  <td style="font-size:14px; text-align:right; line-height:25px; font-weight:bold;">
+                                    Invoice Date:</td>
+                                  <td style="font-size:16px; text-align:right;  line-height:25px;">
+                                    {{invoiceDate}}
+                                  </td>
+
+                                </tr>
+                                <tr>
+                                  <td style="font-size:14px; text-align:right; line-height:20px;font-weight:bold;">Job
+                                    Date:</td>
+                                  <td style="font-size:16px; text-align:right; line-height:20px;">
+                                    {{completedDate}}
+                                  </td>
+
+                                <tr>
+                                  <td style="font-size:14px; text-align:right; line-height:20px;font-weight:bold;">Ref
+                                    No:</td>
+                                  <td style="font-size:16px; text-align:right; line-height:20px;">
+                                    {{customerContactReference}}
+                                  </td>
+
+                                </tr>
+                                <tr>
+                                  <td style="font-size:14px; text-align:right; line-height:20px;font-weight:bold;">Due
+                                    Date: </td>
+                                  <td style="font-size:16px; text-align:right; line-height:25px;">{{dueDate}}</td>
+
+                                </tr>
+
+                              </table>
+
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <br>
+                      <div style="box-sizing: border-box; display: flex;">
+                        <h3 style="font-size: 16px; margin: 0; font-weight: 800;">Job Address:</h3>
+                        <p style="margin-left: 2px; font-size: 16px;">{{jobAddress}}</p>
+                      </div>
+                    </td>
+
+                  </tr>
+                  <tr style="padding-top: 50px;">
+                    <td style="vertical-align:top" colspan="4">
+                      <div style="box-sizing: border-box;">
+                        <h3 style="margin-bottom:0; font-size: 16px; font-weight: 800; ">WORK COMPLETED:</h3>
+                        <p style="margin:0; font-size: 16px; ">{{workCompleted}}</p>
+                      </div>
+                    </td>
+                  </tr>
+
+
+                  <tr>
+                    <td colspan="4" style="vertical-align:top; width:100%">
+                      <table cellpadding="5" cellspacing="0" style="width:100%;margin-top:30px">
+                        <thead style="background-color:#e8e8e8">
+                          <tr>
+                            <th width="500"
+                              style="color: #000 !important; text-align:center;font-size:14px;vertical-align:middle;text-transform:uppercase;vertical-align:top;padding:10px; white-space: nowrap;">
+                              DESCRIPTION </th>
+                            <th width="180"
+                              style="color: #000 !important; text-align:center;font-size:14px;vertical-align:middle;text-transform:uppercase;vertical-align:top;padding:10px;white-space: nowrap;">
+                              QTY</th>
+                            <th width="200"
+                              style="color: #000 !important; min-width:200px; text-align:center;font-size:14px;vertical-align:middle;text-transform:uppercase;vertical-align:top;padding:10px;white-space: nowrap;">
+                              UNIT PRICE</th>
+                            <th width="200"
+                              style="color: #000 !important; min-width:200px;text-align:center;font-size:14px;vertical-align:middle;text-transform:uppercase;vertical-align:top;padding:10px;white-space: nowrap;">
+                              TOTAL PRICE</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor ="let data of itemRecordData">
+                            <td style = "text-align: center;">{{data.JobItemDescription}}</td>
+                            <td style = "text-align: center;">{{data.Quantity}}</td>
+                            <td style = "text-align: center;">{{data.UnitPrice}}</td>
+                            <td style = "text-align: center;">{{data.TotalPrice}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">
+                      <table width="380" align="right" style="float: right; text-align:right">
+
+                        <tr>
+                          <td colspan="2">
+                            <div style="background-color: #cccccc; height: 1px; margin: 15px 0; width: 100%;">
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="font-size:14px; text-align:right;  line-height:15px;">SUBTOTAL:</td>
+                          <td style="font-size:14px; text-align:right;  line-height:15px;">${{subTotal}}</td>
+                        </tr>
+                        <tr>
+                          <td style="font-size:14px; text-align:right;  line-height:15px;">GST:</td>
+                          <td style="font-size:14px; text-align:right;  line-height:15px;">${{GST}}</td>
+                        </tr>
+                        <tr>
+                          <td style="font-size:14px; text-align:right; line-height:15px;">TOTAL:</td>
+                          <td style="font-size:14px; text-align:right; line-height:15px;">${{total}}</td>
+                        <tr>
+                          <td style="font-size:14px; text-align:right; line-height:15px;">PAID:</td>
+                          <td style="font-size:14px; text-align:right; line-height:15px;">${{paidAmount}}</td>
+
+                        </tr>
+                        <tr style="background-color:#E8E8E8;">
+                          <td
+                            style="font-size:14px; text-align:right;line-height:15px; font-weight: 600; padding: 8px 5px;">
+                            BALANCE DUE:</td>
+                          <td
+                            style="font-size:14px; text-align:right; line-height:15px;font-weight: 600; padding: 8px 5px;">
+                            ${{balanceDue}}
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div
+                style="font-family: 'Uchen', serif; box-sizing: border-box;width:100%;margin-top:30px ;padding:20px;background-color:#fff; box-sizing: border-box; border-top:1px solid #eee;">
+                <p style="box-sizing: border-box;margin:0 0 4px; font-size:15px; font-family: 'Uchen', serif;">
+                  <strong>Our Bank Acc Details:</strong>
+                </p>
+                <p
+                  style="box-sizing: border-box;margin:0 ;font-size:15px; line-height: 22px; font-family: 'Uchen', serif;">
+                  Name: Commonwealth Bank</p>
+                <p
+                  style="box-sizing: border-box;margin:0 ;font-size:15px; line-height: 22px; font-family: 'Uchen', serif;">
+                  BSB: 06 2121</p>
+                <p
+                  style="box-sizing: border-box;margin:0 ;font-size:15px; line-height: 22px; font-family: 'Uchen', serif;">
+                  Account No: 28061210</p>
+              </div>
+            </section>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn primary-btn comBtn" data-dismiss="modal"
+          (click)="closeDialog()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -32,9 +32,6 @@ public getJobList(model:JobsRequestModel):Observable<any>{
   return this.http.get(this.url+'/job?',{params})
 }
 
-// public addJobs(data:JobsModel):Observable<any>{
-//   return this.http.post(this.url+"/Job",data);
-// }
 
 public addJobOrder(data:JobModel):Observable<any>{
   return this.http.post(this.url+"/Job",data);
@@ -94,9 +91,6 @@ public jobAudit(model : JobAuditRequestModel){
   .set('JobOrderId',`${model.JobOrderId}`)
   .set('PageNo', `${model.PageNo}`)
   .set('PageSize', `${model.PageSize}`)
-  // .set('SearchValue',model.SearchValue)
-  // .set('SortColumn',model.SortColumn)
-  // .set('SortOrder',model.SortOrder);
    return this.http.get<JobCustomerRequestModel>(this.url +'/Job/AuditJobOrder?',{params});
 }
 

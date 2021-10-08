@@ -20,6 +20,8 @@ import { MoveJobComponent } from '../../../Modal/MoveJob/MoveJob.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { WarningDialogComponent } from 'src/app/SharedModules/Components/WarningDialog/WarningDialog.component';
+import { UrlService } from 'src/app/SharedModules/Services/Services/Url.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-JobsList',
@@ -27,7 +29,9 @@ import { WarningDialogComponent } from 'src/app/SharedModules/Components/Warning
   styleUrls: ['./JobsList.component.scss']
 })
 export class JobsListComponent implements OnInit {
-public message = "Job deleted successfully"
+  previousUrl: Observable<string> = this.urlService.previousUrl$;
+
+  public message = "Job deleted successfully";
   public requestModel = new JobsRequestModel();
   public result:any;
   public editjobId:any;
@@ -45,7 +49,7 @@ public message = "Job deleted successfully"
   responseData: any;
 
   constructor( private jobService:JobService,public dialog: MatDialog,
-    public snackBar:MatSnackBar,
+    public snackBar:MatSnackBar, private urlService : UrlService,
     private activeRouter:ActivatedRoute,
     private router: Router,
     private spinner: NgxSpinnerService) {}
@@ -61,6 +65,11 @@ public message = "Job deleted successfully"
       });
 
     this.getJobListData();
+    
+    this.urlService.previousUrl$.subscribe((previousUrl: string) => {
+      //console.log('previous url: ', previousUrl);
+    });
+
   }
 
   

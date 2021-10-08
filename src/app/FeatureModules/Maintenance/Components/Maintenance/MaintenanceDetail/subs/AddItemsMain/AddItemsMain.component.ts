@@ -47,14 +47,6 @@ export class AddItemsMainComponent implements OnInit {
     }   
 }
 
-// public empty(val: any){
-//   if (val.length === 0)
-//   {
-//      this.requestModel.SearchValue = '';
-//      this.setRequesetParams();
-//   }
-// }
-
 public sortData(sort: Sort): void {
 
   this.requestModel.SortColumn = sort.active;
@@ -122,22 +114,33 @@ public  getItemList(): void{
   });
 }
 
+
  public addItemModal(){
     const dialogRef = this.dialog.open(PriceMaintenanceComponent, {
       width: '960px', disableClose: true
     });
+    
     dialogRef.afterClosed().subscribe(() =>{
       this.setRequesetParams()
     });
   }
 
   // On Edit Item 
-  public onEditItem(input){
-    
+  public onEditItem(input){  
     const dataList = this.dataList;
-    this.dialog.open(PriceMaintenanceComponent, {
+    const dialogRef = this.dialog.open(PriceMaintenanceComponent, {
       width: '840px', disableClose: true,
       data: {input, dataList},
+    });
+   
+    dialogRef.afterClosed().subscribe(result => {
+      
+      if(!result){
+        this.setRequesetParams();
+      }else{
+        return
+      }
+      
     });
   }
 

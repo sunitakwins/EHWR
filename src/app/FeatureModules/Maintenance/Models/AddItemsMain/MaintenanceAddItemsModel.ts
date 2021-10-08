@@ -1,8 +1,8 @@
 export class MaintenanceAddItemsModel {
   itemType: number;
   // customerType: number;
-  accountId: number;
-  supplierId: number;
+  // accountId: number;
+  // supplierId: number;
   itemParts: number;
   itemName: string;
   itemDescription: string;
@@ -20,8 +20,8 @@ export class ItemPriceDetails{
 export class MaintenanceEditItemsModel{
  itemId: number;
  itemType: number;
- accountId: number;
- supplierId: number;
+//  accountId: number;
+//  supplierId: number;
  itemParts: number;
  itemName:string;
  itemDescription:string;

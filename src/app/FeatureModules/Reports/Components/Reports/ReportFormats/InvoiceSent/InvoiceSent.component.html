@@ -62,43 +62,46 @@
             <div class="row">
               <div class="col-sm-12">
                   <div class="table-responsive ">
-                    <table  class="table tableBodyScroll" id ="invoiceSentData">
+                    <table  class="table tableBodyScroll" >
                       <thead>
-                        <tr *ngFor ="let res of displayData">
-                          <th>{{res.column1}}</th>
-                          <th>{{res.column2}}</th>
-                          <th>{{res.column3}}</th>
-                          <th>{{res.column4}}</th>
-                          <th>{{res.column5}}</th>
-                          <th>{{res.column6}}</th>
-                          <th>{{res.column7}}</th>
-                          <th>{{res.column8}}</th>
-                          <!-- <th>{{res.column9}}</th>  -->
+                        <tr>
+                          <th>Page no.</th>
+                          <th>Invoice</th>
+                          <th>Customer</th>
+                          <th>Job Date</th>
+                          <th>Date Due</th>
+                          <th>Amount</th>
+                          <th>Date Paid</th>
+                          <th>Amount Paid</th>
+                          
                         </tr>
                       </thead>
                       <tbody class="boxscroll">
                         <tr *ngFor="let data of invoiceSentArray">
                           <td>{{data.pageNo}}</td>
-                          <td>{{data.invoiceId}}</td>
+                          <td>#{{data.jobOrderId}}</td>
                           <td>{{data.customerName}} <br> {{data.customerAddress}}</td>
-                          <td>{{data.completedDate | date: 'dd/MM/yyyy'}}</td>
-                          <td>{{data.dueDate | date: 'dd/MM/yyyy'}}</td>
+                          <td>{{(data.completedDate > '0001-01-01T00:00:00') ? (data.completedDate | date: 'dd/MM/yyyy') : ''}}</td>
+                          <td>{{ (data.dueDate > '0001-01-01T00:00:00') ? (data.dueDate | date: 'dd/MM/yyyy') : ''}}</td>
                           <td>{{data.amountInvoice}}</td>
-                          <td>{{data.paymentDate | date: 'dd/MM/yyyy'}}</td>
+                          <td>{{(data.paymentDate > '0001-01-01T00:00:00') ? (data.paymentDate | date: 'dd/MM/yyyy') : ''}}</td>
                           <td>{{data.amountPayment}}</td>
                         </tr>
                           
                         <tr *ngFor="let data of invoiceSentArray; let i = index" >
                           <div *ngIf ="i ===0">
-                            <td colspan="5"><strong>Total Records:{{data.totalRows}}</strong></td> 
+                            <td colspan="1" style="border-top: 1px solid #ccc; text-align: left;"><strong>Total Records:</strong></td> 
+                            <td colspan="1" style="border-top: 1px solid #ccc; text-align: left;"><strong>{{data.totalRows}}</strong></td> 
+                            <td colspan="3" style="border-top: 1px solid #ccc; text-align: left;"><strong></strong></td>
+                            <td colspan="3" style="border-top: 1px solid #ccc; text-align: left;"><strong>$$</strong></td> 
+                            <td colspan="3" style="border-top: 1px solid #ccc; text-align: left;"><strong></strong></td> 
+                            <td colspan="3" style="border-top: 1px solid #ccc; text-align: left;"><strong>###</strong></td>  
+                            <!-- <td colspan="1" style="border-top: 1px solid #ccc; text-align: left;"><strong></strong></td>   -->
                           </div>
                         </tr>
                       </tbody>
                     </table>
                     <br>
-                    <div *ngIf="noFoundData" class="col-sm-12 col-md-12 text-center noDataFound">
-                      <b>No record found</b>
-                    </div>
                   </div>
               </div>
             </div>
@@ -108,3 +111,33 @@
     </div>
   </div>
 </section>
+<!-- ================== Excel Data ======================================== -->
+<table  class="table tableBodyScroll d-none" id ="invoiceSentData">
+  <thead>
+    <tr >
+      <th>Page no.</th>
+      <th>Invoice</th>
+      <th>Customer</th>
+      <th>Job Date</th>
+      <th>Date Due</th>
+      <th>Amount</th>
+      <th>Date Paid</th>
+      <th>Amount Paid</th>
+      <th>Total</th> 
+    </tr>
+  </thead>
+  <tbody class="boxscroll">
+    <tr *ngFor="let data of invoiceSentArray">
+      <td>{{data.pageNo}}</td>
+      <td>{{data.jobOrderId}}</td>
+      <td>{{data.customerName}} <br> {{data.customerAddress}}</td>
+      <td>{{(data.completedDate > '0001-01-01T00:00:00') ? (data.completedDate | date: 'dd/MM/yyyy') : ''}}</td>
+      <td>{{ (data.dueDate > '0001-01-01T00:00:00') ? (data.dueDate | date: 'dd/MM/yyyy') : ''}}</td>
+      <td>{{data.amountInvoice}}</td>
+      <td>{{(data.paymentDate > '0001-01-01T00:00:00') ? (data.paymentDate | date: 'dd/MM/yyyy') : ''}}</td>
+      <td>{{data.amountPayment}}</td>
+      <td>{{data.totalRows}}</td>
+    </tr>
+      
+  </tbody>
+</table>

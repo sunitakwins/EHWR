@@ -3,6 +3,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router, RouterEvent } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
 import { InvoicesOutstandingModel } from '../../Models/Payments/Payments.model';
@@ -22,12 +23,13 @@ export class StripePaymentModalComponent implements OnInit {
   AmountInvoice: number;
 
   public stripeForm: FormGroup;
+  jobOrderId: any;
 
   constructor(
 
     public dialogRef: MatDialogRef<StripePaymentModalComponent>, private spinner: NgxSpinnerService,
     private dialog: MatDialog, private fb: FormBuilder, private paymentService : PaymentService,
-     public snackBar: MatSnackBar, 
+     public snackBar: MatSnackBar, private router : Router,
     //  private decimalPipe: DecimalPipe,
 
     @Inject(MAT_DIALOG_DATA) public data: any) 
@@ -57,12 +59,14 @@ export class StripePaymentModalComponent implements OnInit {
         paymentId = payment[0];
         paymentMethodName = payment[1];
 
-        this.invoiceId =  this.data.InvoiceId;
+        // this.invoiceId =  this.data.InvoiceId;
+        this.jobOrderId = this.data.jobOrderId;
         this.AmountInvoice = 
         this.data.PaymentForm.value.amount.toFixed(2);
       }
       if(this.data.invoiceData){
         this.invoiceId =  this.data.invoiceData.invoiceId;
+        this.jobOrderId = this.data.invoiceData.jobOrderId;
         this.AmountInvoice = 
         this.data.invoiceData.amountPayment.toFixed(2);
 
@@ -105,7 +109,7 @@ export class StripePaymentModalComponent implements OnInit {
         this.payInvoiceMethod(params);
         
       }
-
+       
       if(this.data.invoiceData){
         let params: InvoicesOutstandingModel = {
           "customerId": this.data.CusId ? this.data.CusId : this.data.invoiceData.customerId,
@@ -124,44 +128,27 @@ export class StripePaymentModalComponent implements OnInit {
         }; 
         this.payInvoiceMethod(params);
       }
-    
-    //  let methodRefNo = this.data.PaymentForm.value.methodRef ? this.data.PaymentForm.value.methodRef: null;
-      // const params: InvoicesOutstandingModel = {
-      //   "customerId": this.data.CusId ? this.data.CusId : this.data.invoiceData.customerId,
-      //   "invoiceId": this.data.InvoiceId ? Number(this.data.InvoiceId) :  this.invoiceId,
-      //   "jobOrderId": Number(this.data.JobId)? this.data.JobId : this.data.invoiceData.jobOrderId ,
-      //   "methodPayId": mehtodPayId  > 0 ? Number(mehtodPayId) : null,
-      //   "methodPayName" :paymentMethodName ?paymentMethodName : this.data.invoiceData.methodPayName,
-      //   "methodRefrenceNumberPayment": null,
-      //   // methodRefNo > 0 ? Number(methodRefNo > 0) : null,
-      //   "paymentDate": new Date(),
-      //   "amountPayment": this.data.invoiceData.amountPayment ? this.data.invoiceData.amountPayment : this.data.PaymentForm.value.amount ,
-      //   "cardNumber" :this.stripeForm.value.cardNumber,
-      //   "cvv": this.stripeForm.value.cvv,
-      //   "month": Number(expiryMonth) ,
-      //   "year": Number(expiryYear),
-      //   "createdBy": "Micheal"
-      // }; 
-      // console.log(params);
-      // this.spinner.show();
-
-    // }else{
-    //   const controls = this.stripeForm.controls
-    //   Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
-    //   return false;
-    // }
   }
 
   // post api call function
    payInvoiceMethod(params : any){
     this.spinner.show();
+
     this.paymentService.addPayment(params).subscribe((res)=>{
-      // console.log(res);
       this.messages(res.responseMessage);
+      
+      if(this.router.url.includes("sm73.link/"))
+      {
+        this.dialogRef.close(true);
+        window.open("https://gmail.com");
+      } else {
+        this.dialogRef.close(true);
+      }
+
       setTimeout(() => {
       this.spinner.hide();
        }, 500);
-       this.dialogRef.close(true);
+      
   },error =>{
     setTimeout(() => {
       this.spinner.hide();

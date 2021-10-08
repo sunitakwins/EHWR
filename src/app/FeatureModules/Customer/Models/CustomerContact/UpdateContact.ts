@@ -1,6 +1,6 @@
 export class UpdateContact{
     "customerContactId": number;
-    // "salutation": number;
+    "customerId" : number;
     "firstName": string;
     "lastName":string;
     "defaultEmail": boolean;

@@ -147,16 +147,6 @@ export class PaymentsComponent implements OnInit, OnChanges {
 
   }
 
-
-  //======== Patch date in Payment Form 
-  // patchDate(){
-
-  //   this.paymentForm.patchValue({
-  //     paymentDate : _moment(),
-  //   });
-  // }
-
-
   //=======fetching Customer Id from job Id
   public getCustomerId() {
     this.jobRequestModel.JobOrderId = this.jobId ? this.jobId : 0;
@@ -255,7 +245,6 @@ export class PaymentsComponent implements OnInit, OnChanges {
       else {
         this.noFoundData = true;
       }
-      //  this.paymentForm.reset();
     }, error => {
 
     })
@@ -269,6 +258,12 @@ export class PaymentsComponent implements OnInit, OnChanges {
     }
     this.paymentService.getPaymentMethod(queryParams).subscribe(res => {
       this.paymentMethod = res;
+      function RemoveElementFromObjectArray(key: number) {
+        res.forEach((value, index) => {
+          if (value.globalCodeId == key) res.splice(index, 1);
+        });
+      }
+      RemoveElementFromObjectArray(30);
     }, error => {
       console.log(error);
     })
@@ -283,8 +278,6 @@ export class PaymentsComponent implements OnInit, OnChanges {
       Id: input['paymentId'],
       DeletedBy: 'Micheal'
     }
-    // console.log(data);
-
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       width: '350px',
       data: "Are you sure you want to delete this payment?"
@@ -301,7 +294,7 @@ export class PaymentsComponent implements OnInit, OnChanges {
 
         this.spinner.show();
         this.paymentService.deletePayment(data).subscribe(res => {
-          // console.log(res['responseMessage']);
+          
           this.messages(res['responseMessage']);
           this.invoiceId = input['invoiceId'];
 
@@ -313,7 +306,6 @@ export class PaymentsComponent implements OnInit, OnChanges {
             paymentId: [''],
             methodRef: [''],
           });
-          // this.patchDate();
           setTimeout(() => {
             this.spinner.hide();
           }, 500);
@@ -324,12 +316,12 @@ export class PaymentsComponent implements OnInit, OnChanges {
           }, 500);
         })
       } else {
-        // this.patchDate();
+        
       }
     });
   }
 
-  // delete contact
+  
   public messages(message) {
     this.openSnackBar(message, 'hello');
   }

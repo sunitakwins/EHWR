@@ -137,6 +137,7 @@ export class ReportsService {
     .set('CustomerId', `${param.CustomerId}`)
     .set('StartDate', `${param.StartDate}`)
     .set('EndDate',`${param.EndDate}`)
+    .set('SendStatement',`${param.SendStatement}`)
     return this.http.get(this.url+ '/Reports/InvoiceStatement?',{params})
   }
 

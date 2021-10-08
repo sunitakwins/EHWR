@@ -22,6 +22,7 @@ export class InvoiceOverDueComponent implements OnInit {
     grandTotalOfAmountDue: '',
     grandTotalOfAmountPaid: '',
     invoiceDetails: [{
+      JobOrderId: '',
       InvoiceId: '',
       PageNo: '',
       CustomerName: '',
@@ -46,10 +47,10 @@ export class InvoiceOverDueComponent implements OnInit {
 
   // get Data from api
   getInvoiceOverDueData() {
-   
+  
     this.invoiceOverDueList;
     this.dataArray = [];
-     debugger
+     
     this.invoiceOverDueList.forEach(data => {
       let objData = {
         days: data.dueGroup,

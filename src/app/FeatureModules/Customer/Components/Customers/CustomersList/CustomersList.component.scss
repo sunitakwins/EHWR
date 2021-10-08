@@ -1,3 +1,8 @@
 table {
     width: 100%;
 }
+
+.mat-column-merge { 
+    flex: 0 0 12% !important;
+    width: 12% !important;
+}

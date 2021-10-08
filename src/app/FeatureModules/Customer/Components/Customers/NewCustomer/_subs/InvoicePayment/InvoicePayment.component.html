@@ -1,0 +1,265 @@
+<section>
+  <div class="container  pt-3">
+    <div class="row">
+      <div class="col-md-7 d-flex align-items-center justify-content-end" *ngIf ="invoiceId > 0" >
+        <h2 class ="jobId text-center justify-content-center font-weight-normal"
+        >Invoice no. <span># {{jobId ? jobId : JobId}} </span>&nbsp;For &nbsp;<span>${{invoiceAmount}}</span></h2>
+      </div>
+      
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-7">
+         <div class="row">
+             <div class="col-md-6">
+                <p class="font15">Current Status : <span> {{currentStatus}}</span></p>
+                <p class="font15"> Payment Status :<span> {{paymentStatus}} </span></p>
+                <p class="font15"> Date Due :<span> {{dueDate | date :'dd-MM-yyyy'}}</span></p> 
+                <p class="font15"> Amount Due :<span *ngIf ="amountDue != null"> ${{amountDue}}</span></p> 
+             </div>
+             <div class="col-md-6 d-flex align-items-end">
+              
+              <p class="font15">Days OverDue :<span> {{daysOverdue}}</span></p> 
+             </div>
+         </div>
+         <div class="row mt-2">
+           <div class="col-md-12">
+             <h3 class="font18"style ="text-decoration: underline; color: rgb(233, 52, 52);">
+              <strong >Payments</strong></h3>
+             <mat-card>
+              <div class="table-responsive-sm">
+              <table class="table table-bordered">
+                <thead>
+                  <th style ="color: rgb(233, 52, 52);">Date</th>
+                  <th style ="color: rgb(233, 52, 52);">Amount</th>
+                  <th style ="color: rgb(233, 52, 52);">Payment Type</th>
+                  <th style ="color: rgb(233, 52, 52);"> Action</th>
+                </thead>
+                <tbody>
+                 <tr *ngFor ="let payment of paidPaymentArray">
+                   <td>{{payment.paymentDate | date: 'dd-MM-yyyy'}}</td>
+                   <td>${{payment.amountPayment}}</td>
+                   <td>{{payment.paymentMethod}}</td>
+                   <td>
+                    <button mat-button matTooltip="Delete" color="warn" (click)="openDeleteDialog(1, payment.paymentId )">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                   </td>
+                 </tr>
+                </tbody>
+              </table>
+              <div *ngIf="notRecordFound" class="text-center noDataFound">No record found</div>
+              </div>
+             </mat-card>
+           </div>
+         </div>
+      </div>
+      <div class="col-md-5 ">
+         <p class="greenColor font18 text-center" style ="text-decoration :underline"><strong>Invoice Audit Trail :</strong></p>
+          <div class="px-4">
+            <p class="greenColor font18">Date Invoice Created : <span>{{dateInvoiceCreated | date: 'dd-MM-yyyy'}}</span> </p>
+            <p class="greenColor font18">Date Invoice Sent : <span>{{dateInvoiceSent | date: 'dd-MM-yyyy'}}</span> </p>
+            <p class="greenColor font18 ">Invoice To : <span>{{invoicedTo}}</span> </p>
+            <p class="greenColor font18 ">Date Resent :
+                <span class=" d-block mt-1 ml-5" *ngFor ="let date of dateResent">
+                  {{date.InvoiceResentDate  | date: 'dd-MM-yyyy'}} <br>
+                  <!-- <span class="d-block"></span> -->
+                  <!-- <span class="d-block mt-1"></span>  -->
+                  <!-- <span class="d-block mt-1">{{date.InvoiceResentDate  | date: 'dd-MM-yyyy'}} </span> -->
+                </span>
+            </p>
+
+          </div>
+          <div class ="float-right ">
+            <button class="btn primary-btn comBtn px-4 py-2" (click)="openDeleteDialog(3, invoiceId)"  >Delete Invoice</button>
+          </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-10 mb-3">
+        <button class="btn primary-btn comBtn mr-3" (click) ="resendInvoice()">Resend Invoice</button>
+        <!-- <button class="btn primary-btn comBtn mr-3" (click) ="downloadInvoice()"  >Download Invoice</button> -->
+        <button class="btn primary-btn comBtn mr-3" (click) ="viewInvoice()" >View Invoice</button>
+        <button class="btn primary-btn comBtn mr-3"(click) ="addPayments()"  >Add Payments</button>
+        <button class="btn primary-btn comBtn mr-3" (click)="openNotesDialog()" >Add Notes</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-9">
+        <mat-card>
+            <table class="table notesTable">
+              <thead>
+                <tr>
+                <th>Date</th>
+                <th> Notes</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+                 <tr *ngFor = "let note of noteDataSource">
+                   <td>{{note.date | date: 'dd-MM-yyyy'}}</td>
+                   <td>{{note.notes}}</td>
+                   <td>
+                    <button mat-button matTooltip="Delete" color="warn" (click)="openDeleteDialog(2, note)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                   </td>
+                 </tr>
+              </tbody>
+            </table>
+            <div *ngIf="notFoundData" class="text-center noDataFound">No record found</div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-spin-clockwise" [fullScreen]="true">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>
+
+<!-- ==================== View Invoice ========================================================== -->
+<section class="taxInvoice ViewInvoice d-none" id="printDivView"  [class.show]="show" *ngIf ="newArr" >
+  <div class="printTableWrapper">
+    <table cellpadding="0" cellspacing="0"> 
+      <thead  class = "page-break" *ngFor="let printData of newArr; let i = index;">
+        <tr>
+          <th>
+            <div class="tiWrapper">
+              <div class="tiLeftCol">
+                <h5>Emergency Hot Water Repairs (Kingsford) Pty. Ltd.</h5>
+                <div class="tiLeftInnerWrap">
+                  <div class="tiLogo"><img src="/ehwr/assets/images/tax-invoice-logo.jpg" alt="images"></div>
+                  <div class="tiContentWrap">
+                    <div class="tiContent">
+                      <p>87 Bunnerong Rd. Kingsford, NSW, 2032</p>
+                      <p class="redColor">Ph: 02 9344 6602 Fax: 02 9344 9529</p>
+                      <p>Bondi: Cnr Curlewis & Old South Head Rd,</p>
+                      <p>Bondi: 2026</p>
+                      <p class="redColor">Ph: 02 9365 4533</p>
+                      <p>ewhr@bigpond.com</p>
+                      <p>www.emergencyhotwaterrepairs.com.au</p>
+                      <p>ABN: 78 003 998 329 Lic No. 284905c</p>
+                    </div>
+                    <div class="tiPriceMatch"><img src="/ehwr/assets/images/price-match.jpg" alt="images"></div>
+                  </div>
+                </div>
+                <h6>Proudly servicing the eastern suburbs of Sydney for over 30 years</h6>
+              </div>
+                      
+            </div>            
+          </th>
+          <th class="alignRightText">
+            <div class="tiRighttCol">
+              <img src="/ehwr/assets/images/micky-images.jpg" alt="images">
+              <p class="redColor">Don't Be A Bunny, <br>Don't Run Out Of Hot Water</p>
+            </div>	
+          </th>
+        </tr>
+        <tr>
+          <th colspan="2" align="left" valign="center"><div class="redColor mdText"><span>Accredited Rheem Service Agents</span><img src="/ehwr/assets/images/raheem-logo.jpg" alt="images"></div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="2">
+            <div class="tableBodyContent">
+              <div class="tbLeftCol">
+                <div class="dateWrapper">
+                  <div>
+                    <strong>Job Date  : </strong>{{completedDate }}
+                  </div>
+                </div>
+                <div class="addressWrapper">
+                  <p><strong>Accounts Payable:</strong></p>
+                  <p><strong>
+                    <p >{{customerName}}</p>
+                    <p>{{customerAddress}}</p>
+                  </strong></p>
+                </div>
+                <div class ="addressWrapper" *ngIf ="customerContactReference > -1">
+                  <strong>Customer ref no. :</strong> &nbsp; {{customerContactReference}}
+                </div>
+              </div>
+              <div class="tbRightCol">						
+                <div class="invoiveIdWrapper">
+                  <h1>Tax Invoice</h1>
+                  <p>Tax Invoice #{{jobId}}</p>
+                  <p>{{dueDate | date: 'dd/MM/yyyy'}}</p>
+                  <!-- <p>{{completedDate | date: 'dd/MM/yyyy' }}</p> -->
+                </div>
+                <div class="jobAddressWrapper">
+                  <p class="textJustify"><strong>Job Address:   </strong>
+                    <span style ="margin-left: 5px;">{{jobAddress}} </span></p>
+
+                  <p><strong>Job Done By: </strong>
+                    <span style ="margin-left: 5px;" *ngFor ="let emp of employeeNames">
+                      {{emp.EmployeeName}} </span></p>
+                  <p><strong>Payment Type:  </strong><span> {{paymentMethod}}</span></p>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        
+        <tr>
+          <td colspan="2">
+            <div class="workComplete">
+              <p><strong>Work Completed :</strong></p>
+              <!-- <p>2012 50L compact leaking from element and relief would replace tank because of its age.</p> -->
+              <p>{{workCompleted}}</p>
+            </div>  <br>
+          </td>
+        </tr>
+      
+        
+        <tr>
+          <td colspan="2">
+            <div class="table-responsive">			
+             <table class="taxInvoiceTable" cellpadding="0" cellspacing="0"> 
+              <thead>
+                <tr>
+                  <th>DESCRIPTION </th>
+                  <th>QTY</th>
+                  <th>UNIT PRICE</th>
+                  <!-- <th>TAX AMOUNT</th> -->
+                  <th>TOTAL PRICE</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of itemRecordData; let i = index;">
+                  <td>{{data.JobItemDescription}} </td>
+                  <td>{{data.Quantity}}</td>
+                  <td>${{data.UnitPrice}}</td>
+                  <!-- <td>${{data.GST}}</td> -->
+                  <td>${{data.TotalPrice}}</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td colspan="4">
+                    <ul class="amountTotal">
+                      <li><strong>SUBTOTAL:</strong> <span>${{subTotal}}</span></li>
+                      <li><strong>GST:</strong> <span>${{GST}}</span></li>
+                      <li><strong>TOTAL:</strong> <span>${{total}}</span></li>
+                      <li><strong>PAID:</strong> <span>${{paidAmount}}</span></li>
+                      <li class="dueBalance"><strong>BALANCE DUE:</strong> <span>${{balanceDue}}</span></li>
+                    </ul>
+                  </td>
+                </tr>
+              </tbody>
+             </table>		
+            </div>		
+          </td>
+        </tr>		
+      </tbody>
+      </table>
+     
+      <div class="banlDetails">
+      <p><strong>Our Bank Account Details:</strong></p>
+      <p>Name: Commonwealth Bank</p>
+      <p>BSB: 06 2121</p>
+      <p>Account No: 28061210</p>
+      </div>
+  </div>
+ 
+
+</section>

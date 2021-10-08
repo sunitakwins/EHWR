@@ -12,7 +12,7 @@
                 <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
                 <mat-datepicker  #fromDate></mat-datepicker>
               </div>
-              <div class="help-block" *ngIf="JobTypePrintForm.get('from').invalid && JobTypePrintForm.get('from').touched">
+              <div class="help-block" *ngIf="JobTypePrintForm.get('to').invalid && JobTypePrintForm.get('to').touched">
                 <p class="mt-4 ml-3 mb-1">Select date</p>
               </div>
             </div>
@@ -62,7 +62,7 @@
             <div class="row">
               <div class="col-sm-12">
                   <div class="table-responsive ">
-                    <table  class="table tableBodyScroll1" id ="InvoiceNotPaidData">
+                    <table  class="table tableBodyScroll1" id ="InvoiceNotPaidData" >
                       <thead>
                         <tr *ngFor = "let res of displayData">
                           <th>{{res.column1}}</th>
@@ -79,7 +79,7 @@
                       <tbody class="boxscroll">
                         <tr *ngFor="let data of printData; let i = index">
                           <td>{{data.page}}</td>
-                          <td>{{data.invoice}}</td>
+                          <td>{{data.jobOrderId}}</td>
                           <td>{{data.customerName}}</td>
                           <!-- *ngIf = "data.jobDate == '0001-01-01T00:00:00' ? null : data.jobDate" -->
                           <td >
@@ -98,8 +98,8 @@
                   </div>   
               </div>
             </div>
-            <div *ngIf="noDatafound" class="text-center noDataFound">
-              <b>No record found</b>
+            <div *ngIf="noDatafound" class="text-center noDataFound" >
+              <b style ="text-align: center;">No record found</b>
             </div>
         </div>
       </header>

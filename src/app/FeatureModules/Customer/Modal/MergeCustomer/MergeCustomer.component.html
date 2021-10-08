@@ -1,0 +1,48 @@
+<div class="modal fade" id="moveJob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog mergeCus mx-auto" role="document">
+    <form [formGroup]="mergeForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Merge Customers</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="justify-center">
+            <span>Merging 2 Customers together</span><br>
+            <span>Job history, Customer dairy entries and contact details will be </span> <br>
+            <span>merged into the selected company below.</span>
+            <div>
+              <label>Merge From</label>
+              <select class="form-control" formControlName="fromCustomerId"
+              (change)="onSelectCompleteStatus($event.target.value)">
+                <option *ngFor ="let customer of customerDataArr" [value] ="customer.customerId">
+                  {{customer.customerName}}
+                </option>
+              </select>
+            </div>
+
+            <!-- <div>
+              <label>Merge Into</label>
+              <select class="form-control" formControlName="toCustomerId"
+              (change)="onSelectCompleteStatus($event.target.value)">
+                <option *ngFor ="let customer of customerDataArr" [value] ="customer.customerId">
+                  {{customer.customerName}}
+                </option>
+              </select>
+            </div> -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn primary-btn comBtn" data-dismiss="modal" disabled (click)="onMergingCustomer()">
+            <span>Merge</span>
+          </button>
+          <button type="button" class="btn primary-btn comBtn" data-dismiss="modal" (click)="closeDialog()">
+            <span>Cancel</span>
+          </button>
+        </div>
+      </div>
+    </form>  
+  </div>
+</div>

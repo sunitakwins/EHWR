@@ -12,11 +12,14 @@ import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-Snack
 import { WarningDialogComponent } from 'src/app/SharedModules/Components/WarningDialog/WarningDialog.component';
 import { DataService } from 'src/app/SharedModules/Services/Services/Data.service';
 import { LocalStorageService } from 'src/app/SharedModules/Services/Services/LocalStorage.service';
+import { PreviewInvoiceModalComponent } from '../../../Modal/PreviewInvoiceModal/PreviewInvoiceModal.component';
 import { CustomerRequestModel } from '../../../Models/Customer/CustomerRequestModel';
+import { InvoiceRequestModel } from '../../../Models/Invoice/Invoice/InvoiceRequest.model';
 import { ItemsModel, PutJobItemsRequestModel } from '../../../Models/Items/Items';
 import { ItemSourceRequestModel, ItemsRequestModel } from '../../../Models/Items/ItemsRequestModel';
 import { JobsRequestModel } from '../../../Models/Jobs/JobsRequest.model';
 import { CustomerService } from '../../../Services/CustomerServices/Customer.service';
+import { InvoiceService } from '../../../Services/InvoiceService/Invoice.service';
 import { ItemService } from '../../../Services/ItemService/Item.service';
 import { JobService } from '../../../Services/JobService/Job.service';
 
@@ -68,6 +71,7 @@ export class AddItemsComponent implements OnInit {
   public jobRequestModel = new JobsRequestModel();
   public putJobItemsRequestModel = new PutJobItemsRequestModel()
   public customerRequestModel = new CustomerRequestModel();
+  requestModel = new InvoiceRequestModel();
 
   public updateForm: boolean = false;
   displayedColumns: string[] = ['itemName', 'unitPrice', 'quantity', 'totalPrice', 'action'];
@@ -76,7 +80,11 @@ export class AddItemsComponent implements OnInit {
 
   addItemsForm: FormGroup;
   itemName: any;
-  constructor(private route: ActivatedRoute,
+  invoiceId: any;
+
+  constructor(
+    private route: ActivatedRoute,
+    private invoiceService: InvoiceService,
     private itemService: ItemService, private jobService: JobService,
     private fb: FormBuilder, public dialog: MatDialog,
     public snackBar: MatSnackBar, private router: Router,
@@ -153,40 +161,127 @@ export class AddItemsComponent implements OnInit {
     this.router.navigate(["customer", "AddJobs", this.cusId]);
   }
 
-
-  public onGetJobDetail(val) {
+  // sunita
+  public onGetJobDetail() {
 
     this.jobRequestModel.JobOrderId = this.id;
-
     if (this.id === undefined) {
-      this.createInvoiceMessage();
+      this.createJobMessage();
     } else {
-      this.jobService.getJobList(this.jobRequestModel).subscribe(res => {
-        // ========================================
+      if (this.allItems.length > 0) {
+        this.jobService.getJobList(this.jobRequestModel).subscribe(res => {
+          if (res[0].statusId === 13) {
+            
+            if (res[0].invoiceId <= 0) {
+              const dialogRef = this.dialog.open(PreviewInvoiceModalComponent, {
+                width: '350px',
+                data: this.id
+              });
 
-        if (this.allItems.length > 0) {
-          if (val === 1) {
-            if (res[0].statusId === 13) {
-              this.sendJobIdToInvoiceValue.emit(this.id);
-            } else {
-              this.statusMessage();
+              dialogRef.afterClosed().subscribe(result => {
+                this.spinner.show();
+                if (result) {
+                  this.createInvoice();
+                  setTimeout(() => {
+                    this.spinner.hide();
+                  }, 3000);
+                } else {
+                  setTimeout(() => {
+                    this.spinner.hide();
+                  }, 100);
+                }
+             
+              })
+            } else{
+              this.invoiceExistMessage();
             }
           } else {
-            if (res[0].statusId === 13) {
-              this.sendJobIdToInvoiceValue.emit(this.id);
-            } else {
-              this.statusMessage();
-            }
+            this.statusMessage();
           }
-        } else {
-          this.addItemMessage();
-        }
-      }, error => {
-
-      });
-
+         }, error => {
+        });
+      } else {
+        this.addItemMessage();
+      }
     }
   }
+
+
+  createInvoice() {
+    this.requestModel.JobOrderId = this.id;
+    this.requestModel.CustomerId = this.cusId;
+    this.invoiceService.getInvoiceList(this.requestModel).subscribe(res => {
+      const dueDate = new Date(res[0].dueDate);
+      let params = {
+        joborderId: Number(this.id),
+        customerId: this.cusId,
+        tickIfInvoiceNotRequired: false,
+        invoiceTo: res[0].ownerName,
+        dueDate: dueDate,
+        amountInvoice: res[0].amount,
+        createdBy: 'Michael'
+      }
+      this.invoiceService.saveCustomerInvoice(params).subscribe(res => {
+        let msg = res.responseMessage;
+        this.invoiceId = res.keyId; 
+         this.messages(msg);
+        this.sendJobIdToInvoiceValue.emit(this.id);
+        
+        let emailMsg = JSON.parse(res.email);
+        if(emailMsg[0].Email != null){
+          let msg = "Invoice has been sent through email.";
+          setTimeout(() => {
+            this.messages(msg);
+          }, 700);
+        }
+        setTimeout(() => {
+          this.spinner.hide()
+        }, 3500);
+      },error =>{
+        setTimeout(() => {
+          this.spinner.hide()
+        }, 500);
+      });
+    },error =>{
+      setTimeout(() => {
+        this.spinner.hide()
+      }, 500);
+    });
+  }
+
+
+  // public onGetJobDetail(val) {
+  //   this.jobRequestModel.JobOrderId = this.id;
+
+  //   if (this.id === undefined) {
+  //     this.createInvoiceMessage();
+  //   } else {
+  //     this.jobService.getJobList(this.jobRequestModel).subscribe(res => {
+  //       // ========================================
+
+  //       if (this.allItems.length > 0) {
+  //         if (val === 1) {
+  //           if (res[0].statusId === 13) {
+  //             this.sendJobIdToInvoiceValue.emit(this.id);
+  //           } else {
+  //             this.statusMessage();
+  //           }
+  //         } else {
+  //           if (res[0].statusId === 13) {
+  //             this.sendJobIdToInvoiceValue.emit(this.id);
+  //           } else {
+  //             this.statusMessage();
+  //           }
+  //         }
+  //       } else {
+  //         this.addItemMessage();
+  //       }
+  //     }, error => {
+
+  //     });
+
+  //   }
+  // }
 
   public onGetItemDetail() {
     if (this.id !== undefined) {
@@ -550,69 +645,6 @@ export class AddItemsComponent implements OnInit {
     }
   }
 
-  // add items ===================
-  // public onSubmit() {
-  //   if (this.invoiceStatus == true) {
-  //     this.dialog.open(WarningDialogComponent, {
-  //       width: '350px',
-  //       data: "This job has already been Invoiced. Item cannot be added." 
-  //     });
-  //   } else {
-  //     if (this.putJobItemsRequestModel.jobOrderItemId > 0) {
-  //       this.updateAddItems();
-  //     }
-  //     else {
-  //       const itemId = this.addItemsForm.value.itemId.itemId ? this.addItemsForm.value.itemId.itemid : 1;
-  //       if(itemId == undefined){
-  //         
-  //         this.dialog.open(WarningDialogComponent, {
-  //           width: '350px',
-  //           data: "This item is not availble. Please choose the item from the list." 
-  //         }); 
-  //       }else{
-  //         const requestParams: ItemsModel = {
-  //           "jobOrderId": Number(this.id),
-  //           "itemType": Number(this.addItemsForm.value.itemType),
-  //           "itemId": itemId ? itemId : 1,
-  //           "itemName" : this.addItemsForm.value.itemId.itemName ? this.addItemsForm.value.itemId.itemName :this.addItemsForm.value.itemId ,
-  //           "jobItemDescription": this.addItemsForm.value.jobItemDescription,
-  //           "unitPrice": this.addItemsForm.value.unitPrice,
-  //           "quantity": this.addItemsForm.value.quantity,
-  //           "createdBy": 'Michael'
-  //         }
-  //         if (this.addItemsForm.valid) {
-
-  //           this.spinner.show();
-  //           this.itemService.addItems(requestParams).subscribe(res => {
-
-  //             this.messages(res.responseMessage);
-  //             this.getJobOrderItems();
-  //             this.addItemsForm.reset();
-  //             this.addItemsForm.patchValue({
-  //               itemType: '14'
-  //             });
-  //             this.onChangeItemSource('14');
-  //             this.totalPrice = null;
-  //             setTimeout(() => {
-  //               this.spinner.hide();
-  //             }, 500);
-  //           }, error => {
-
-  //             setTimeout(() => {
-  //               this.spinner.hide();
-  //             }, 200);
-  //           })
-  //         } else {
-  //           const controls = this.addItemsForm.controls
-  //           Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
-  //           return false;
-  //         }
-  //       }
-  //     }
-  //   }
-
-  // }
-  // Update items =====================
 
 
   updateAddItems() {
@@ -624,7 +656,7 @@ export class AddItemsComponent implements OnInit {
         if (itemId || itemName) {
           this.putJobItemsRequestModel.itemId = itemId ? itemId : null;
           this.putJobItemsRequestModel.itemType = Number(this.addItemsForm.value.itemType);
-          this.putJobItemsRequestModel.itemName = itemName ==="0" ? this.itemName : itemName;
+          this.putJobItemsRequestModel.itemName = itemName === "0" ? this.itemName : itemName;
           this.putJobItemsRequestModel.jobItemDescription = this.addItemsForm.value.jobItemDescription;
           this.putJobItemsRequestModel.unitPrice = this.addItemsForm.value.unitPrice;
           this.putJobItemsRequestModel.quantity = Number(this.addItemsForm.value.quantity);
@@ -632,7 +664,7 @@ export class AddItemsComponent implements OnInit {
           return false;
         }
       } else {
-        
+
         const itemId = this.addItemsForm.controls.itemId.value;
         if (itemId == undefined) {
           this.dialog.open(WarningDialogComponent, {
@@ -694,13 +726,20 @@ export class AddItemsComponent implements OnInit {
     this.openSnackBar(val, 'hello');
   }
 
-  createInvoiceMessage() {
+  createJobMessage() {
     this.dialog.open(WarningDialogComponent, {
       width: '350px',
-      data: "Kindly create the job."
+      data: "Please create the job."
     });
   }
 
+
+  invoiceExistMessage() {
+    this.dialog.open(WarningDialogComponent, {
+      width: '350px',
+      data: "Invoice has been already created."
+    });
+  }
 
   addItemMessage() {
     this.dialog.open(WarningDialogComponent, {

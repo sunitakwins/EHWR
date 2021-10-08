@@ -1,3 +1,4 @@
+import { Params } from '@angular/router';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -6,7 +7,7 @@ import { environment } from 'src/environments/environment.prod';
 import { AuditRequestModel } from '../../Models/AuditLog/AuditRequestModel';
 import { CusInvoicesRequestModel } from '../../Models/CusInvoices/CusInvoicesRequestModel';
 import { CustomerModel } from '../../Models/Customer/Customer';
-import { CustomerNameModel, CustomerRequestModel } from '../../Models/Customer/CustomerRequestModel';
+import { CustomerNameModel, CustomerRequestModel, MergeCustomer } from '../../Models/Customer/CustomerRequestModel';
 import { SuburbRequestModel } from '../../Models/Customer/SuburbRequestModel';
 import { AccountBalance, UpdateCustomer } from '../../Models/Customer/UpdateCustomer';
 import { ContactModel } from '../../Models/CustomerContact/Contact';
@@ -129,6 +130,15 @@ deleteJob(params:any){
     .set('SortOrder', `${model.SortOrder}`);
   return this.http.get(this.Url + '/Customer/AuditCustomer?', { params })
 }
+
+// put merge Customer
+// mergeCustomer(){
+//   return this.http.put(this.Url+'/Customer/CustomerMerge?', {params});
+//  } 
+
+ mergeCustomer(data: MergeCustomer): Observable<any> {
+  return this.http.put<any>(this.Url+'/Customer/CustomerMerge?', data);
+ }  
 
 // get Customer Invoices 
 public getCusInvoicesList(model: CusInvoicesRequestModel) {
