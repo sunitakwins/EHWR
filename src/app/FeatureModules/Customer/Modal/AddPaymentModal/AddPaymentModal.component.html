@@ -1,10 +1,10 @@
 <div class="modal fade" id="moveJob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog " role="document">
+  <div class="modal-dialog addPayments" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Add Payments 
-          <span>For Job no. </span>
-          <span>For Customer Name </span></h5>
+          <span>For Job no.{{jobOrderId}} </span>
+          <span>For {{customerName}}</span></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeDialog()">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -12,32 +12,55 @@
       <div class="modal-body smHeight">
           <div mat-dialog-content>
             <div class="container">
-              <form>
+              <form [formGroup]="paymentForm">
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label>Amount :</label>
-                       <span>$ 275</span>
+                      <label>Amount Due:</label>
+                       <span style="color:red;">${{amountDue}}</span>
                     </div>
                     <div class="form-group">
                       <label>Due Date :</label>
-                       <span>10/10/2021</span>
+                       <span>{{ dueDate | date: 'dd-MM-yyyy'}}</span>
                     </div>
                     <div class="form-group d-flex">
                       <label>Payment Amount : </label>
-                      <input formControlName="invoiceTo" class="form-control" type="text" placeholder="Amount">
+                      <input formControlName="paymentAmountControl" class="form-control" type="text" placeholder="Amount" >
+                      <div class="help-block"
+                        *ngIf="paymentForm.get('paymentAmountControl').invalid && paymentForm.get('paymentAmountControl').touched">
+                        <p>Amount is required</p>
+                      </div>
                     </div>
                     <div class="form-group d-flex">
                       <label>Payment Type :</label>
-                      <input formControlName="invoiceTo" class="form-control" type="text" placeholder="Invoice To">
+                      <!-- <input formControlName ="paymentTypeControl" class="form-control" type="text" placeholder="Invoice To"> -->
+                      <select class="form-control " formControlName="paymentId" *ngIf ="paymentMethod">
+                        <option *ngFor="let method of paymentMethod" value="{{method.globalCodeId}},{{method.codeName}}" >
+                          {{method.codeName}}
+                        </option>
+                      </select>
+
                     </div>
                     <div class="form-group d-flex">
                       <label>Date Paid :</label>
-                      <input formControlName="invoiceTo" class="form-control" type="text" placeholder="Invoice To" disabled>
+                      <div class="datePickerCol f-flex">
+                        <input class="form-control" formControlName="datePaid"  matInput
+                          [matDatepicker]="picker"  placeholder="dd/mm/yyyy" readonly>
+                          <!-- [min]="tomorrow" -->
+                        <div class="pickerIconCol">
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker>
+                        </div>
+                      </div>
+                      <div class="help-block"
+                        *ngIf="paymentForm.get('datePaid').invalid && paymentForm.get('datePaid').touched">
+                        <p>Date Paid is required</p>
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <button type = "button " class ="btn comBtn float-right">Add Payment</button>
+                    <button type ="submit" class ="btn comBtn float-right" (click)="onSubmit()"
+                    *ngIf ="!disableClick" [disabled] ="amountDue === 0">Add Payment</button>
                   </div>
                 </div>
               </form>

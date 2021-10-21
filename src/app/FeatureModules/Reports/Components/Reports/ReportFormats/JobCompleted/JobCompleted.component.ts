@@ -186,7 +186,7 @@ export class JobCompletedComponent implements OnInit {
 
   // ================ print Function======================================
   print() {
-    debugger
+    
     if (this.JobTypePrintForm.valid) {
       this.getJobCompletedData();
       //  if(this.printData.length > 0){

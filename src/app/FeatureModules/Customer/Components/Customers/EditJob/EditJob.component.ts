@@ -287,7 +287,7 @@ public searchFilter(value: string): void {
   private filterCustomerBySearch() {
     
     this.jobService.getJobList(this.requestModel).subscribe((res) => {
-     //console.log(res);
+     
       this.allsearch = res;
       this.customerOptions = res;
     }, error => {
@@ -319,7 +319,7 @@ public searchFilter(value: string): void {
 
   private getSuburbData() {
     this.jobService.getSuburb(this.suburbRequestModel).subscribe(res => {
-     //console.log(res);
+     
       this.allSuburb = res;
       this.suburbOptions = res;
     }, error => {
@@ -431,7 +431,7 @@ public onSaveAndCreateItem(type: boolean = false) {
      CategoryName:"status"
     };
    this.jobService.getGlobalCodeStatus(params).subscribe(res=>{
-     //console.log(res);
+     
      this.showStatus = res;
      this.filterCustomerBySearch();
    },error=>{

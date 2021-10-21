@@ -135,7 +135,7 @@ export class PriceMaintenanceComponent implements OnInit {
       CategoryName: "ItemSource"
     }
     this.maintenanceService.getItemTypeFromGlobalCode(params).subscribe(res => {
-      //console.log(res);
+      
       this.allItemType = res;
       function RemoveElementFromObjectArray(key: number) {
         res.forEach((value, index) => {
@@ -156,7 +156,7 @@ public itemPartsTypeGlobalCode() {
       CategoryName: "ItemParts"
     }
     this.maintenanceService.getItemPartsTypeFromGlobalCode(params).subscribe(res => {
-      //console.log(res);
+      
       this.allItemPartsType = res;
     }, error => {
       console.log(error);
@@ -241,7 +241,7 @@ public itemPartsTypeGlobalCode() {
 
 
   bindItemData() {
-    debugger
+    
     if(this.data.input.itemId){
       let clickedItemId = this.data.input.itemId;
 

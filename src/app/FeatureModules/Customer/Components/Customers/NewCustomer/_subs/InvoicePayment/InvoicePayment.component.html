@@ -76,11 +76,10 @@
     </div>
     <div class="row mt-3">
       <div class="col-md-10 mb-3">
-        <button class="btn primary-btn comBtn mr-3" (click) ="resendInvoice()">Resend Invoice</button>
-        <!-- <button class="btn primary-btn comBtn mr-3" (click) ="downloadInvoice()"  >Download Invoice</button> -->
-        <button class="btn primary-btn comBtn mr-3" (click) ="viewInvoice()" >View Invoice</button>
-        <button class="btn primary-btn comBtn mr-3"(click) ="addPayments()"  >Add Payments</button>
-        <button class="btn primary-btn comBtn mr-3" (click)="openNotesDialog()" >Add Notes</button>
+        <button class="btn primary-btn comBtn mr-3" (click) ="resendInvoice()" [disabled] ="invoiceMethod ==='Mail'">Resend Invoice</button>
+        <button class="btn primary-btn comBtn mr-3" (click) ="viewInvoice()">View Invoice</button>
+        <button class="btn primary-btn comBtn mr-3"(click) ="addPayments()">Add Payments</button>
+        <button class="btn primary-btn comBtn mr-3" (click)="openNotesDialog()">Add Notes</button>
       </div>
     </div>
     <div class="row">

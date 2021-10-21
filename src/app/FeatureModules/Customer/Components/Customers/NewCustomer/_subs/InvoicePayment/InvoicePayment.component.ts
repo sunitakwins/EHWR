@@ -17,6 +17,7 @@ import { PaymentsComponent } from '../../../Payments/Payments.component';
 import { PaymentModalComponent } from 'src/app/FeatureModules/Customer/Modal/PaymentModal/PaymentModal.component';
 import { WarningDialogComponent } from 'src/app/SharedModules/Components/WarningDialog/WarningDialog.component';
 import { environment } from 'src/environments/environment';
+import { AddPaymentModalComponent } from 'src/app/FeatureModules/Customer/Modal/AddPaymentModal/AddPaymentModal.component';
 
 @Component({
   selector: 'app-InvoicePayment',
@@ -68,6 +69,7 @@ export class InvoicePaymentComponent implements OnInit {
   notRecordFound: boolean;
   invoiceGUId: any;
   amountDue: any;
+  invoiceMethod: any;
 
   constructor(private route: ActivatedRoute,
     private jobService: JobService,
@@ -154,9 +156,9 @@ export class InvoicePaymentComponent implements OnInit {
     }
     //  this.spinner.show();
     this.invoiceService.getInvoiceData(params).subscribe((res: any) => {
-       debugger
+       
       if (res.length > 0) {
-        
+        this.invoiceMethod = res[0].invoiceMethod;
         this.invoiceId = res[0].invoiceId;
         this.invoiceAmount = res[0].amountInvoice;
         this.invoiceGUId = res[0].invoiceGUID;
@@ -209,8 +211,8 @@ export class InvoicePaymentComponent implements OnInit {
 
   // Resend Invoice ==================================
   resendInvoice() {
-    debugger
-    if (this.invoiceId) {
+    
+    if (this.invoiceId ) {
       let invoiceIdArr = [];
       invoiceIdArr.push({ invoiceId: this.invoiceId, createdBy : 'Michael'});
       const data = {
@@ -226,7 +228,7 @@ export class InvoicePaymentComponent implements OnInit {
             this.spinner.hide();
           }, 200);
         } else {
-          debugger
+          
           let msg = "Please try again later."
           this.openSnackBar(msg, 'hello');
           setTimeout(() => {
@@ -426,10 +428,7 @@ export class InvoicePaymentComponent implements OnInit {
           invoiceId: this.invoiceId,
           cusId: this.customerId,
         }
-        const dialogRef = this.dialog.open(PaymentModalComponent, {
-          width: '50px', disableClose: true,
-          data: { id: data }
-        });
+         const dialogRef = this.dialog.open(AddPaymentModalComponent, { data } );
 
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
@@ -467,10 +466,11 @@ export class InvoicePaymentComponent implements OnInit {
 
   // view Invoice
   viewInvoice() {
-    debugger
+    
     if (this.invoiceId) {
       const data = {
           invoiceId :this.invoiceId,
+          createdBy : 'Michael',
       };
       this.spinner.show();
       this.invoiceService.viewInvoice(data).subscribe(res =>{
@@ -481,13 +481,13 @@ export class InvoicePaymentComponent implements OnInit {
               setTimeout(() => {
                 this.spinner.hide();
               }, 200);
-            } else {
+        } else {
               let msg = "Please try again later."
               this.openSnackBar(msg, 'hello');
               setTimeout(() => {
                 this.spinner.hide();
               }, 200);
-            }
+          }
       });
     } else {
       this.createInvoiceFirst();
@@ -495,13 +495,4 @@ export class InvoicePaymentComponent implements OnInit {
 
   }
 
-  // download Invoice
-  downloadInvoice() {
-    if (this.invoiceId) {
-      let url = environment.pdfPathUrl + this.invoiceGUId + '.pdf';
-      window.open(url, "_blank");
-    } else {
-      this.createInvoiceFirst();
-    }
-  }
 }

@@ -1,3 +1,97 @@
-<p>
-  BulkPayments works!
-</p>
+<div class="modal fade" id="moveJob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog addPayments" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Bulk Payment 
+          <span *ngIf ="customerName">For {{customerName}}</span>
+        </h5>
+        <!-- {{data.customerName}} -->
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body smHeight">
+        <div mat-dialog-content>
+          <div class="container">
+            <form [formGroup] ="bulkPaymentForm">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Customer Name</label>
+                    <input type="text" matInput placeholder="Search Customer" aria-label="string" class="form-control"
+                      formControlName="customerId" [matAutocomplete]="customer" (keyup)="searchCustomer($event.target.value)">
+          
+                    <mat-autocomplete #customer="matAutocomplete" [displayWith]="displayCustomer.bind(this)">
+                      <mat-option *ngFor="let customer of allCustomers" [value]="customer">
+                        {{customer.customerName}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </div>
+                  <table class="table table-bordered"  *ngIf ="showGridList">
+                    <thead>
+                      <th>Invoice No.</th>
+                      <th>Amount Due</th>
+                      <th>Add Payment</th>
+                      <th>Amount</th>
+                      <!-- <th>Date</th> -->
+                      <th>Type</th>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor ="let data of dataSource; let i = index" >
+                        <td>#{{data.jobOrderId}}</td>
+                        <td>${{data.amountDue}}</td>
+                        <td>
+                          <input #checkbox [id] = "i" type="checkbox" (change) ="checkboxValue(data)">
+                        </td>
+                        <td>
+                          <div formArrayName="amountControl">
+                            <div [formGroupName]="i">
+                            <input type="text" [id] = "data.invoiceId" name ="data.amountDue" class ="d-none" [formControlName] ="data.amountDue" [class.show]="data.isChecked" >
+                          </div>
+                        </div>
+                        </td>
+                        <!-- <td>
+                           <div class="datePickerCol d-none" [class.show]="showInputBox && checkbox.checked">
+                            <input formControlName="datePaid"  matInput
+                              [matDatepicker]="picker"  placeholder="dd/mm/yyyy" readonly >
+                            <div class="pickerIconCol">
+                              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                              <mat-datepicker #picker></mat-datepicker>
+                            </div>
+                          </div>
+                         <div class="help-block"
+                            *ngIf="paymentForm.get('datePaid').invalid && paymentForm.get('datePaid').touched">
+                            <p>Date Paid is required</p>
+                          </div>
+                        </td> -->
+                        <td>
+                          <div formArrayName="paymentId">
+                            <div [formGroupName]="i">
+                              <select class="form-control d-none" name ="data.paymentId"  id ="data.paymentId" formControlName="data.paymentId"  [class.show]="data.isChecked">
+                                <option *ngFor="let method of paymentMethodArr" value="{{method.globalCodeId}},{{method.codeName}}" >
+                                  {{method.codeName}}
+                                </option>
+                              </select>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="button">
+                    <button class="btn primary-btn comBtn" (click) = "Save(dataSource)">Save</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+      <!-- <div class="modal-footer">
+        <button class ="comBtn" mat-button (click)="onNoClick()" >No</button>&nbsp;
+        <button class ="comBtn" mat-button (click)="onYesClick()">Yes</button>
+      </div> -->
+    </div>
+  </div>
+</div>

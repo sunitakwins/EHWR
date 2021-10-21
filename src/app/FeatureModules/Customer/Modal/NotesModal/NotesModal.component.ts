@@ -73,7 +73,7 @@ export class NotesModal implements OnInit {
     }
     // 
     this.invoiceService.saveNotes(params).subscribe(res => {
-      //console.log(res); 
+       
       this.savedNotesMessage()
       this.dialog.closeAll();
     })

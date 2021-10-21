@@ -126,7 +126,7 @@ export class MoveJobComponent implements OnInit {
     //console.log(this.moveJobsRequestModel);
 
     this.jobService.moveJob(this.moveJobsRequestModel).subscribe(res=>{
-      //console.log(res);
+      
       this.savedMessage();
       this.closeDialog();
     },error=>{

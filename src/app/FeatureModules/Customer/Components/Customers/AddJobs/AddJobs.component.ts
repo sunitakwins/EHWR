@@ -984,7 +984,7 @@ ngAfterViewInit(){
   private getSuburbData() {
 
     this.jobService.getSuburb(this.suburbRequestModel).subscribe(res => {
-      // //console.log(res);
+      
       this.allSuburb = res;
       this.suburbOptions = res;
 
@@ -1001,7 +1001,7 @@ ngAfterViewInit(){
     };
     this.jobService.getGlobalCodeStatus(params).subscribe(res => {
       this.showStatus = res;
-      // //console.log(res);
+      
     }, error => {
       // //console.log(error);
     });

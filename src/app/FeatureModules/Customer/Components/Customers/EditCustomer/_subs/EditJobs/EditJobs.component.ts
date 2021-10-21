@@ -219,7 +219,7 @@ export class EditJobsComponent implements OnInit {
   }
 
   print(input: any, event: any) {
-    debugger
+    
     event.stopPropagation();
     if (input.jobInvoiceStatus == true) {
        let invoiceGUId = input.invoiceGUID;

@@ -1,0 +1,33 @@
+form {
+    .SearchBox {
+        width: 50%;
+    }
+    .table {
+        thead {
+            background-color: #04773b;
+            color: #fff;
+        }
+        tbody {
+            background-color: #eff0e0;
+            td {
+                font-weight: 500;
+                font-size: 15px;
+                text-align: center;
+                input, select {
+                    &[type="text"] {
+                        width: 50px;
+                        border: 1px solid #ccc;
+                    }
+                }
+            }
+        }
+    }
+    .button {
+        text-align: right;
+    }
+}
+
+
+.show{
+    display: block !important;
+}

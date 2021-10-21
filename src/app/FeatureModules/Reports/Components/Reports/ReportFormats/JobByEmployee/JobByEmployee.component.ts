@@ -114,7 +114,7 @@ export class JobByEmployeeComponent implements OnInit {
   private getEmployeeBySearch() {
 
     this.reportService.getEmployees(this.employeeRequestModel).subscribe(res => {
-      //console.log(res);
+      
       this.allEmployees = res;
       this.employeeOptions = res;
     }, error => {

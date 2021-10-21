@@ -186,7 +186,7 @@ export class UpdateEmployeesComponent implements OnInit {
 
     this.spinner.show();
     this.maintenanceService.updateEmployees(requestParams).subscribe(res => {
-      //console.log(res);
+      
       this.setRequesetParams();
       let msg = res['responseMessage'];
       this.isUpdate = false;

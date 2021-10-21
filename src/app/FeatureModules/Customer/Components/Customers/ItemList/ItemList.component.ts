@@ -75,7 +75,7 @@ public sortData(sort: Sort) {
 
   getItemsList(): void {
     this.itemsService.getItemsList(this.requestModel).subscribe(res=>{
-      //console.log(res);
+      
       if(res.length > 0){
         // const finalArray = union(this.result, res);   
         // console.log(finalArray);  

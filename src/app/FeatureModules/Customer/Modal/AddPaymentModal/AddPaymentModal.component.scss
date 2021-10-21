@@ -1,0 +1,24 @@
+.addPayments{
+    .form-group{
+        white-space: nowrap;
+        font-size: 17px;
+        label{
+            width: 136px;
+            margin-right: 20px;
+        }
+        select{
+            margin-left: 20px;
+        }
+        .form-control {
+            background-color: #e9ecef !important;
+            &:hover, 
+            &:focus {
+                background-color: #fff !important;
+            }
+        }
+        .help-block {
+            position: absolute;
+            right: 75px;
+        }
+    }
+}

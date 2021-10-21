@@ -125,9 +125,16 @@ export class PaymentListComponent implements OnInit {
   }
 
   onPaymentClick(input,event){
-    const data = input.invoiceId;
     event.stopPropagation();
-    this.dialog.open(AddPaymentModalComponent ,{data});
+    let data = {
+      jobOrderId: input.jobOrderId,
+      invoiceId: input.invoiceId,
+      cusId: input.customerId,
+    }
+    const dialogRef = this.dialog.open(AddPaymentModalComponent ,{data});
+    dialogRef.afterClosed().subscribe(result => {
+       this.getPaymentOutstandingListData();
+     });
   }
 
 

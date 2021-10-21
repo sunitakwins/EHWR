@@ -50,7 +50,7 @@ export class PreviewInvoiceModalComponent implements OnInit {
 
 
   ngOnInit() {
-    debugger
+    
     this.previewInvoice(this.data);
 
   }
@@ -76,7 +76,7 @@ export class PreviewInvoiceModalComponent implements OnInit {
     
     this.invoiceService.previewInvoice(data).subscribe(res => {
       this.printData = res;
-      debugger 
+       
       if (res) {
         this.ownerName = res[0].ownerName; 
         this.customerName = res[0].customerName;

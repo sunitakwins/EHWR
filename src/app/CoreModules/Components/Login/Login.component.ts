@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
       };
 
       this.loginService.onLogin(requestParams).subscribe(res => {
-        //console.log(res);
+        
         if(res['responseCode'] === 200){ 
           let LoggedInId = res['keyId'];
           this.localstorage.setUserId(LoggedInId);

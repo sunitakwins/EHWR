@@ -54,6 +54,8 @@ import { SafePipePipe } from 'src/app/SharedModules/Pipes/safePipe.pipe';
 import { PayInvoiceThroughEmailLinkComponent } from './Modal/PayInvoiceThroughEmailLink/PayInvoiceThroughEmailLink.component';
 import { PaymentModalComponent } from './Modal/PaymentModal/PaymentModal.component';
 import { PreviewInvoiceModalComponent } from './Modal/PreviewInvoiceModal/PreviewInvoiceModal.component';
+import { AddPaymentModalComponent } from './Modal/AddPaymentModal/AddPaymentModal.component';
+import { BulkPaymentsComponent } from './Modal/BulkPayments/BulkPayments.component';
 
 
 
@@ -99,6 +101,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         PaymentsComponent,
         NotesGridModalComponent,
         StripePaymentModalComponent,
+        AddPaymentModalComponent,
+        BulkPaymentsComponent,
      
         PayInvoiceThroughEmailLinkComponent,
         SendAllUnsentInvoicesModalComponent
