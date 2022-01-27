@@ -183,7 +183,7 @@ OnSelectedRow(customerId){
 listCheckbox(customerId : number, event : any ,index: number, value: any){
   
   event.stopPropagation(); 
-  customerId; event; index; value;
+  // customerId; event; index; value;
   // add selected customer id in Array
   if (value.checked == true) {
     this.responseData[index].checkbox = value.checked;

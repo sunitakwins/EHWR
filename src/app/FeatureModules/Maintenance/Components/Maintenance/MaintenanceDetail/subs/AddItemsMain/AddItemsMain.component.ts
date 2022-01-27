@@ -22,13 +22,14 @@ export class AddItemsMainComponent implements OnInit {
   public message = 'Item Deleted Successfully';
   public requestModel = new AddItemsMainRequestModel();
 
-  displayedColumns: string[] = ['itemName', 'itemDescription', 'itemPartsName', 'customerTypeName', 'price_exTax', 'effectiveDate', 'Action'];
+  displayedColumns: string[] = ['itemName', 'itemDescription', 'itemPartsName', 'agentPrice_IncTax', 'privatePrice_IncTax', 'effectiveDate', 'Action'];
   dataSource = new MatTableDataSource();
 
   @ViewChild('sort', { static: true })sort!: MatSort;
   customerType: any;
   ItemData: any;
   dataList: any;
+  noRecordFound : boolean = false;
 
   constructor(private maintenanceService: MaintenanceService,
     private router :Router, public dialog: MatDialog, public snackBar: MatSnackBar,private spinner:NgxSpinnerService) { }
@@ -66,6 +67,7 @@ public  getItemList(): void{
     this.maintenanceService.getAllItems(this.requestModel).subscribe(res => {
       this.dataSource = new MatTableDataSource(res);
        this.dataList = res;
+      this.noRecordFound = (res.length < 0)? true : false;
       // let itemPrice = JSON.parse(res[0].itemPrice);
       // this.customerType = itemPrice[0].GC[0].CustomerTypeName;
       // console.log(this.customerType);
@@ -126,7 +128,7 @@ public  getItemList(): void{
   }
 
   // On Edit Item 
-  public onEditItem(input){  
+  public onEditItem(input){
     const dataList = this.dataList;
     const dialogRef = this.dialog.open(PriceMaintenanceComponent, {
       width: '840px', disableClose: true,
@@ -135,11 +137,11 @@ public  getItemList(): void{
    
     dialogRef.afterClosed().subscribe(result => {
       
-      if(!result){
-        this.setRequesetParams();
-      }else{
-        return
-      }
+      // if(!result){
+      //   this.setRequesetParams();
+      // }else{
+      //   return
+      // }
       
     });
   }
@@ -147,10 +149,6 @@ public  getItemList(): void{
   
 // On Clicking on Row
 OnSelectedRow(input: any){
-  const dataList = this.dataList;
-    this.dialog.open(PriceMaintenanceComponent, {
-      width: '840px', disableClose: true,
-      data: {input, dataList},
-    });
+  this.onEditItem(input);
  }
 }

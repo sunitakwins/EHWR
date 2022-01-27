@@ -11,12 +11,16 @@ export class CustomerNameModel{
     CustomerName: string ='';
 }
 
-export class MergeCustomer{
-    "customerId": number;
-      "mergeCustomerId": MergeCustomerId[]
-      "modifiedBy": string;
+export class MergeCustomer {
+    customerId: number;
+    mergeCustomerId: MergeCustomerId[];
+    address1: string;
+    suburbId: number;
+    state: string;
+    postCode: number;
+    modifiedBy: string;
 }
 
 export class MergeCustomerId{
-    "customerId": number
+    customerId: number
 }

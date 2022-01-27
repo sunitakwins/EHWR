@@ -113,6 +113,7 @@ export class MaintenanceService {
       .set('PageSize', `${model.PageSize}`)
       return this.http.get(this.Url + '/ItemPrice?', {params});
   }
+  
   editItemsInMaintenance(data):Observable<any>{
     return this.http.put(this.Url + '/Item', data);
   }

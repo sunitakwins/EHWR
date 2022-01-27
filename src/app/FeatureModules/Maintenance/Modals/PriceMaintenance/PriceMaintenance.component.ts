@@ -63,7 +63,7 @@ export class PriceMaintenanceComponent implements OnInit {
   public requestModel = new AddItemsMainRequestModel();
 
   dataSource = new MatTableDataSource();
-  displayedColumns: string[] = ['price_exTax', 'effectiveDate', 'action'];
+  displayedColumns: string[] = ['agentPriceTax','privatPriceTax', 'effectiveDate', 'action'];
   priceForAgent: any;
   priceForPrivate: any;
   allItemPartsType: any;
@@ -74,15 +74,12 @@ export class PriceMaintenanceComponent implements OnInit {
     public fb: FormBuilder,
     public dialogRef: MatDialogRef<PriceMaintenanceComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any) {
-    //  console.log('Item Data ',data);
   }
 
   ngOnInit(): void {
-
     this.addItemsForm = this.fb.group({
       itemType: ['14'],
       itemPartsType : [''],
-      // accountId: [''],
       itemName: ['', Validators.required],
       itemDescription: [''],
       price_exTaxForPrivate: ['', Validators.required],
@@ -168,22 +165,20 @@ public itemPartsTypeGlobalCode() {
   priceDetailsWithData() {
     const dataAgent = {
       customerTypeId: 3,
-      price_exTax: this.addItemsForm.value.price_exTaxForAgent,
+      price_exTax: Number(this.addItemsForm.value.price_exTaxForAgent),
     };
 
     const dataPrivate = {
       customerTypeId: 4,
-      price_exTax: this.addItemsForm.value.price_exTaxForPrivate,
+      price_exTax: Number(this.addItemsForm.value.price_exTaxForPrivate),
     }
     this.itemPriceDetails.push(dataAgent);
     this.itemPriceDetails.push(dataPrivate);
-    // console.log(this.itemPriceDetails);
   }
 
 
   // Save Item
   onSaveItem(type : boolean) {
-    // this.data.input.itemId != null
     
     if (this.data != null) {
       this.priceDetailsWithData();
@@ -245,33 +240,34 @@ public itemPartsTypeGlobalCode() {
     if(this.data.input.itemId){
       let clickedItemId = this.data.input.itemId;
 
-    let filteredData = this.data.dataList.filter(x => x.itemId == clickedItemId);
+    // let filteredData = this.data.dataList.filter(x => x.itemId == clickedItemId);
 
-    let ItemPrice1 = JSON.parse(filteredData[0].itemPrice);
-    let ItemPrice2 = JSON.parse(filteredData[1].itemPrice);
+    // let ItemPrice1 = JSON.parse(filteredData[0].itemPrice);
+    // let ItemPrice2 = JSON.parse(filteredData[1].itemPrice);
 
    
-    this.priceForPrivate = ItemPrice1[0].UnitPrice;
-    this.priceForAgent = ItemPrice2[0].UnitPrice;
+    // this.priceForPrivate = ItemPrice1[0].UnitPrice;
+    // this.priceForAgent = ItemPrice2[0].UnitPrice;
 
     
     // check customer Type is Private or Agent 
-    if (ItemPrice1[0].CustomerTypeName == 'Private') {
-      if (ItemPrice2[0].CustomerTypeName == 'Private') {
-        this.priceForPrivate = (ItemPrice2[0].UnitPrice) == null ? null : ItemPrice2[0].UnitPrice;
-      } else {
-        this.priceForAgent = (ItemPrice2[0].UnitPrice) == null ? null : ItemPrice2[0].UnitPrice;
-      }
-      this.priceForPrivate = (ItemPrice1[0].UnitPrice) == null ? null : ItemPrice1[0].UnitPrice;
-    }
-    else {
-      if (ItemPrice2[0].CustomerTypeName == 'Private') {
-        this.priceForPrivate = (ItemPrice2[0].UnitPrice) == null ? null : ItemPrice2[0].UnitPrice;
-      } else {
-        this.priceForAgent = (ItemPrice2[0].UnitPrice) == null ? null : ItemPrice2[0].UnitPrice;
-      }
-      this.priceForAgent = (ItemPrice1[0].UnitPrice) == null ? null : ItemPrice1[0].UnitPrice;
-    }
+
+    // if (ItemPrice1[0].CustomerTypeName == 'Private') {
+    //   if (ItemPrice2[0].CustomerTypeName == 'Private') {
+    //     this.priceForPrivate = (ItemPrice2[0].UnitPrice) == null ? null : ItemPrice2[0].UnitPrice;
+    //   } else {
+    //     this.priceForAgent = (ItemPrice2[0].UnitPrice) == null ? null : ItemPrice2[0].UnitPrice;
+    //   }
+    //   this.priceForPrivate = (ItemPrice1[0].UnitPrice) == null ? null : ItemPrice1[0].UnitPrice;
+    // }
+    // else {
+    //   if (ItemPrice2[0].CustomerTypeName == 'Private') {
+    //     this.priceForPrivate = (ItemPrice2[0].UnitPrice) == null ? null : ItemPrice2[0].UnitPrice;
+    //   } else {
+    //     this.priceForAgent = (ItemPrice2[0].UnitPrice) == null ? null : ItemPrice2[0].UnitPrice;
+    //   }
+    //   this.priceForAgent = (ItemPrice1[0].UnitPrice) == null ? null : ItemPrice1[0].UnitPrice;
+    // }
 
     
     this.addItemsForm.patchValue({
@@ -281,8 +277,8 @@ public itemPartsTypeGlobalCode() {
       itemType: this.data.input.itemType.toString(),
       itemDescription: this.data.input.itemDescription,
       effectiveDate: this.data.input.effectiveDate,
-      price_exTaxForPrivate: this.priceForPrivate,
-      price_exTaxForAgent: this.priceForAgent
+      price_exTaxForPrivate: (this.data.input.privatePrice).toFixed(2),
+      price_exTaxForAgent:  (this.data.input.agentPrice).toFixed(2)
 
     });
     }else{
@@ -305,26 +301,31 @@ public itemPartsTypeGlobalCode() {
         effectiveDate: this.addItemsForm.value.effectiveDate,
       };
   
-      
+
       const requestParamsofPriceEffective: MaintenancePriceEffective = {
         "itemId": this.data.input.itemId,
-        "price_exTax": this.addItemsForm.value.price_exTax,
+        "agentPrice": Number(this.addItemsForm.controls.price_exTaxForAgent.value),
+        "privatePrice" :Number(this.addItemsForm.controls.price_exTaxForPrivate.value),
         "effectiveDate": this.addItemsForm.value.effectiveDate,
         "createdBy": "Michael"
+
       }
   
-       
       this.maintenanceService.editItemsInMaintenance(requestParamsOfEditItemDetail).subscribe(resp => {
-   
+        // this.getItemPriceList();
+        //   this.messages(resp.responseMessage);
+        //   this.dialogRef.close(type);
+
+        this.onCancel();
         this.maintenanceService.editItemPrice(requestParamsofPriceEffective).subscribe(res => {
-      
           this.getItemPriceList();
           this.messages(resp.responseMessage);
           // this.onCancel();
           this.dialogRef.close(type);
         }, error => {
           console.log(error);
-        })
+        });
+        
       }, error => {
         console.log(error);
       });
@@ -364,7 +365,6 @@ public itemPartsTypeGlobalCode() {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.maintenanceService.deleteItemPrice(params).subscribe(res => {
-          //console.log(res[0].responseMessage);
           this.getItemPriceList();
           this.messages(res['responseMessage'])
         }, error => {

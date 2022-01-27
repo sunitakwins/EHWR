@@ -16,6 +16,8 @@ table {
 td{
   &.cdk-column-itemDescription{
     max-width: 300px;
+    text-overflow: ellipsis;
+    word-break: break-word;
   }
 }
 

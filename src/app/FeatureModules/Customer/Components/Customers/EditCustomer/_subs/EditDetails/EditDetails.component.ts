@@ -401,7 +401,7 @@ public onSaveAndCreateJob(type: boolean = false) {
         "address3Postal": formData.postal.postaladdress3,
         "suburbPostal": formData.postal.postalSuburb.localityId,
         "statePostal": formData.postal.postalSuburb.state,
-        "postCodePostal": formData.postal.postalSuburb.postCode,
+        "postCodePostal": Number(formData.postal.postalSuburb.postCode),
         "invoiceMethod": Number(formData.invoiceMethod),
         "modifiedBy": "Micheal"
       }
@@ -435,11 +435,13 @@ public onSaveAndCreateJob(type: boolean = false) {
           }
         }
         setTimeout(() => {
-          /* spinner ends after 5 seconds */
           this.spinner.hide();
           }, 500);
       }, error =>{
          console.log(error);
+         setTimeout(() => {
+          this.spinner.hide();
+          }, 500);
       })
     }else{
         this.validateAllFormFields(this.EditdetailsForm);
@@ -451,7 +453,6 @@ public onSaveAndCreateJob(type: boolean = false) {
       if (control instanceof FormControl) {           
         control.markAsTouched({ onlySelf: true }),
         setTimeout(() => {
-          /* spinner ends after 5 seconds */
           this.spinner.hide();
           }, 500);
       } else if (control instanceof FormGroup) {  

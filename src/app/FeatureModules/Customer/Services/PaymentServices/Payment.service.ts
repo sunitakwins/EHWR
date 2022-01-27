@@ -55,4 +55,8 @@ export class PaymentService {
     return this.http.get<any>(this.url + '/Payment/InvoicePaymentDetail?', {params} )
   }
   
+  // bulk payment 
+  sendBulkPaymentData(data : any){
+    return this.http.post(this.url + '/Payment/AddPaymentBulk?', data);
+  }
 }

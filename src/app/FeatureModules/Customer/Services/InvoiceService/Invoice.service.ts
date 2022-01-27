@@ -5,8 +5,10 @@ import { environment } from 'src/environments/environment';
 
 
 /*models */
-import { GetAllInvoicesModel, InvoiceNotesModel, InvoiceRequestModel, jobInvoiceRequestModel } from '../../Models/Invoice/Invoice/InvoiceRequest.model';
-import { InvoicesOutstandingModel, InvoicesOutstandingRequestModel } from '../../Models/Payments/Payments.model';
+import { GetAllInvoicesModel, 
+  InvoiceNotesModel, 
+  InvoiceRequestModel,
+  jobInvoiceRequestModel } from '../../Models/Invoice/Invoice/InvoiceRequest.model';
 
 
 @Injectable({ providedIn: 'root' })
@@ -99,8 +101,6 @@ export class InvoiceService {
   
   //preview Invoice
   previewInvoice(params :any){
-    // const params = new HttpParams()
-    //   .set('JobOrderId',)
     return this.http.get(this.url + '/CustomerInvoice/InvoicePreview?', {params : params})
   }
 
@@ -111,29 +111,6 @@ export class InvoiceService {
 
   getInvoiceData(params){
     return this.http.get(this.url + '/CustomerInvoice/GetInvoicePayment?', {params : params})
-  }
-
-  // =========== Payment =============================================================
-
-    //Payment Method global code 
-    getPaymentMethod(params) {
-      return this.http.get<any>(this.url + '/GlobalCode?', { params })
-    }
-
-   getInvoiceOutstandingList(model: InvoicesOutstandingRequestModel): Observable<any> {
-    const params = new HttpParams()
-      .set('InvoiceId', `${model.InvoiceId}`)
-      .set('CustomerId', `${model.CustomerId}`)
-      .set('PageNo', `${model.PageNo}`)
-      .set('PageSize', `${model.PageSize}`)
-      .set('SearchValue', `${model.SearchValue}`)
-      .set('SortColumn', model.SortColumn)
-      .set('SortOrder', model.SortOrder);
-    return this.http.get(this.url + '/Payment/PaymentOutstanding?', { params })
-  }
-
-  addPayment(data: InvoicesOutstandingModel): Observable<any> {
-    return this.http.post<any>(this.url + '/Payment?', data)
   }
 
 }

@@ -28,7 +28,7 @@
           (scrolled)="loadMore()" -->
           <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)"
             class="mat-elevation-z8">
-            <ng-container matColumnDef="checkbox">
+            <!-- <ng-container matColumnDef="checkbox">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let element">
                 <div class="csRadioBtn form-group">
@@ -38,7 +38,7 @@
                   </label>
                 </div>
               </td>
-            </ng-container>
+            </ng-container> -->
 
             <ng-container matColumnDef="itemName">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Name</th>
@@ -59,28 +59,24 @@
               <td mat-cell *matCellDef="let element">{{element.itemPartName}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="customerTypeName">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Type </th>
-              <td mat-cell *matCellDef="let element">
-                <div *ngFor ="let index of element.itemPrice | jsonParse">
-                 {{ index.CustomerTypeName}}
-                </div>  
-              </td>
+            <ng-container matColumnDef="agentPrice_IncTax">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Price For Agent (Inc.taxes)</th>
+              <td mat-cell *matCellDef="let element">${{element.agentPrice_IncTax | number : '1.2-2'}}</td>
             </ng-container>
 
 
-            <ng-container matColumnDef="price_exTax">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
-              <td mat-cell *matCellDef="let element">
-                <div *ngFor ="let index of element.itemPrice | jsonParse">
-                  ${{ index.UnitPrice}}
-                 </div>
-                </td>
+            <ng-container matColumnDef="privatePrice_IncTax">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Price For Private (Inc.taxes) </th>
+              <td mat-cell *matCellDef="let element"> ${{element.privatePrice_IncTax | number : '1.2-2' }}</td>
             </ng-container>
 
             <ng-container matColumnDef="effectiveDate">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-              <td mat-cell *matCellDef="let element">{{element.effectiveDate | date: 'dd-MM-yyyy'}} </td>
+              <td mat-cell *matCellDef="let element">
+               <span *ngIf = "element.effectiveDate == '0001-01-01T00:00:00' ? null : element.effectiveDate">
+                {{element.effectiveDate | date: 'dd-MM-yyyy'}}
+               </span>    
+                 </td>
             </ng-container>
 
 
@@ -98,9 +94,9 @@
 
           </table>
         </div>
-        <!-- <div *ngIf="result.length === 0">
+        <div *ngIf="noRecordFound">
           <h4>No records found!</h4>
-        </div>  -->
+        </div> 
       </div>
     </div>
   </div>

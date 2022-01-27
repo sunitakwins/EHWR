@@ -70,12 +70,13 @@
                         placeholder="Item Description"></textarea>
                     </div>
                   </div>
+
                   <!-- <div class="form-group">
                     <label>Price Exclusive of GST<sup>*</sup></label>
                     <input class="form-control removeArrow" type="number" formControlName="price_exTax"
                       placeholder="Price Exclusive of GST">
                     <div class="help-block"
-                      *ngIf=" addItemsForm.get('price_exTax').invalid && addItemsForm.get('price_exTax').touched">
+                      *ngIf="addItemsForm.get('price_exTax').invalid && addItemsForm.get('price_exTax').touched">
                       <p>Price is Required</p>
                     </div>
                   </div> -->
@@ -124,10 +125,16 @@
                 <div class="col-sm-12" *ngIf="showGrid">
                   <div class="table-responsive popupTable">
                     <table [dataSource]="dataSource" class="mat-elevation-z8" mat-table >
-                      <ng-container matColumnDef="price_exTax">
-                        <th *matHeaderCellDef mat-header-cell >Price</th>
+                      <ng-container matColumnDef="agentPriceTax">
+                        <th *matHeaderCellDef mat-header-cell >Price For Agent(inc.Taxes)</th>
                         <td *matCellDef="let element" mat-cell>
-                          <a style="color: #137d59;text-decoration: none;cursor: pointer;">{{element.price_exTax}}</a></td>
+                          <a>{{element.agentPrice_IncTax | number : '1.2-2'}}</a></td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="privatPriceTax">
+                        <th *matHeaderCellDef mat-header-cell >Price For Private(inc.Taxes)</th>
+                        <td *matCellDef="let element" mat-cell>
+                          <a>{{element.privatePrice_IncTax | number : '1.2-2'}}</a></td>
                       </ng-container>
                   
                       <ng-container matColumnDef="effectiveDate">

@@ -555,8 +555,7 @@ if(this.makeFormNull==true)
           this.sendTabValue.emit({ "id": res.keyId, "cusName": this.detailsForm.value.customerName });
           // this.savedMessage();
         }
-       
-       
+      
 
         setTimeout(() => {
           this.spinner.hide();

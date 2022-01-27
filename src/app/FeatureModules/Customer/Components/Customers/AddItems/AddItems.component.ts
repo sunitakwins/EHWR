@@ -338,11 +338,10 @@ export class AddItemsComponent implements OnInit {
   }
 
   private getAllItemSource(stockType: number) {
-    // this.spinner.show();
     this.itemSourceRequestModel.CustomerType = this.customerType ? this.customerType : 0;
     this.itemSourceRequestModel.ItemType = Number(stockType);
     this.itemService.getItems(this.itemSourceRequestModel).subscribe(res => {
-      // console.log(res);
+    
       if (res.length > 0) {
         this.allItemSource = res;
         this.itemsOptions = res;
@@ -371,6 +370,7 @@ export class AddItemsComponent implements OnInit {
         data: "This job has already been Invoiced. Item cannot be updated."
       });
     } else {
+      debugger
       this.putJobItemsRequestModel.itemId = object.itemId;
       this.putJobItemsRequestModel.itemType = object.itemType;
       this.putJobItemsRequestModel.itemName = object.itemName;
@@ -388,6 +388,7 @@ export class AddItemsComponent implements OnInit {
 
       this.addItemsForm.patchValue({
         itemId: {
+          customerType : object.customerType,
           jobItemDescription: object.jobItemDescription,
           unitPrice: object.unitPrice,
           quantity: object.quantity,
@@ -408,22 +409,42 @@ export class AddItemsComponent implements OnInit {
 
   // get all Itemsource------------------------ 
   public displayItemSource(result?: any): string | undefined {
-
+    debugger
     if (result || result > 0) {
-      if (result.itemPrice) {
-        let priceItem = JSON.parse(result.itemPrice);
-        this.itemPrice = priceItem[0].UnitPrice
-        this.totalPrice = priceItem[0].Price_incTax
-      }
+      // if (result.itemPrice) {
+      //   let priceItem = JSON.parse(result.itemPrice);
+      //   this.itemPrice = priceItem[0].UnitPrice
+      //   this.totalPrice = priceItem[0].Price_incTax
+      // }
+      let customerTypeName = result.customerType;
+      let setUnitPrice :number = 0;
+      let settotalPrice :number = 0;
+    debugger 
+  if((result.agentPrice !== undefined || result.privateValue !== undefined)  && (result.agentPrice_IncTax !== undefined || result.privatePrice_IncTax !== undefined) ){
+     {
+       if(customerTypeName == 'Agent'){
+        setUnitPrice = result.agentPrice; 
+        settotalPrice = result.agentPrice_IncTax;
+       }else{
+        setUnitPrice = result.privatePrice; 
+        settotalPrice = result.privatePrice_IncTax;
+       }
+     }
+  }else {
+     setUnitPrice = result.unitPrice;
+     settotalPrice = result.totalPrice;
+  }
+
+
       this.addItemsForm.patchValue({
         itemType: result.itemType.toString(),
         itemId: result.itemId.toString(),
         jobItemDescription: result.jobItemDescription == undefined ? result.itemDescription : result.jobItemDescription,
-        unitPrice: result.unitPrice == undefined ? this.itemPrice : result.unitPrice,
+        unitPrice: setUnitPrice,
         quantity: result.quantity > 0 ? result.quantity : 1,
       });
-      this.totalPrice = result.totalPrice == undefined ? this.totalPrice : result.totalPrice
-      return result.itemName;
+      this.totalPrice = settotalPrice;
+        return result.itemName;
     } else return undefined;
   }
 

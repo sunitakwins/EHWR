@@ -9,6 +9,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-SnackBar/Mat-SnackBar.component';
 import { InvoicesOutstandingModel, InvoicesOutstandingRequestModel } from '../../Models/Payments/Payments.model';
 import { InvoiceService } from '../../Services/InvoiceService/Invoice.service';
+import { PaymentService } from '../../Services/PaymentServices/Payment.service';
 
 
 export const MY_FORMATS = {
@@ -47,7 +48,7 @@ export class AddPaymentModalComponent implements OnInit {
 
   constructor(private dialog: MatDialog, private fb: FormBuilder,
     public dialogRef: MatDialogRef<AddPaymentModalComponent>,
-    private invoiceService: InvoiceService, private snackBar: MatSnackBar,
+    private paymentService: PaymentService, private snackBar: MatSnackBar,
     private spinner: NgxSpinnerService,
     @Inject(MAT_DIALOG_DATA) public data: any) { 
       this.paymentForm = this.fb.group({
@@ -66,7 +67,7 @@ export class AddPaymentModalComponent implements OnInit {
     let queryParams = {
       CategoryName: 'PaymentMethod'
     }
-    this.invoiceService.getPaymentMethod(queryParams).subscribe(res => {
+    this.paymentService.getPaymentMethod(queryParams).subscribe(res => {
       this.paymentMethod = res;
       function RemoveElementFromObjectArray(key: number) {
         res.forEach((value, index) => {
@@ -116,7 +117,7 @@ export class AddPaymentModalComponent implements OnInit {
     if (this.paymentForm.valid) {
       this.spinner.show();
       this.disableClick = true;
-      this.invoiceService.addPayment(params).subscribe((res: any) => {
+      this.paymentService.addPayment(params).subscribe((res: any) => {
         this.disableClick = false;
         setTimeout(() => {
           this.getInvoicesOutstandingListData(this.data.cusId);
@@ -141,7 +142,8 @@ export class AddPaymentModalComponent implements OnInit {
   public getInvoicesOutstandingListData(cusId) {
     this.requestModel.CustomerId = cusId;
     this.requestModel.InvoiceId = this.data.invoiceId;
-    this.invoiceService.getInvoiceOutstandingList(this.requestModel).subscribe((res: any) => {
+    this.paymentService.getInvoiceOutstandingList(this.requestModel).subscribe((res: any) => {
+      
       if (res.length > 0) {
         this.amountDue = res[0].amountDue;
         this.customerName = res[0].customerName;

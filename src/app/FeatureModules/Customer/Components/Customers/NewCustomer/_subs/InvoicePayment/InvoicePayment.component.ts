@@ -13,8 +13,6 @@ import { MatSnackBarComponent } from 'src/app/SharedModules/Components/Mat-Snack
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeleteDialogComponent } from 'src/app/SharedModules/Components/DeleteDialog/DeleteDialog.component';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { PaymentsComponent } from '../../../Payments/Payments.component';
-import { PaymentModalComponent } from 'src/app/FeatureModules/Customer/Modal/PaymentModal/PaymentModal.component';
 import { WarningDialogComponent } from 'src/app/SharedModules/Components/WarningDialog/WarningDialog.component';
 import { environment } from 'src/environments/environment';
 import { AddPaymentModalComponent } from 'src/app/FeatureModules/Customer/Modal/AddPaymentModal/AddPaymentModal.component';

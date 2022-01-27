@@ -16,7 +16,6 @@ const routes: Routes = [
   { path: 'sm73.link/:id',resolve:{Resp:PaymentLinkResolver}, component: PayInvoiceThroughEmailLinkComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  // { path: '', component: LoginComponent, },
   {
     path: '',
     component: ContentLayoutComponent,
@@ -29,10 +28,6 @@ const routes: Routes = [
     ]
   },
   {path :'**' , component : PageNotFoundComponent }
- 
-
-  // {path: 'pageNotFound', component: PageNotFoundComponent,  data: { message: 'This page is not found' }},
-  // {path: '**', redirectTo: '/pageNotFound'}
 ];
 
 @NgModule({

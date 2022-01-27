@@ -14,7 +14,6 @@ import { NewCustomerComponent } from './Components/Customers/NewCustomer/NewCust
 
 import { JobsListComponent } from './Components/Customers/JobsList/JobsList.component';
 import { AddJobsComponent } from './Components/Customers/AddJobs/AddJobs.component';
-import { EditJobComponent } from './Components/Customers/EditJob/EditJob.component';
 /*Routing*/ 
 import { CustomerRouting } from './Customer.routing.modules';
 import { CustomerService } from './Services/CustomerServices/Customer.service';
@@ -26,19 +25,15 @@ import { EditJobsComponent } from './Components/Customers/EditCustomer/_subs/Edi
 import { SharedModule } from 'src/app/SharedModules/Shared.module';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { AddItemsComponent } from './Components/Customers/AddItems/AddItems.component';
-import { ItemListComponent } from './Components/Customers/ItemList/ItemList.component';
 import { ItemService } from './Services/ItemService/Item.service';
 import { DetailsComponent } from './Components/Customers/NewCustomer/_subs/Details/Details.component';
 import { ContactComponent } from './Components/Customers/NewCustomer/_subs/Contact/Contact.component';
-import { InvoiceComponent } from './Components/Customers/Invoice/Invoice.component';
 import { InvoiceService } from './Services/InvoiceService/Invoice.service';
 import { AuditComponent } from './Components/Customers/EditCustomer/_subs/Audit/Audit.component';
 import { InvoiceModalComponent } from './Modal/InvoiceModal/InvoiceModal.component';
 import { NotesModal } from './Modal/NotesModal/NotesModal.component';
 import { MoveJobComponent } from './Modal/MoveJob/MoveJob.component';
-import { PaymentsComponent } from './Components/Customers/Payments/Payments.component';
 import { AuditModalComponent } from './Modal/AuditModal/AuditModal.component';
-import { NotesGridModalComponent } from './Modal/NotesGridModal/NotesGridModal.component';
 import { InvoiceListComponent } from './Components/Customers/InvoiceList/InvoiceList.component';
 import { PaymentListComponent } from './Components/Customers/PaymentList/PaymentList.component';
 import { JobAuditComponent } from './Components/Customers/NewCustomer/_subs/JobAudit/JobAudit.component';
@@ -52,10 +47,10 @@ import { SendAllUnsentInvoicesModalComponent } from './Modal/SendAllUnsentInvoic
 
 import { SafePipePipe } from 'src/app/SharedModules/Pipes/safePipe.pipe';
 import { PayInvoiceThroughEmailLinkComponent } from './Modal/PayInvoiceThroughEmailLink/PayInvoiceThroughEmailLink.component';
-import { PaymentModalComponent } from './Modal/PaymentModal/PaymentModal.component';
 import { PreviewInvoiceModalComponent } from './Modal/PreviewInvoiceModal/PreviewInvoiceModal.component';
 import { AddPaymentModalComponent } from './Modal/AddPaymentModal/AddPaymentModal.component';
 import { BulkPaymentsComponent } from './Modal/BulkPayments/BulkPayments.component';
+import { NotesGridModalComponent } from './Modal/NotesGridModal/NotesGridModal.component';
 
 
 
@@ -81,25 +76,20 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
         JobsListComponent,
         AddJobsComponent,
-        EditJobComponent,
         MoveJobComponent,
         JobAuditComponent,
 
         AddItemsComponent,
-        ItemListComponent,
         PreviewInvoiceModalComponent,
         
         InvoicePaymentComponent,
-        
+        NotesGridModalComponent,
+
         InvoiceListComponent,
-        InvoiceComponent,
         InvoiceModalComponent,
         NotesModal,
-        PaymentModalComponent,
        
         PaymentListComponent,
-        PaymentsComponent,
-        NotesGridModalComponent,
         StripePaymentModalComponent,
         AddPaymentModalComponent,
         BulkPaymentsComponent,

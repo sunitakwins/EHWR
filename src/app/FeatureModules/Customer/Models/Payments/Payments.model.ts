@@ -1,19 +1,19 @@
 // Invoices Outstanding Models
 
-export class InvoicesOutstandingRequestModel{
-    InvoiceId : number;
-    CustomerId : number;
-    PageNo: number= 1;
-    PageSize: number =80;
-    SearchValue:string = '';
-    SortColumn:string="invoiceId";
-    SortOrder:string = "desc";
+export class InvoicesOutstandingRequestModel {
+    InvoiceId: number;
+    CustomerId: number;
+    PageNo: number = 1;
+    PageSize: number = 80;
+    SearchValue: string = '';
+    SortColumn: string = "invoiceId";
+    SortOrder: string = "desc";
 }
 
-export class InvoicesOutstandingList{
+export class InvoicesOutstandingList {
     "invoiceId": number;
     "customerId": number;
-    "jobOrderId": number ;
+    "jobOrderId": number;
     "invoiceTo": "Dinesh";
     "dueDate": Date;
     "sendDate": Date;
@@ -24,37 +24,52 @@ export class InvoicesOutstandingList{
 
 
 // Post Model for Invoice Outstanding
-export class InvoicesOutstandingModel{
-    "customerId": number ;
-    "invoiceId": number ;
-    "jobOrderId" : number;
+export class InvoicesOutstandingModel {
+    "customerId": number;
+    "invoiceId": number;
+    "jobOrderId": number;
     "methodPayId": number;
     "methodRefrenceNumberPayment": number;
     "methodPayName": string;
     "paymentDate": Date;
     "amountPayment": number;
     // "cardName": string;
-    "cardNumber" : string;
+    "cardNumber": string;
     "cvv": string;
     "month": number;
-    "year":number;
+    "year": number;
     "createdBy": "Micheal"
 }
 
 
 //  Paid Payments  Models
-export class PaymentPaidRequestModel{
-    PaymentId : number =-1;
+export class PaymentPaidRequestModel {
+    PaymentId: number = -1;
     CustomerId: number;
-    invoiceId : number;
-    PageNo: number= 1;
-    PageSize: number =10;
-    SortColumn:string="";
-    SortOrder:string = "Asc";
+    invoiceId: number;
+    PageNo: number = 1;
+    PageSize: number = 10;
+    SortColumn: string = "";
+    SortOrder: string = "Asc";
 }
 
-export class PaymentPaidList{
+export class PaymentPaidList {
     "paymentId": number;
-    "paymentDate":string;
-    "amountPayment":number
+    "paymentDate": string;
+    "amountPayment": number
+}
+
+export class BulkPaymentModel {
+    customerId: number;
+    invoiceDetail: [
+        {
+            jobOrderId: number;
+            invoiceId: number;
+            paymentDate: string;
+            amountPayment: number;
+            methodPayId: number;
+            methodRefrenceNumberPayment: number
+        }
+    ];
+    createdBy: string;
 }

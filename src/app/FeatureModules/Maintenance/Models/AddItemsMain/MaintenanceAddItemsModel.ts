@@ -32,7 +32,8 @@ export class MaintenanceEditItemsModel{
 
 export class MaintenancePriceEffective{
   itemId: number;
-  price_exTax: number;
+  agentPrice: number;
+  privatePrice : number;
   effectiveDate: string;
   createdBy: string;
 }

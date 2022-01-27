@@ -165,7 +165,7 @@ export class AddJobsComponent implements OnInit {
 
   /* get jobcustomer*/
 
-  public jobCustomerRequestModel = new JobCustomerRequestModel();
+  // public CustomerRequestModel = new CustomerRequestModel();
 
   /*global code*/
   public jobID: number;
@@ -281,7 +281,6 @@ ngAfterViewInit(){
 
   ngOnInit() {
     
-   
     this.route.queryParams.subscribe((params: Params) => {
       this.id = params['customerId'];
       if (this.id === undefined) {
@@ -500,7 +499,7 @@ ngAfterViewInit(){
 
   // get job details by job id 
   jobIdDetails() {
-  
+   
     this.requestModel.JobOrderId = this.JobOrderId ? this.JobOrderId : (this.jobID ? this.jobID : 0);
     this.requestModel.CustomerId = this.id ? this.id : 0;
     this.jobService.getJobList(this.requestModel).subscribe((res: any) => {
@@ -525,72 +524,74 @@ ngAfterViewInit(){
           this.disableNewCusBtn = false;
           
         }
-
-        let employeeIds = JSON.parse(JobData.employees);
-        this.employeeId = [];
-        this.fruits = [];
-        employeeIds.forEach(ele => {
-          const data = {
-            employeeName: ele.EmployeeName,
-            employeeId: ele.EmployeeId
-          }
-          const data2 = {
-            employeeId: ele.EmployeeId
-          }
-          this.fruits.push(data);
-          this.employeeId.push(data2);
-
-        });
-        this.employeeList = JSON.parse(JobData.employees);
-        this.suburbData = JSON.parse(res[0].suburb);
-
-
-        // for Contact 
-        let contactEmail = JSON.parse(JobData.jobEmail);
-        this.jobEmail = [];
-        this.contactFruits = [];
-        if(contactEmail == null){
-         
-        }else{
-          contactEmail.forEach(element => {
-            const emailData = {
-              email: element.Email
+   
+        
+        if(JobData.employees.length > 0){
+          let employeeIds = JSON.parse(JobData.employees);
+          this.employeeId = [];
+          this.fruits = [];
+          employeeIds.forEach(ele => {
+            const data = {
+              employeeName: ele.EmployeeName,
+              employeeId: ele.EmployeeId
             }
-            this.contactFruits.push(emailData);
-            this.jobEmail.push(emailData);
+            const data2 = {
+              employeeId: ele.EmployeeId
+            }
+            this.fruits.push(data);
+            this.employeeId.push(data2);
+  
           });
-        }
-    
-        
-        this.addJobsForm.get('searchDetail').disable();
-        this.addJobsForm.setValue({
-          'customerId': JobData.customerId,
-          'sameAsCustomer': JobData.sameAsCustomer,
-          "customerContactReference": JobData.customerContactReference,
-          'contactEmail': '',
-          'globalCodeForCCInvoice' : JobData.jobDefaultEmail,
-          'searchDetail': JobData.customerName,
-          'ownerName': JobData.ownerName,
-          'address1': JobData.address1,
-          'address2': JobData.address2,
-          'address3': JobData.address3,
-          'suburb': this.suburbData[0],
-          'state': [JobData.state],
-          'postCode': [JobData.postCode],
-          'jobOrderDescription': JobData.jobOrderDescription,
-          "employees": "",
-          'pageNo': JobData.pageNo,
-          'completedDate': (JobData.completedDate == null) ? null : new Date(JobData.completedDate),
-          'statusId': [JobData.statusId],
-          'tankDateInstalled': (JobData.tankDateInstalled == null) ? null : new Date(JobData.tankDateInstalled),
-        });
-        
-        
-        if (this.employeeId.length > 0) {
-          this.addJobsForm.controls["employees"].clearValidators();
-          this.addJobsForm.controls["employees"].updateValueAndValidity();
-        }
-
+          this.employeeList = JSON.parse(JobData.employees);
+        }  
+          this.suburbData = JSON.parse(res[0].suburb);
+  
+  
+          // for Contact 
+          let contactEmail = JSON.parse(JobData.jobEmail);
+          this.jobEmail = [];
+          this.contactFruits = [];
+          if(contactEmail == null){
+           
+          }else{
+            contactEmail.forEach(element => {
+              const emailData = {
+                email: element.Email
+              }
+              this.contactFruits.push(emailData);
+              this.jobEmail.push(emailData);
+            });
+          }
+      
+          
+          this.addJobsForm.get('searchDetail').disable();
+          this.addJobsForm.setValue({
+            'customerId': JobData.customerId,
+            'sameAsCustomer': JobData.sameAsCustomer,
+            "customerContactReference": JobData.customerContactReference,
+            'contactEmail': '',
+            'globalCodeForCCInvoice' : JobData.jobDefaultEmail,
+            'searchDetail': JobData.customerName,
+            'ownerName': JobData.ownerName,
+            'address1': JobData.address1,
+            'address2': JobData.address2,
+            'address3': JobData.address3,
+            'suburb': this.suburbData[0],
+            'state': [JobData.state],
+            'postCode': [JobData.postCode],
+            'jobOrderDescription': JobData.jobOrderDescription,
+            "employees": "",
+            'pageNo': JobData.pageNo,
+            'completedDate': (JobData.completedDate == null) ? null : new Date(JobData.completedDate),
+            'statusId': [JobData.statusId],
+            'tankDateInstalled': (JobData.tankDateInstalled == null) ? null : new Date(JobData.tankDateInstalled),
+          });
+          
+          
+          if (this.employeeId.length > 0) {
+            this.addJobsForm.controls["employees"].clearValidators();
+            this.addJobsForm.controls["employees"].updateValueAndValidity();
+          }
         this.dataService.setOption('JobForm',this.addJobsForm);  
 
         setTimeout(() => {
@@ -710,8 +711,8 @@ ngAfterViewInit(){
 
 
   public searchCustomer() {
-
-    this.jobService.getCustomerList(this.jobCustomerRequestModel).subscribe(res => {
+    
+    this.jobService.getCustomerList(this.customerRequestModel).subscribe(res => {
       this.allsearch = res;
       this.customerOptions = res;
 
@@ -1097,7 +1098,7 @@ ngAfterViewInit(){
         "address3": this.addJobsForm.value.address3,
         "suburb": this.addJobsForm.value.suburb.localityId,
         "state": this.addJobsForm.value.state,
-        "postCode": this.addJobsForm.value.postCode,
+        "postCode": Number(this.addJobsForm.value.postCode),
         "pageNo": (this.addJobsForm.value.pageNo).toString(),
         "position": "Manager",
         "tankDateInstalled": this.addJobsForm.value.tankDateInstalled,
@@ -1167,7 +1168,7 @@ ngAfterViewInit(){
     }
 
     if (this.addJobsForm.valid) {
-      
+     
       const requestParams: NewEditJobModels = {
         "jobOrderId": Number(this.JobOrderId) ? Number(this.JobOrderId) : this.jobID,
         "customerId": this.cusID ? this.cusID : (Number(this.CusId) ? Number(this.CusId) : 0),
@@ -1185,7 +1186,7 @@ ngAfterViewInit(){
         "address3": this.addJobsForm.value.address3,
         "suburb": this.addJobsForm.value.suburb.localityId,
         "state": this.addJobsForm.value.state,
-        "postCode": this.addJobsForm.value.postCode,
+        "postCode": (this.addJobsForm.value.postCode),
         "pageNo": (this.addJobsForm.value.pageNo),
         // "position": "SuperAdmin",
         "tankDateInstalled": this.addJobsForm.value.tankDateInstalled,

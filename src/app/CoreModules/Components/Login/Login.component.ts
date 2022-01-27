@@ -39,9 +39,7 @@ export class LoginComponent implements OnInit {
 
   onLogin() {
     // console.log(this.loginForm.status);
-
     if (this.loginForm.valid) {
-
       const requestParams: Login = {
         UserName: this.loginForm.value.username,
         password: this.loginForm.value.password,
